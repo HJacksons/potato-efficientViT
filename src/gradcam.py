@@ -100,7 +100,7 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
     outputs = model(inputs)
     _, preds = torch.max(outputs, 1)
 
-    for i in range(min(inputs.size(0), 8)):  # Ensures i < 8
+    for i in range(min(inputs.size(0), 4)):  # Ensures i < 8
         img = inputs.data[i].cpu().numpy().transpose((1, 2, 0))
         img = img * np.array([0.229, 0.224, 0.225]) + np.array([0.485, 0.456, 0.406])
         img = np.clip(img, 0, 1)
@@ -110,19 +110,17 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
 
         cam_img = apply_colormap_on_image(img, heatmap)
 
-        # let slog the images to wandb
+        # let slog the images to wandb, original image and the heatmap grouped together
         wandb.log(
             {
                 "Original Image": [wandb.Image(img, caption="Original Image")],
-                "Grad-CAM": [wandb.Image(cam_img, caption="Grad-CAM")],
+                "Heatmap": [wandb.Image(heatmap, caption="Heatmap")],
+                "CAM Image": [wandb.Image(cam_img, caption="CAM Image")],
             }
         )
 
 
-        # axs[i, 0].imshow(img)
-        # axs[i, 0].axis('off')
-        # axs[i, 1].imshow(cam_img)
-        # axs[i, 1].axis('off')
+
 
     break  # Break after the first batch
 
