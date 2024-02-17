@@ -212,16 +212,9 @@ heatmap = grad_cam.generate_heatmap(image_tensor, predicted_class)
 # Note: Implement the apply_colormap_on_image function based on the GradCAM example provided
 cam_image = apply_colormap_on_image(image_tensor.cpu().squeeze(), heatmap)  # Remove batch dimension and move to CPU
 
-
-# Visualization
-plt.figure(figsize=(10, 5))
-plt.subplot(1, 2, 1)
-imshow(images[image_idx])  # Original image
-plt.title(f"True: {classes[labels[image_idx]]}, Pred: {classes[predicted_class[image_idx]]}")
-plt.subplot(1, 2, 2)
-imshow(cam_image)  # Image with Grad-CAM
-plt.title("Grad-CAM")
-plt.show()
+# Display original image and Grad-CAM heatmap overlay
+imshow(images[image_idx].cpu())  # Original image
+imshow(cam_image)  # Grad-CAM overlay
 
 #######################
 
