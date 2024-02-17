@@ -136,16 +136,24 @@ class GradCAM:
             handler.remove()
 
 
-
 def apply_colormap_on_image(org_img, heatmap, alpha=0.6, colormap=plt.cm.jet):
     # Resize heatmap to match the image size
     heatmap = np.uint8(255 * heatmap)  # Convert to 8-bit int
     heatmap = colormap(heatmap)[:, :, :3]  # Apply colormap and remove alpha channel
     heatmap = torch.from_numpy(heatmap).to(device).float() / 255
+    heatmap = heatmap.permute(2, 0, 1).unsqueeze(0)  # Convert to 4D tensor with shape [1, 3, H, W]
+
+    # Resize heatmap to match original image size
+    heatmap_resized = F.interpolate(heatmap, size=(org_img.size(1), org_img.size(2)), mode='bilinear',
+                                    align_corners=False)
+
+    # Perform the overlay of the heatmap on the original image
     with torch.no_grad():
-        cam = heatmap + alpha * org_img
-        cam = cam / cam.max()  # Normalize
-    return cam
+        cam = heatmap_resized + alpha * org_img.unsqueeze(0)  # Ensure org_img is 4D
+        cam = cam / cam.max()
+
+    # Remove batch dimension and return
+    return cam.squeeze(0)
 
 def imshow(img):
     npimg = img.numpy()
