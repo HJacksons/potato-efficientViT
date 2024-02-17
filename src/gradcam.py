@@ -105,7 +105,7 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
     original_images = []
     cam_images = []
 
-    for i in range(min(inputs.size(0), 4)):  # Ensures i < 4 for visualization purposes
+    for i in range(min(inputs.size(0), 8)):  # Ensures i < 8 for visualization purposes
         img = inputs.data[i].cpu().numpy().transpose((1, 2, 0))
         img = img * np.array([0.229, 0.224, 0.225]) + np.array([0.485, 0.456, 0.406])
         img = np.clip(img, 0, 1)
