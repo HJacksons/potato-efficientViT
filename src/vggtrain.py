@@ -91,49 +91,51 @@ epochs = 50
 class GradCAM:
     def __init__(self, model, feature_layer):
         self.model = model
-        self.feature_layer = feature_layer
-        self.gradients = None
-        self.feature_maps = None
-        self.handlers = []  # To store hook handlers
-        # Only register forward hook
+        self.handlers = []  # Handlers for the hooks
+        self.feature_maps = None  # To store the feature maps
+        self.gradients = None  # To store the gradients
+
+        # Register hook to the feature layer
         self.handlers.append(feature_layer.register_forward_hook(self.save_feature_maps))
+        # Ensure gradients are saved
+        self.handlers.append(feature_layer.register_full_backward_hook(self.save_gradients))
 
     def save_feature_maps(self, module, input, output):
         self.feature_maps = output
-        self.feature_maps.requires_grad_(True)  # Enable gradient computation on feature maps
+        self.feature_maps.retain_grad()  # Retain gradients for non-leaf tensors
+
+    def save_gradients(self, module, grad_input, grad_output):
+        self.gradients = grad_output[0]  # grad_output[0] contains gradients with respect to the output
 
     def generate_heatmap(self, input_image, class_idx):
-        # Forward pass
         output = self.model(input_image)
         if isinstance(output, tuple):
-            output = output[0]
+            output = output[0]  # Handle models that return a tuple
 
-        # Get the score for the target class
-        target_score = output[:, class_idx]
-
-        # Backward pass to get gradients with respect to the target score
+        # Zero gradients and perform backward pass from the specific class index
         self.model.zero_grad()
-        target_score.backward(retain_graph=True)
+        class_score = output[:, class_idx].sum()
+        class_score.backward(retain_graph=True)
 
-        # Now, gradients are populated, capture them
-        self.gradients = self.feature_maps.grad
+        # Gradients and feature maps are now populated
+        if self.gradients is not None and self.feature_maps is not None:
+            pooled_gradients = torch.mean(self.gradients, dim=[0, 2, 3], keepdim=True)
+            # Weight the feature maps by the pooled gradients
+            for i in range(pooled_gradients.size(1)):
+                self.feature_maps[0][:, i, :, :] *= pooled_gradients[:, i, :, :]
 
-        # Compute pooled gradients
-        pooled_gradients = torch.mean(self.gradients, dim=[0, 2, 3], keepdim=True)
+            heatmap = torch.mean(self.feature_maps[0], dim=0)
+            heatmap = torch.clamp(heatmap, min=0)
+            heatmap /= torch.max(heatmap)
 
-        # Weight the feature maps
-        for i in range(pooled_gradients.size(1)):
-            self.feature_maps.data[0][:, i, :, :] *= pooled_gradients[:, i, :, :]
-
-        heatmap = torch.mean(self.feature_maps[0], dim=0)
-        heatmap = F.relu(heatmap)
-        heatmap /= torch.max(heatmap)
-
-        return heatmap.cpu().data.numpy()
+            return heatmap.cpu().numpy()
+        else:
+            raise RuntimeError("Gradients or feature maps are not populated.")
 
     def remove_hooks(self):
         for handler in self.handlers:
             handler.remove()
+
 
 
 def apply_colormap_on_image(org_img, heatmap, alpha=0.6, colormap=plt.cm.jet):
