@@ -63,10 +63,10 @@ class GradCAM:
         one_hot_output[0][class_idx] = 1
         output.backward(gradient=one_hot_output)
 
-        # Generate heatmap
-        gradient = self.gradients.data.numpy()[0]
+        # Make sure to move the gradients to CPU before converting to NumPy
+        gradient = self.gradients.data.cpu().numpy()[0]  # Corrected line
         weight = np.mean(gradient, axis=(1, 2))
-        feature_map = self.feature_maps.data.numpy()[0]
+        feature_map = self.feature_maps.data.cpu().numpy()[0]  # Also ensure feature maps are on CPU
 
         cam = np.zeros(feature_map.shape[1:], dtype=np.float32)
         for i, w in enumerate(weight):
@@ -77,6 +77,7 @@ class GradCAM:
         cam = cam - np.min(cam)
         cam = cam / np.max(cam)
         return cam
+
 
 def apply_colormap_on_image(org_img, heatmap):
     heatmap = cv2.applyColorMap(np.uint8(255 * heatmap), cv2.COLORMAP_JET)
