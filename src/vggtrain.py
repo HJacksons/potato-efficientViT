@@ -119,18 +119,22 @@ class GradCAM:
         # Backward pass
         output.backward(gradient=one_hot_output, retain_graph=True)
 
-        # Pool the gradients across the channels
-        pooled_gradients = torch.mean(self.gradients, dim=[0, 2, 3])
+        # Check if self.gradients is not None and is a tensor
+        if self.gradients is not None and isinstance(self.gradients, torch.Tensor):
+            # Pool the gradients across the channels
+            pooled_gradients = torch.mean(self.gradients, dim=[0, 2, 3], keepdim=True)
+        else:
+            raise TypeError("self.gradients is not a tensor or is None")
 
         # Weight the feature map with the gradients
-        for i in range(pooled_gradients.size()[0]):
-            self.feature_maps[0][i] *= pooled_gradients[i]
+        for i in range(pooled_gradients.size(0)):
+            self.feature_maps.data[0][i] *= pooled_gradients[i]
 
         # Average the channels of the feature maps
-        heatmap = torch.mean(self.feature_maps, dim=1).squeeze().cpu()
+        heatmap = torch.mean(self.feature_maps, dim=1).squeeze()
 
-        # Relu on top of the heatmap
-        heatmap = np.maximum(heatmap, 0)
+        # ReLU on top of the heatmap
+        heatmap = F.relu(heatmap)
 
         # Normalize the heatmap
         heatmap /= torch.max(heatmap)
