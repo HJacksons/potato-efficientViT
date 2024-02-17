@@ -92,19 +92,33 @@ model.to(device)
 
 # Load the model
 model.load_state_dict(torch.load(f"vgg_model_{epochs}.pth"))
-model.eval()
 
-# Load the test data
-images, labels = next(iter(test_loader))
-images, labels = images.to(device), labels.to(device)
 
-# Predict the first image in the batch
-with torch.no_grad():
-    outputs = model(images[0].unsqueeze(0))
-    _, predicted = torch.max(outputs, 1)
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+criterion = nn.CrossEntropyLoss()  # Assuming you're using CrossEntropyLoss for classification
 
-# Print the predicted class
-logging.info(f"Predicted class: {predicted.item()}, Actual class: {labels[0].item()}")
+model.eval()  # Set the model to evaluation mode
 
-# Save the model
+total_loss = 0.0
+total_correct = 0
+total_images = 0
+
+with torch.no_grad():  # Disable gradient computation for evaluation
+    for images, labels in test_loader:
+        images, labels = images.to(device), labels.to(device)
+
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+
+        total_loss += loss.item()
+        _, predicted = torch.max(outputs, 1)
+        total_correct += (predicted == labels).sum().item()
+        total_images += labels.size(0)
+
+avg_loss = total_loss / len(test_loader)
+avg_accuracy = total_correct / total_images
+
+# Log the test loss and accuracy
+logging.info(f"Test Loss: {avg_loss:.4f}, Test Accuracy: {avg_accuracy:.4f}")
+wandb.log({"Test Loss": avg_loss, "Test Accuracy": avg_accuracy})
 
