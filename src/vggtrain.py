@@ -136,7 +136,7 @@ with torch.no_grad():
         # Optional: Log images, predictions, and true labels to wandb
         if total_images <= len(images):  # Log only the first batch
             wandb_images = []
-            for i in range(min(len(images), 4)):  # Log up to 4 images per batch
+            for i in range(min(len(images), 8)):  # Log up to 4 images per batch
                 wandb_images.append(wandb.Image(
                     images[i].cpu(),
                     caption=f"True: {classes[labels[i]]} | Pred: {classes[predicted[i]]}"
