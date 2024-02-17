@@ -32,7 +32,6 @@ model.load_state_dict(torch.load(f"vgg_model_50.pth"))
 model.eval()
 
 class GradCAM:
-    """Simplified Grad-CAM implementation."""
     def __init__(self, model, target_layer):
         self.model = model
         self.target_layer = target_layer
@@ -40,13 +39,17 @@ class GradCAM:
         self.feature_maps = None
         self.model.eval()
 
-        # Hook for the gradients of the activations
-        self.hook_gradients()
+        # Ensure hooks are correctly attached
+        self.hook_layers()
 
-    def hook_gradients(self):
-        def hook_function(module, grad_in, grad_out):
+    def hook_layers(self):
+        def forward_hook(module, input, output):
+            self.feature_maps = output
+        def backward_hook(module, grad_in, grad_out):
             self.gradients = grad_out[0]
-        self.target_layer.register_backward_hook(hook_function)
+        # Register hooks
+        self.target_layer.register_forward_hook(forward_hook)
+        self.target_layer.register_backward_hook(backward_hook)
 
     def get_feature_maps_hook(self, module, input, output):
         self.feature_maps = output
@@ -104,7 +107,7 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
 
         # Initialize Grad-CAM and generate heatmap
         grad_cam = GradCAM(model, model.model.features[-1])  # Assuming VGG model
-        heatmap = grad_cam.generate_heatmap(inputs[i].unsqueeze(0), preds[i].cpu().numpy())
+        heatmap = grad_cam.generate_heatmap(inputs[i].unsqueeze(0), preds[i].item())
 
         # Apply heatmap on original image
         cam_img = apply_colormap_on_image(img, heatmap)
