@@ -197,7 +197,7 @@ model.load_state_dict(torch.load(f"vgg_model_{epochs}.pth"))
 ##################
 # Initialize GradCAM
 # Assuming model is your VGG model and target_layer is the layer you're interested in
-target_layer = model.features[-1]
+target_layer = model.model.features[-1]
 grad_cam = SimpleGradCAM(model, target_layer)
 
 # Select an image from your dataset
