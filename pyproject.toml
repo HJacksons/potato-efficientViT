@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "thesis1"
+version = "0.1.0"
+description = ""
+authors = ["HJacksons <jacksonherberts@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+torch = "^2.2.0"
+torchvision = "^0.17.0"
+matplotlib = "^3.8.3"
+numpy = "^1.26.4"
+wandb = "^0.16.3"
+opencv-python = "^4.9.0.80"
+scikit-learn = "^1.4.1.post1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
