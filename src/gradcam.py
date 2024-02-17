@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 import cv2
 
 
-
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
@@ -103,7 +102,7 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
         img = np.clip(img, 0, 1)
 
         # Initialize Grad-CAM and generate heatmap
-        grad_cam = GradCAM(model, model.features[-1])  # Assuming VGG model
+        grad_cam = GradCAM(model, model.model.features[-1])  # Assuming VGG model
         heatmap = grad_cam.generate_heatmap(inputs[i].unsqueeze(0), preds[i].cpu().numpy())
 
         # Apply heatmap on original image
