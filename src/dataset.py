@@ -117,7 +117,7 @@ class Dataset:
         test_dl = DataLoader(
             test_dataset,
             batch_size=BATCH_SIZE,
-            shuffle=True,
+            shuffle=False,
             num_workers=4,
             pin_memory=True,
         )
