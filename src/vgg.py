@@ -11,7 +11,7 @@ class VGG(nn.Module):
         for param in self.model.parameters():
             param.requires_grad = True
         self.model.classifier[6] = nn.Linear(
-            4096, 3
+            4096, 7
         )
 
     def forward(self, x):

@@ -143,7 +143,7 @@ class Dataset:
                 axes[i, j].imshow(image)
                 axes[i, j].set_title(f"{CLASSES[label]}")
                 axes[i, j].axis("off")
-        plt.show()
+        #plt.show()
 
         return train_dl, vali_dl, test_dl
 
