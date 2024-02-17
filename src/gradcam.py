@@ -105,7 +105,7 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
         img = img * np.array([0.229, 0.224, 0.225]) + np.array([0.485, 0.456, 0.406])
         img = np.clip(img, 0, 1)
 
-        grad_cam = GradCAM(model, model.features[-1])
+        grad_cam = GradCAM(model, model.model.features[-1])
         heatmap = grad_cam.generate_heatmap(inputs[i].unsqueeze(0), preds[i].cpu().numpy())
 
         cam_img = apply_colormap_on_image(img, heatmap)
