@@ -18,4 +18,4 @@ class VGG(nn.Module):
         return self.model(x)
 
 
-
+print(VGG())

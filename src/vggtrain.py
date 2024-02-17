@@ -188,30 +188,38 @@ classes = ['Bacteria', 'Fungi', 'Healthy', 'Nematode', 'Pest', 'Phytopthora', 'V
 
 ##################
 # Initialize GradCAM with the model and the last convolutional layer
-grad_cam = GradCAM(model, model.features[-1])
+#grad_cam = GradCAM(model, model.features[-1])
+grad_cam = GradCAM(model, model.model.features[-1])
 
-model.eval()
-# Assume 'images' and 'labels' are from the test_loader
+
+# Choose an image from your test set
 images, labels = next(iter(test_loader))
 images, labels = images.to(device), labels.to(device)
-predicted = model(images).argmax(dim=1)
 
-# Select an image index to visualize
-image_idx = 0  # Change as needed
+# Assuming you're interested in the first image in the batch
+image_idx = 0
+image_tensor = images[image_idx].unsqueeze(0)  # Add batch dimension
+
+# Predict class for the selected image
+output = model(image_tensor)
+_, predicted_class = torch.max(output, 1)
+predicted_class = predicted_class.item()
 
 # Generate heatmap
-heatmap = grad_cam.generate_heatmap(images[image_idx].unsqueeze(0), predicted[image_idx].item())
+heatmap = grad_cam.generate_heatmap(image_tensor, predicted_class)
 
-# Apply heatmap on original image
-cam_img = apply_colormap_on_image(images[image_idx], heatmap)
+# Convert heatmap to a displayable format
+# Note: Implement the apply_colormap_on_image function based on the GradCAM example provided
+cam_image = apply_colormap_on_image(image_tensor.cpu().squeeze(), heatmap)  # Remove batch dimension and move to CPU
+
 
 # Visualization
 plt.figure(figsize=(10, 5))
 plt.subplot(1, 2, 1)
 imshow(images[image_idx])  # Original image
-plt.title(f"True: {classes[labels[image_idx]]}, Pred: {classes[predicted[image_idx]]}")
+plt.title(f"True: {classes[labels[image_idx]]}, Pred: {classes[predicted_class[image_idx]]}")
 plt.subplot(1, 2, 2)
-imshow(cam_img)  # Image with Grad-CAM
+imshow(cam_image)  # Image with Grad-CAM
 plt.title("Grad-CAM")
 plt.show()
 
