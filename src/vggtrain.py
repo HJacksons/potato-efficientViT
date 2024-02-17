@@ -50,9 +50,10 @@ for epoch in range(epochs):
 
     avg_loss = total_loss / len(train_loader)
     avg_accuracy = total_correct / total_samples
-    print(
+    logging.info(
         f"Epoch [{epoch+1}/{epochs}], Train Loss: {avg_loss:.4f}, Train Accuracy: {avg_accuracy:.4f}"
     )
+    wandb.log({"Train Loss": avg_loss, "Train Accuracy": avg_accuracy})
 
     model.eval()
     total_loss, total_correct, total_samples = 0, 0, 0
@@ -70,12 +71,12 @@ for epoch in range(epochs):
 
     avg_loss = total_loss / len(vali_loader)
     avg_accuracy = total_correct / total_samples
-    print(
+    logging.info(
         f"Epoch [{epoch+1}/{epochs}], Validation Loss: {avg_loss:.4f}, Validation Accuracy: {avg_accuracy:.4f}"
     )
-
+    wandb.log({"Validation Loss": avg_loss, "Validation Accuracy": avg_accuracy})
 
 # Save the model
-torch.save(model.state_dict(), f"src/vgg_model_{epochs}.pth")
+torch.save(model.state_dict(), f"vgg_model_{epochs}.pth")
 
 
