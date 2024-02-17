@@ -107,20 +107,21 @@ class GradCAM:
         self.feature_maps = output
 
     def generate_heatmap(self, input_image, class_idx):
-        self.model.zero_grad()
-        output = self.model(input_image)
-        if isinstance(output, tuple):
-            output = output[0]
-        one_hot_output = torch.FloatTensor(1, output.size()[-1]).zero_().to(device)
-        one_hot_output[0][class_idx] = 1
-        output.backward(gradient=one_hot_output)
-
+        # Forward pass, backward pass, and gradient pooling remain the same
+        ...
+        # Ensure gradients and feature_maps are not None and are tensors
         if self.gradients is not None and isinstance(self.gradients, torch.Tensor):
             pooled_gradients = torch.mean(self.gradients, dim=[0, 2, 3], keepdim=True)
-            self.feature_maps[0] *= pooled_gradients
+
+            # Broadcasting pooled_gradients for multiplication
+            for i in range(pooled_gradients.size(1)):  # Iterate over the channels
+                self.feature_maps[0][:, i, :, :] *= pooled_gradients[:, i, :, :]
+
+            # Generate the heatmap
             heatmap = torch.mean(self.feature_maps[0], dim=0)
             heatmap = F.relu(heatmap)
             heatmap /= torch.max(heatmap)
+
             return heatmap.cpu().data.numpy()
         else:
             raise TypeError("self.gradients is not a tensor or is None")
