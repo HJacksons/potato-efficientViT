@@ -8,6 +8,7 @@ import wandb
 import numpy as np
 import torchvision
 import matplotlib.pyplot as plt
+import cv2
 
 
 
@@ -88,71 +89,67 @@ epochs = 50
 
 ##########################
 
-class GradCAM:
-    def __init__(self, model, feature_layer):
+class SimpleGradCAM:
+    def __init__(self, model, target_layer):
         self.model = model
-        self.handlers = []  # Handlers for the hooks
-        self.feature_maps = None  # To store the feature maps
-        self.gradients = None  # To store the gradients
+        self.target_layer = target_layer
+        self.gradients = None
+        self.model.eval()
 
-        # Register hook to the feature layer
-        self.handlers.append(feature_layer.register_forward_hook(self.save_feature_maps))
-        # Ensure gradients are saved
-        self.handlers.append(feature_layer.register_full_backward_hook(self.save_gradients))
+    def get_gradients(self, grad):
+        self.gradients = grad
 
-    def save_feature_maps(self, module, input, output):
-        self.feature_maps = output
-        self.feature_maps.retain_grad()  # Retain gradients for non-leaf tensors
+    def forward_pass_with_hooks(self, input_image):
+        conv_output = None  # The output of the target layer
 
-    def save_gradients(self, module, grad_input, grad_output):
-        self.gradients = grad_output[0]  # grad_output[0] contains gradients with respect to the output
+        # Register hook to capture the gradients of the target layer
+        hook_backward = self.target_layer.register_backward_hook(self.get_gradients)
+
+        # Forward pass
+        for name, module in self.model.named_children():
+            input_image = module(input_image)
+            if name == self.target_layer:
+                # Register hook to capture the output of the target layer
+                hook_forward = module.register_forward_hook(lambda module, input, output: setattr(self, "conv_output", output))
+                break
+
+        return conv_output, input_image
 
     def generate_heatmap(self, input_image, class_idx):
-        output = self.model(input_image)
-        if isinstance(output, tuple):
-            output = output[0]  # Handle models that return a tuple
-
+        # Forward
+        conv_output, model_output = self.forward_pass_with_hooks(input_image)
+        # Zero grads
         self.model.zero_grad()
-        class_score = output[:, class_idx].sum()
-        class_score.backward(retain_graph=True)
+        # Target for backprop
+        one_hot_output = torch.FloatTensor(1, model_output.size()[-1]).zero_().to(input_image.device)
+        one_hot_output[0][class_idx] = 1
+        # Backward pass
+        model_output.backward(gradient=one_hot_output)
+        # Get gradients and convert to positive
+        gradients = self.gradients.data[0].cpu().numpy()
+        positive_gradients = np.maximum(gradients, 0)
+        # Get the output of the target layer
+        target = self.conv_output.data[0].cpu().numpy()
+        # Weight the target layer's output with the (positive) gradients
+        weights = np.mean(positive_gradients, axis=(1, 2))
+        cam = np.dot(target.transpose(1, 2, 0), weights).transpose(2, 0, 1)
+        # Relu and normalize heatmap
+        cam = np.maximum(cam, 0)
+        cam = cam - np.min(cam)
+        cam = cam / np.max(cam)
+        return cam
 
-        if self.gradients is not None and self.feature_maps is not None:
-            pooled_gradients = torch.mean(self.gradients, dim=[0, 2, 3], keepdim=True)
-
-            # Apply the gradients onto the feature map
-            weighted_feature_maps = self.feature_maps[0] * pooled_gradients
-
-            # Generate the heatmap
-            heatmap = torch.mean(weighted_feature_maps, dim=0)
-            heatmap = torch.clamp(heatmap, min=0)
-            heatmap /= torch.max(heatmap)
-
-            return heatmap.cpu().data.numpy()
-        else:
-            raise RuntimeError("Gradients or feature maps are not populated.")
-
-    def remove_hooks(self):
-        for handler in self.handlers:
-            handler.remove()
-
-
-def apply_colormap_on_image(org_img, heatmap, alpha=0.6, colormap=plt.cm.jet):
-    # Convert heatmap to 8-bit format and apply colormap
+def apply_colormap_on_image(org_img, heatmap, alpha=0.4):
+    # Resize heatmap to match the original image
     heatmap = np.uint8(255 * heatmap)
-    colored_heatmap = colormap(heatmap)[:, :, :3]  # Apply colormap (removing alpha channel)
-    colored_heatmap = torch.from_numpy(colored_heatmap).to(org_img.device).float() / 255
-    colored_heatmap = colored_heatmap.permute(2, 0, 1).unsqueeze(0)  # [1, 3, H, W]
-
-    # Resize the colored heatmap to match the original image size
-    org_img_size = org_img.size()[1:]  # Assuming org_img is [C, H, W]
-    colored_heatmap = F.interpolate(colored_heatmap, size=org_img_size, mode='bilinear', align_corners=False)
-
-    # Overlay heatmap onto the original image
-    with torch.no_grad():
-        cam = colored_heatmap + alpha * org_img.unsqueeze(0)
-        cam = cam / cam.max()
-
-    return cam.squeeze(0)
+    heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+    heatmap = torch.from_numpy(heatmap).to(org_img.device).permute(2, 0, 1).float() / 255
+    heatmap = F.interpolate(heatmap.unsqueeze(0), size=(org_img.size(1), org_img.size(2)), mode='bilinear',
+                            align_corners=False).squeeze(0)
+    # Apply heatmap on img
+    superimposed_img = heatmap * alpha + org_img
+    superimposed_img = superimposed_img / superimposed_img.max()
+    return superimposed_img
 
 
 def imshow(img):
@@ -199,44 +196,27 @@ model.load_state_dict(torch.load(f"vgg_model_{epochs}.pth"))
 
 ##################
 # Initialize GradCAM
-grad_cam = GradCAM(model, model.model.features[-1])
+# Assuming model is your VGG model and target_layer is the layer you're interested in
+target_layer = model.features[-1]
+grad_cam = SimpleGradCAM(model, target_layer)
 
-# Visualization for a single image from the test set
-images, labels = next(iter(test_loader))
-images = images.to(device)
-labels = labels.to(device)
+# Select an image from your dataset
+image, _ = next(iter(test_loader))
+image.requires_grad_(True)
 
-# Select an image and predict
-image_idx = 0  # Change as needed
-image_tensor = images[image_idx].unsqueeze(0)  # Add batch dimension
-output = model(image_tensor)
-_, predicted_class = torch.max(output, 1)
-predicted_class = predicted_class.item()
+# Generate heatmap for a specific class index
+class_idx = 0  # Example class index
+heatmap = grad_cam.generate_heatmap(image.unsqueeze(0), class_idx)
 
-# Generate Grad-CAM heatmap
-heatmap = grad_cam.generate_heatmap(image_tensor, predicted_class)
+# Apply the heatmap to the original image
+superimposed_img = apply_colormap_on_image(image.squeeze(0), heatmap, alpha=0.4)
 
-# Unnormalize the image for display
-img_display = images[image_idx] * torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1).to(device) + torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1).to(device)
-img_display = img_display.cpu()
-
-# Apply heatmap on original image
-cam_img = apply_colormap_on_image(img_display, heatmap)
-
-# Display results
-plt.figure(figsize=(10, 5))
-plt.subplot(1, 2, 1)
-imshow(torchvision.utils.make_grid(image_tensor.cpu().data, normalize=True))
-plt.title('Original Image')
-
-plt.subplot(1, 2, 2)
-imshow(torchvision.utils.make_grid(cam_img.cpu().data, normalize=True))
-plt.title('Grad-CAM')
-
+# Visualize
+plt.imshow(superimposed_img.permute(1, 2, 0).cpu().numpy())
 plt.show()
 
-# Clean up hooks
-grad_cam.remove_hooks()
+
+
 
 #######################
 
