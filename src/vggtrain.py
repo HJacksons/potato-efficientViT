@@ -137,25 +137,21 @@ class GradCAM:
 
 
 def apply_colormap_on_image(org_img, heatmap, alpha=0.6, colormap=plt.cm.jet):
-    # First, ensure heatmap is a 2D numpy array
-    if heatmap.ndim == 2:
-        heatmap = np.uint8(255 * heatmap)  # Convert to 8-bit int
-        heatmap = colormap(heatmap)[:, :, :3]  # Apply colormap and remove alpha channel
-        heatmap = torch.from_numpy(heatmap).to(device).float() / 255
-        heatmap = heatmap.permute(2, 0, 1).unsqueeze(0)  # Convert to 4D tensor [1, 3, H, W]
-    else:
-        raise ValueError("Expected heatmap to be a 2D numpy array")
+    # Convert heatmap to 8-bit format and apply colormap
+    heatmap = np.uint8(255 * heatmap)
+    colored_heatmap = colormap(heatmap)[:, :, :3]  # Apply colormap (removing alpha channel)
+    colored_heatmap = torch.from_numpy(colored_heatmap).to(org_img.device).float() / 255
+    colored_heatmap = colored_heatmap.permute(2, 0, 1).unsqueeze(0)  # [1, 3, H, W]
 
-    # Resize heatmap to match original image size
-    org_img_size = org_img.size()[1:]  # Assuming org_img is a 3D tensor [C, H, W]
-    heatmap_resized = F.interpolate(heatmap, size=org_img_size, mode='bilinear', align_corners=False)
+    # Resize the colored heatmap to match the original image size
+    org_img_size = org_img.size()[1:]  # Assuming org_img is [C, H, W]
+    colored_heatmap = F.interpolate(colored_heatmap, size=org_img_size, mode='bilinear', align_corners=False)
 
-    # Perform the overlay of the heatmap on the original image
+    # Overlay heatmap onto the original image
     with torch.no_grad():
-        cam = heatmap_resized + alpha * org_img.unsqueeze(0)  # Ensure org_img is 4D [1, C, H, W]
+        cam = colored_heatmap + alpha * org_img.unsqueeze(0)
         cam = cam / cam.max()
 
-    # Remove batch dimension and return
     return cam.squeeze(0)
 
 
