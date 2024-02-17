@@ -110,10 +110,19 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
 
         cam_img = apply_colormap_on_image(img, heatmap)
 
-        axs[i, 0].imshow(img)
-        axs[i, 0].axis('off')
-        axs[i, 1].imshow(cam_img)
-        axs[i, 1].axis('off')
+        # let slog the images to wandb
+        wandb.log(
+            {
+                "Original Image": [wandb.Image(img, caption="Original Image")],
+                "Grad-CAM": [wandb.Image(cam_img, caption="Grad-CAM")],
+            }
+        )
+
+
+        # axs[i, 0].imshow(img)
+        # axs[i, 0].axis('off')
+        # axs[i, 1].imshow(cam_img)
+        # axs[i, 1].axis('off')
 
     break  # Break after the first batch
 
