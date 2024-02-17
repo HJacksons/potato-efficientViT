@@ -86,6 +86,71 @@ epochs = 50
 # wandb.save(f"vgg_model_{epochs}.pth")
 # logging.info("Model saved.")
 
+##########################
+
+class GradCAM:
+    def __init__(self, model, feature_layer):
+        self.model = model
+        self.feature_layer = feature_layer
+        self.gradients = None
+        self.feature_maps = None
+        feature_layer.register_forward_hook(self.save_feature_maps)
+        feature_layer.register_full_backward_hook(self.save_gradients)
+
+    def save_gradients(self, *args):
+        self.gradients = args[1]
+
+    def save_feature_maps(self, module, input, output):
+        self.feature_maps = output
+
+    def generate_heatmap(self, input_image, class_idx):
+        # Forward pass
+        output = self.model(input_image)
+        if isinstance(output, tuple):
+            output = output[0]  # For models returning a tuple
+
+        # Zero grads
+        self.model.zero_grad()
+
+        # Target for backprop
+        one_hot_output = torch.FloatTensor(1, output.size()[-1]).zero_().to(device)
+        one_hot_output[0][class_idx] = 1
+
+        # Backward pass
+        output.backward(gradient=one_hot_output, retain_graph=True)
+
+        # Pool the gradients across the channels
+        pooled_gradients = torch.mean(self.gradients, dim=[0, 2, 3])
+
+        # Weight the feature map with the gradients
+        for i in range(pooled_gradients.size()[0]):
+            self.feature_maps[0][i] *= pooled_gradients[i]
+
+        # Average the channels of the feature maps
+        heatmap = torch.mean(self.feature_maps, dim=1).squeeze().cpu()
+
+        # Relu on top of the heatmap
+        heatmap = np.maximum(heatmap, 0)
+
+        # Normalize the heatmap
+        heatmap /= torch.max(heatmap)
+
+        return heatmap.numpy()
+
+
+def apply_colormap_on_image(org_img, heatmap, alpha=0.6, colormap=plt.cm.jet):
+    # Apply heatmap on image
+    heatmap = np.uint8(255 * heatmap)
+    heatmap = colormap(heatmap)
+    heatmap = torch.from_numpy(heatmap).to(device).float() / 255
+    heatmap = heatmap[:, :, :3]  # remove alpha channel
+    with torch.no_grad():
+        cam = heatmap + alpha * org_img
+        cam = cam / cam.max()
+    return cam
+
+##########################
+
 
 # predicting
 import torch.nn.functional as F
@@ -103,6 +168,9 @@ criterion = nn.CrossEntropyLoss()  # Assuming you're using CrossEntropyLoss for 
 
 
 
+
+
+
 # Function to display an image
 def imshow(img):
     img = img.cpu().numpy().transpose((1, 2, 0))  # Convert from tensor and reorder dimensions
@@ -113,39 +181,88 @@ def imshow(img):
     plt.imshow(img)
     plt.show()
 
+
 # Classes
 classes = ['Bacteria', 'Fungi', 'Healthy', 'Nematode', 'Pest', 'Phytopthora', 'Virus']  # Update this with your actual class names
 
-# Evaluation loop with visualization
+
+##################
+# Initialize GradCAM with the model and the last convolutional layer
+grad_cam = GradCAM(model, model.features[-1])
+
 model.eval()
-total_loss = 0.0
-total_correct = 0
-total_images = 0
+# Assume 'images' and 'labels' are from the test_loader
+images, labels = next(iter(test_loader))
+images, labels = images.to(device), labels.to(device)
+predicted = model(images).argmax(dim=1)
 
-with torch.no_grad():
-    for images, labels in test_loader:
-        images, labels = images.to(device), labels.to(device)
-        outputs = model(images)
-        loss = criterion(outputs, labels)
+# Select an image index to visualize
+image_idx = 0  # Change as needed
 
-        total_loss += loss.item()
-        _, predicted = torch.max(outputs, 1)
-        total_correct += (predicted == labels).sum().item()
-        total_images += labels.size(0)
+# Generate heatmap
+heatmap = grad_cam.generate_heatmap(images[image_idx].unsqueeze(0), predicted[image_idx].item())
 
-        # Optional: Log images, predictions, and true labels to wandb
-        if total_images <= len(images):  # Log only the first batch
-            wandb_images = []
-            for i in range(min(len(images), 8)):  # Log up to 4 images per batch
-                wandb_images.append(wandb.Image(
-                    images[i].cpu(),
-                    caption=f"True: {classes[labels[i]]} | Pred: {classes[predicted[i]]}"
-                ))
-            wandb.log({"Test Examples": wandb_images})
+# Apply heatmap on original image
+cam_img = apply_colormap_on_image(images[image_idx], heatmap)
 
-avg_loss = total_loss / len(test_loader)
-avg_accuracy = total_correct / total_images
+# Visualization
+plt.figure(figsize=(10, 5))
+plt.subplot(1, 2, 1)
+imshow(images[image_idx])  # Original image
+plt.title(f"True: {classes[labels[image_idx]]}, Pred: {classes[predicted[image_idx]]}")
+plt.subplot(1, 2, 2)
+imshow(cam_img)  # Image with Grad-CAM
+plt.title("Grad-CAM")
+plt.show()
 
-# Log the test loss and accuracy
-logging.info(f"Test Loss: {avg_loss:.4f}, Test Accuracy: {avg_accuracy:.4f}")
-wandb.log({"Test Loss": avg_loss, "Test Accuracy": avg_accuracy})
+#######################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
+# # Evaluation loop with visualization
+# model.eval()
+# total_loss = 0.0
+# total_correct = 0
+# total_images = 0
+#
+# with torch.no_grad():
+#     for images, labels in test_loader:
+#         images, labels = images.to(device), labels.to(device)
+#         outputs = model(images)
+#         loss = criterion(outputs, labels)
+#
+#         total_loss += loss.item()
+#         _, predicted = torch.max(outputs, 1)
+#         total_correct += (predicted == labels).sum().item()
+#         total_images += labels.size(0)
+#
+#         # Optional: Log images, predictions, and true labels to wandb
+#         if total_images <= len(images):  # Log only the first batch
+#             wandb_images = []
+#             for i in range(min(len(images), 8)):  # Log up to 4 images per batch
+#                 wandb_images.append(wandb.Image(
+#                     images[i].cpu(),
+#                     caption=f"True: {classes[labels[i]]} | Pred: {classes[predicted[i]]}"
+#                 ))
+#             wandb.log({"Test Examples": wandb_images})
+#
+# avg_loss = total_loss / len(test_loader)
+# avg_accuracy = total_correct / total_images
+#
+# # Log the test loss and accuracy
+# logging.info(f"Test Loss: {avg_loss:.4f}, Test Accuracy: {avg_accuracy:.4f}")
+# wandb.log({"Test Loss": avg_loss, "Test Accuracy": avg_accuracy})
