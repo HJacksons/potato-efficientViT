@@ -100,16 +100,14 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
     outputs = model(inputs)
     _, preds = torch.max(outputs, 1)
 
-    for i in range(inputs.size(0)):
+    for i in range(min(inputs.size(0), 8)):  # Ensures i < 8
         img = inputs.data[i].cpu().numpy().transpose((1, 2, 0))
         img = img * np.array([0.229, 0.224, 0.225]) + np.array([0.485, 0.456, 0.406])
         img = np.clip(img, 0, 1)
 
-        # Initialize Grad-CAM and generate heatmap
-        grad_cam = GradCAM(model, model.model.features[-1])  # Assuming VGG model
-        heatmap = grad_cam.generate_heatmap(inputs[i].unsqueeze(0), preds[i].item())
+        grad_cam = GradCAM(model, model.features[-1])
+        heatmap = grad_cam.generate_heatmap(inputs[i].unsqueeze(0), preds[i].cpu().numpy())
 
-        # Apply heatmap on original image
         cam_img = apply_colormap_on_image(img, heatmap)
 
         axs[i, 0].imshow(img)
