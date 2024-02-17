@@ -112,23 +112,22 @@ class GradCAM:
         if isinstance(output, tuple):
             output = output[0]  # Handle models that return a tuple
 
-        # Zero gradients and perform backward pass from the specific class index
         self.model.zero_grad()
         class_score = output[:, class_idx].sum()
         class_score.backward(retain_graph=True)
 
-        # Gradients and feature maps are now populated
         if self.gradients is not None and self.feature_maps is not None:
             pooled_gradients = torch.mean(self.gradients, dim=[0, 2, 3], keepdim=True)
-            # Weight the feature maps by the pooled gradients
-            for i in range(pooled_gradients.size(1)):
-                self.feature_maps[0][:, i, :, :] *= pooled_gradients[:, i, :, :]
 
-            heatmap = torch.mean(self.feature_maps[0], dim=0)
+            # Apply the gradients onto the feature map
+            weighted_feature_maps = self.feature_maps[0] * pooled_gradients
+
+            # Generate the heatmap
+            heatmap = torch.mean(weighted_feature_maps, dim=0)
             heatmap = torch.clamp(heatmap, min=0)
             heatmap /= torch.max(heatmap)
 
-            return heatmap.cpu().numpy()
+            return heatmap.cpu().data.numpy()
         else:
             raise RuntimeError("Gradients or feature maps are not populated.")
 
