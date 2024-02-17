@@ -32,68 +32,89 @@ model.to(device)
 model.load_state_dict(torch.load(f"vgg_model_50.pth"))
 model.eval()
 
-# implement Grad-CAM and visualize the results
+class GradCAM:
+    """Simplified Grad-CAM implementation."""
+    def __init__(self, model, target_layer):
+        self.model = model
+        self.target_layer = target_layer
+        self.gradients = None
+        self.feature_maps = None
+        self.model.eval()
 
-# Get the image and label
-img, label = next(iter(test_loader))
-img, label = img.to(device), label.to(device)
+        # Hook for the gradients of the activations
+        self.hook_gradients()
 
-# Get the class index
-class_idx = label[0].item()
+    def hook_gradients(self):
+        def hook_function(module, grad_in, grad_out):
+            self.gradients = grad_out[0]
+        self.target_layer.register_backward_hook(hook_function)
 
-# Get the model's prediction
-pred = model(img)
-pred = pred.argmax(dim=1)
+    def get_feature_maps_hook(self, module, input, output):
+        self.feature_maps = output
 
-# Get the gradient of the output with respect to the parameters of the model
-pred[:, class_idx].backward()
+    def generate_heatmap(self, input_image, class_idx):
+        # Forward
+        output = self.model(input_image)
+        if isinstance(output, tuple):
+            output = output[0]
 
-# Pull the gradients out of the model
-gradients = model.get_activations_gradient()
+        # Zero grads
+        self.model.zero_grad()
+        one_hot_output = torch.FloatTensor(1, output.size()[-1]).zero_().to(device)
+        one_hot_output[0][class_idx] = 1
+        output.backward(gradient=one_hot_output)
 
-# Pool the gradients across the channels
-pooled_gradients = torch.mean(gradients, dim=[0, 2, 3])
+        # Generate heatmap
+        gradient = self.gradients.data.numpy()[0]
+        weight = np.mean(gradient, axis=(1, 2))
+        feature_map = self.feature_maps.data.numpy()[0]
 
-# Get the activations of the last convolutional layer
-activations = model.get_activations(img).detach()
+        cam = np.zeros(feature_map.shape[1:], dtype=np.float32)
+        for i, w in enumerate(weight):
+            cam += w * feature_map[i, :, :]
 
-# Weight the channels by corresponding gradients
-for i in range(512):
-    activations[:, i, :, :] *= pooled_gradients[i]
+        cam = np.maximum(cam, 0)
+        cam = cv2.resize(cam, (224, 224))
+        cam = cam - np.min(cam)
+        cam = cam / np.max(cam)
+        return cam
 
-# Average the channels of the activations
-heatmap = torch.mean(activations, dim=1).squeeze()
+def apply_colormap_on_image(org_img, heatmap):
+    heatmap = cv2.applyColorMap(np.uint8(255 * heatmap), cv2.COLORMAP_JET)
+    heatmap = np.float32(heatmap) / 255
+    cam = heatmap + np.float32(org_img)
+    cam = cam / np.max(cam)
+    return np.uint8(255 * cam)
 
-# ReLU on top of the heatmap
-heatmap = np.maximum(heatmap.cpu(), 0)
+# Visualization of Grad-CAM
+fig, axs = plt.subplots(8, 2, figsize=(10, 40))
 
-# Normalize the heatmap
-heatmap /= torch.max(heatmap)
+for batch_idx, (inputs, labels) in enumerate(test_loader):
+    inputs = inputs.to(device)
+    labels = labels.to(device)
 
-# Draw the heatmap
-plt.matshow(heatmap.squeeze())
+    # Get the model output
+    outputs = model(inputs)
+    _, preds = torch.max(outputs, 1)
+
+    for i in range(inputs.size(0)):
+        img = inputs.data[i].cpu().numpy().transpose((1, 2, 0))
+        img = img * np.array([0.229, 0.224, 0.225]) + np.array([0.485, 0.456, 0.406])
+        img = np.clip(img, 0, 1)
+
+        # Initialize Grad-CAM and generate heatmap
+        grad_cam = GradCAM(model, model.features[-1])  # Assuming VGG model
+        heatmap = grad_cam.generate_heatmap(inputs[i].unsqueeze(0), preds[i].cpu().numpy())
+
+        # Apply heatmap on original image
+        cam_img = apply_colormap_on_image(img, heatmap)
+
+        axs[i, 0].imshow(img)
+        axs[i, 0].axis('off')
+        axs[i, 1].imshow(cam_img)
+        axs[i, 1].axis('off')
+
+    break  # Break after the first batch
+
+plt.tight_layout()
 plt.show()
-
-# Load the original image
-original_image = img[0].cpu().numpy().transpose((1, 2, 0))
-original_image = np.clip(original_image, 0, 1)
-
-# Resize the heatmap to be the same size as the original image
-heatmap = cv2.resize(heatmap.numpy(), (original_image.shape[1], original_image.shape[0]))
-
-# Convert the heatmap to RGB
-heatmap = np.uint8(255 * heatmap)
-
-# Apply the heatmap to the original image
-heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
-
-# Superimpose the heatmap on the original image
-superimposed_img = heatmap * 0.4 + original_image * 255
-superimposed_img /= np.max(superimposed_img)
-
-# Display the superimposed image
-plt.imshow(superimposed_img)
-plt.show()
-# Save the superimposed image
-cv2.imwrite("superimposed_img.jpg", superimposed_img)
-wandb.log({"Grad-CAM": [wandb.Image("superimposed_img.jpg", caption="Grad-CAM")]})
