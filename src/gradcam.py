@@ -92,6 +92,7 @@ def apply_colormap_on_image(org_img, heatmap):
 
 # Visualization of Grad-CAM
 fig, axs = plt.subplots(8, 2, figsize=(10, 40))
+classes = ['Bacteria', 'Fungi', 'Healthy', 'Nematode', 'Pest', 'Phytopthora', 'Virus']  # Update this with your actual class names
 
 for batch_idx, (inputs, labels) in enumerate(test_loader):
     inputs = inputs.to(device)
@@ -100,10 +101,11 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
     # Get the model output
     outputs = model(inputs)
     _, preds = torch.max(outputs, 1)
+
     original_images = []
     cam_images = []
 
-    for i in range(min(inputs.size(0), 8)):  # Adjust as needed
+    for i in range(min(inputs.size(0), 4)):  # Ensures i < 4 for visualization purposes
         img = inputs.data[i].cpu().numpy().transpose((1, 2, 0))
         img = img * np.array([0.229, 0.224, 0.225]) + np.array([0.485, 0.456, 0.406])
         img = np.clip(img, 0, 1)
@@ -113,16 +115,19 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
 
         cam_img = apply_colormap_on_image(img, heatmap)
 
-        # Directly add NumPy images to lists
-        original_images.append(wandb.Image(img, caption=f"Original Image {i + 1}"))
-        cam_images.append(wandb.Image(cam_img, caption=f"Grad-CAM Overlay {i + 1}"))
+        # Construct caption with true and predicted classes
+        true_class = classes[labels[i].item()]  # Assuming 'classes' is a list of class names
+        pred_class = classes[preds[i].item()]
+        caption = f"True: {true_class} | Pred: {pred_class}"
+
+        # Add images with captions to lists
+        original_images.append(wandb.Image(img, caption=caption))
+        cam_images.append(wandb.Image(cam_img, caption=caption))
 
     # Log all images as a group
     wandb.log({"Original Images": original_images, "Grad-CAM Overlays": cam_images})
 
     break  # Break after the first batch
-
-
 
 plt.tight_layout()
 plt.show()
