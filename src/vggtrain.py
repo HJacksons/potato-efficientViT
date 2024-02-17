@@ -5,6 +5,10 @@ from dataset import Dataset
 import logging
 import os
 import wandb
+import numpy as np
+import torchvision
+import matplotlib.pyplot as plt
+
 
 
 # Set up logging
@@ -97,13 +101,28 @@ model.load_state_dict(torch.load(f"vgg_model_{epochs}.pth"))
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 criterion = nn.CrossEntropyLoss()  # Assuming you're using CrossEntropyLoss for classification
 
-model.eval()  # Set the model to evaluation mode
 
+
+# Function to display an image
+def imshow(img):
+    img = img.cpu().numpy().transpose((1, 2, 0))  # Convert from tensor and reorder dimensions
+    mean = np.array([0.485, 0.456, 0.406])  # These values should match your normalization
+    std = np.array([0.229, 0.224, 0.225])  # These values should match your normalization
+    img = std * img + mean  # Unnormalize
+    img = np.clip(img, 0, 1)  # Clip to ensure [0,1] range
+    plt.imshow(img)
+    plt.show()
+
+# Classes
+classes = ['Bacteria', 'Fungi', 'Healthy', 'Nematode', 'Pest', 'Phytopthora', 'Virus']  # Update this with your actual class names
+
+# Evaluation loop with visualization
+model.eval()
 total_loss = 0.0
 total_correct = 0
 total_images = 0
 
-with torch.no_grad():  # Disable gradient computation for evaluation
+with torch.no_grad():
     for images, labels in test_loader:
         images, labels = images.to(device), labels.to(device)
 
@@ -114,6 +133,14 @@ with torch.no_grad():  # Disable gradient computation for evaluation
         _, predicted = torch.max(outputs, 1)
         total_correct += (predicted == labels).sum().item()
         total_images += labels.size(0)
+
+        # Visualization code for the first batch in the test_loader
+        if total_images <= len(images):
+            imshow(torchvision.utils.make_grid(images[:4]))  # Show 4 images
+            actual = [classes[labels[j]] for j in range(4)]
+            predicted_labels = [classes[predicted[j]] for j in range(4)]
+            print('Actual: ', ' '.join(actual))
+            print('Predicted: ', ' '.join(predicted_labels))
 
 avg_loss = total_loss / len(test_loader)
 avg_accuracy = total_correct / total_images
