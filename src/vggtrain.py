@@ -125,7 +125,6 @@ total_images = 0
 with torch.no_grad():
     for images, labels in test_loader:
         images, labels = images.to(device), labels.to(device)
-
         outputs = model(images)
         loss = criterion(outputs, labels)
 
@@ -134,13 +133,15 @@ with torch.no_grad():
         total_correct += (predicted == labels).sum().item()
         total_images += labels.size(0)
 
-        # Visualization code for the first batch in the test_loader
-        if total_images <= len(images):
-            imshow(torchvision.utils.make_grid(images[:4]))  # Show 4 images
-            actual = [classes[labels[j]] for j in range(4)]
-            predicted_labels = [classes[predicted[j]] for j in range(4)]
-            print('Actual: ', ' '.join(actual))
-            print('Predicted: ', ' '.join(predicted_labels))
+        # Optional: Log images, predictions, and true labels to wandb
+        if total_images <= len(images):  # Log only the first batch
+            wandb_images = []
+            for i in range(min(len(images), 4)):  # Log up to 4 images per batch
+                wandb_images.append(wandb.Image(
+                    images[i].cpu(),
+                    caption=f"True: {classes[labels[i]]} | Pred: {classes[predicted[i]]}"
+                ))
+            wandb.log({"Test Examples": wandb_images})
 
 avg_loss = total_loss / len(test_loader)
 avg_accuracy = total_correct / total_images
@@ -148,4 +149,3 @@ avg_accuracy = total_correct / total_images
 # Log the test loss and accuracy
 logging.info(f"Test Loss: {avg_loss:.4f}, Test Accuracy: {avg_accuracy:.4f}")
 wandb.log({"Test Loss": avg_loss, "Test Accuracy": avg_accuracy})
-
