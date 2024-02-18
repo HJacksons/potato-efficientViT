@@ -115,11 +115,16 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
 
         cam_img = apply_colormap_on_image(img, heatmap)
 
+        # Probabilities
+        probabilities = torch.softmax(outputs, dim=1)
+        pred_prob = probabilities[i][preds[i]].item()
+        pred_percentage = pred_prob * 100
+
         # Construct caption with true and predicted classes
         true_class = classes[labels[i].item()]  # Assuming 'classes' is a list of class names
         pred_class = classes[preds[i].item()]
-        pred_score = outputs[i][preds[i]]    #
-        caption = f"True: {true_class} | Pred: {pred_class} | PredScore: {pred_score :.4f}"
+
+        caption = f"True: {true_class} | Pred: {pred_class} | Confidence: {pred_percentage:.2f}%"
 
         # Add images with captions to lists
         original_images.append(wandb.Image(img, caption=caption))
