@@ -67,8 +67,8 @@ class GradCAM:
         one_hot_output[0][class_idx] = 1
         output.backward(gradient=one_hot_output)
 
-        # Make sure to move the gradients to CPU before converting to NumPy
-        gradient = self.gradients.data.cpu().numpy()[0]  # Corrected line
+        # Move the gradients to CPU before converting to NumPy
+        gradient = self.gradients.data.cpu().numpy()[0]
         weight = np.mean(gradient, axis=(1, 2))
         feature_map = self.feature_maps.data.cpu().numpy()[0]  # Also ensure feature maps are on CPU
 
@@ -121,7 +121,7 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
         pred_percentage = pred_prob * 100
 
         # Construct caption with true and predicted classes
-        true_class = classes[labels[i].item()]  # Assuming 'classes' is a list of class names
+        true_class = classes[labels[i].item()]
         pred_class = classes[preds[i].item()]
 
         caption = f"True: {true_class} | Pred: {pred_class} | Confidence: {pred_percentage:.2f}%"
