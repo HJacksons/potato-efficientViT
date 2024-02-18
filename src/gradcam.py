@@ -118,7 +118,7 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
         # Construct caption with true and predicted classes
         true_class = classes[labels[i].item()]  # Assuming 'classes' is a list of class names
         pred_class = classes[preds[i].item()]
-        pred_score = outputs[i][preds[i]].item()    # Assuming outputs is a tensor of logits
+        pred_score = outputs[i][preds[i]]    #
         caption = f"True: {true_class} | Pred: {pred_class} | PredScore: {pred_score :.4f}"
 
         # Add images with captions to lists
