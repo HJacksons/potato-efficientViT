@@ -118,7 +118,8 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
         # Construct caption with true and predicted classes
         true_class = classes[labels[i].item()]  # Assuming 'classes' is a list of class names
         pred_class = classes[preds[i].item()]
-        caption = f"True: {true_class} | Pred: {pred_class}"
+        pred_score = outputs[i][preds[i]].item()    # Assuming outputs is a tensor of logits
+        caption = f"True: {true_class} | Pred: {pred_class} | PredScore: {100 * pred_score :.4f}"
 
         # Add images with captions to lists
         original_images.append(wandb.Image(img, caption=caption))
