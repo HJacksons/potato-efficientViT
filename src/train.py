@@ -15,6 +15,7 @@ class Trainer:
         self.vali_loader = vali_loader
         self.criterion = criterion
         self.optimizer = optimizers
+        self.best_acc = {model_name: 0.0 for model_name in self.models.keys()}
 
     # Train the model get loss and accuracy
     def train(self, num_epochs):
@@ -65,6 +66,14 @@ class Trainer:
                 f"Model {model_name}, Validation Loss: {avg_loss}, Validation Accuracy: {avg_acc}"
             )
             wandb.log({"Validation Loss": avg_loss, "Validation Accuracy": avg_acc})
+
+            # Save the model if it has better accuracy than previously seen
+            if avg_acc > self.best_acc[model_name]:
+                self.best_acc[model_name] = avg_acc
+                torch.save(model.state_dict(), f"{model_name}_best_model.pth")
+                logging.info(
+                    f"Saved new best model for {model_name} with accuracy: {avg_acc}"
+                )
 
 
 if __name__ == "__main__":
