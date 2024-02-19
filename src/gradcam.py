@@ -1,4 +1,4 @@
-from vgg import VGG
+from models import VGG
 import torch
 from torch import nn
 from dataset import Dataset
@@ -32,6 +32,7 @@ model.to(device)
 model.load_state_dict(torch.load(f"vgg_model_50.pth"))
 model.eval()
 
+
 class GradCAM:
     def __init__(self, model, target_layer):
         self.model = model
@@ -46,8 +47,10 @@ class GradCAM:
     def hook_layers(self):
         def forward_hook(module, input, output):
             self.feature_maps = output
+
         def backward_hook(module, grad_in, grad_out):
             self.gradients = grad_out[0]
+
         # Register hooks
         self.target_layer.register_forward_hook(forward_hook)
         self.target_layer.register_backward_hook(backward_hook)
@@ -70,7 +73,9 @@ class GradCAM:
         # Move the gradients to CPU before converting to NumPy
         gradient = self.gradients.data.cpu().numpy()[0]
         weight = np.mean(gradient, axis=(1, 2))
-        feature_map = self.feature_maps.data.cpu().numpy()[0]  # Also ensure feature maps are on CPU
+        feature_map = self.feature_maps.data.cpu().numpy()[
+            0
+        ]  # Also ensure feature maps are on CPU
 
         cam = np.zeros(feature_map.shape[1:], dtype=np.float32)
         for i, w in enumerate(weight):
@@ -90,9 +95,18 @@ def apply_colormap_on_image(org_img, heatmap):
     cam = cam / np.max(cam)
     return np.uint8(255 * cam)
 
+
 # Visualization of Grad-CAM
 fig, axs = plt.subplots(8, 2, figsize=(10, 40))
-classes = ['Bacteria', 'Fungi', 'Healthy', 'Nematode', 'Pest', 'Phytopthora', 'Virus']  # Update this with your actual class names
+classes = [
+    "Bacteria",
+    "Fungi",
+    "Healthy",
+    "Nematode",
+    "Pest",
+    "Phytopthora",
+    "Virus",
+]  # Update this with your actual class names
 
 for batch_idx, (inputs, labels) in enumerate(test_loader):
     inputs = inputs.to(device)
@@ -110,8 +124,12 @@ for batch_idx, (inputs, labels) in enumerate(test_loader):
         img = img * np.array([0.229, 0.224, 0.225]) + np.array([0.485, 0.456, 0.406])
         img = np.clip(img, 0, 1)
 
-        grad_cam = GradCAM(model, model.model.features[-1])  # Ensure this matches your model's structure
-        heatmap = grad_cam.generate_heatmap(inputs[i].unsqueeze(0), preds[i].item())  # Use .item() for class index
+        grad_cam = GradCAM(
+            model, model.model.features[-1]
+        )  # Ensure this matches your model's structure
+        heatmap = grad_cam.generate_heatmap(
+            inputs[i].unsqueeze(0), preds[i].item()
+        )  # Use .item() for class index
 
         cam_img = apply_colormap_on_image(img, heatmap)
 

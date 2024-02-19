@@ -15,6 +15,7 @@ wandb = "^0.16.3"
 opencv-python = "^4.9.0.80"
 scikit-learn = "^1.4.1.post1"
 torchsummary = "^1.5.1"
+black = "^24.2.0"
 
 
 [build-system]
