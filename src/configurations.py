@@ -4,15 +4,14 @@ import torch.nn as nn
 from models import VGG19
 import os
 import wandb
-from dataset import Dataset
+
+# from dataset import Dataset
 import logging
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S"
 )
 
-wandb.login(key=os.getenv("WANDB_KEY"))
-wandb.init(project=os.getenv("WANDB_PROJECT"), entity=os.getenv("WANDB_ENTITY"))
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -39,10 +38,12 @@ VALI_SIZE = 0.5
 RANDOM_STATE = 42  # this is used to ensure reproducibility
 BATCH_SIZE = 32
 CLASSES = os.listdir(DATA)
+AUGMENT = False
 
 
-DATASET = Dataset()
-train_loader, vali_loader, test_loader = DATASET.prepare_dataset()
-TRAIN_LOADER = train_loader
-VALI_LOADER = vali_loader
-TEST_LOADER = test_loader
+wandb.login(key=os.getenv("WANDB_KEY"))
+wandb.init(
+    project=os.getenv("WANDB_PROJECT"),
+    entity=os.getenv("WANDB_ENTITY"),
+    name=f"Train_Aug_{AUGMENT}_{EPOCHS}epochs_batch_size_{BATCH_SIZE}",
+)

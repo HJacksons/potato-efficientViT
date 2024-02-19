@@ -18,12 +18,14 @@ class Dataset:
         test_size=TEST_SIZE,
         vali_size=VALI_SIZE,
         random_state=RANDOM_STATE,
+        augment=AUGMENT,
     ):
         self.dataset_name = dataset
         self.test_size = test_size
         self.vali_size = vali_size
         self.random_state = random_state
-        self.data_transforms = get_transforms_for_model()
+        self.data_transforms = get_transforms_for_model(augment)
+        print(augment)
 
     def prepare_dataset(self):
         # Load dataset

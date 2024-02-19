@@ -2,6 +2,7 @@ from configurations import *
 import torch
 import logging
 import wandb
+from dataset import Dataset
 
 
 class Trainer:
@@ -67,6 +68,8 @@ class Trainer:
 
 
 if __name__ == "__main__":
-    trainer = Trainer(MODELS, DEVICE, TRAIN_LOADER, VALI_LOADER, CRITERION, OPTIMIZERS)
+    dataset = Dataset()
+    train_loader, vali_loader, _ = dataset.prepare_dataset()
+    trainer = Trainer(MODELS, DEVICE, train_loader, vali_loader, CRITERION, OPTIMIZERS)
     trainer.train(num_epochs=EPOCHS)
     trainer.validate()
