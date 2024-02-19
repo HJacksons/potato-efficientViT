@@ -44,6 +44,7 @@ class Trainer:
                 )
                 wandb.log({"Train Loss": avg_loss, "Train Accuracy": avg_acc})
 
+
     # Validate the model get loss and accuracy
     def validate(self):
         for model_name, model in self.models.items():
@@ -67,6 +68,7 @@ class Trainer:
             )
             wandb.log({"Validation Loss": avg_loss, "Validation Accuracy": avg_acc})
 
+
             # Save the model if it has better accuracy than previously seen
             if avg_acc > self.best_acc[model_name]:
                 self.best_acc[model_name] = avg_acc
@@ -82,3 +84,5 @@ if __name__ == "__main__":
     trainer = Trainer(MODELS, DEVICE, train_loader, vali_loader, CRITERION, OPTIMIZERS)
     trainer.train(num_epochs=EPOCHS)
     trainer.validate()
+
+    wandb.finish()

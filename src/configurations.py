@@ -41,7 +41,7 @@ CLASSES = os.listdir(DATA)
 AUGMENT = False
 
 
-wandb.login(key=os.getenv("WANDB_KEY"))
+#wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
