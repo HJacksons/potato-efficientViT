@@ -27,20 +27,20 @@ MODELS = {
 }
 
 OPTIMIZERS = {
-    "VGG19": optim.Adam(MODELS["VGG19"].parameters(), lr=0.001),
-    "ResNet50": optim.Adam(MODELS["ResNet50"].parameters(), lr=0.001),
-    "MobileV2": optim.Adam(MODELS["MobileV2"].parameters(), lr=0.001),
-    # "model4": optim.Adam(MODELS["modelD"].parameters(), lr=0.001)
+    "VGG19": optim.Adam(MODELS["VGG19"].parameters(), lr=0.0001),
+    "ResNet50": optim.Adam(MODELS["ResNet50"].parameters(), lr=0.0001),
+    "MobileV2": optim.Adam(MODELS["MobileV2"].parameters(), lr=0.0001),
+    # "model4": optim.Adam(MODELS["modelD"].parameters(), lr=0.0001)
 }
 
 CRITERION = nn.CrossEntropyLoss()
-EPOCHS = 10
+EPOCHS = 50
 
 DATA = "../data/potatodata"
 TEST_SIZE = 0.3
 VALI_SIZE = 0.5
 RANDOM_STATE = 42  # this is used to ensure reproducibility
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 CLASSES = os.listdir(DATA)
 AUGMENT = False
 
