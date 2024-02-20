@@ -78,9 +78,8 @@ class Trainer:
                 )
                 wandb.log(
                     {
-                        "Model": model_name,
-                        "Validation Loss": avg_loss,
-                        "Validation Accuracy": avg_acc,
+                        f"{model_name} Validation Loss": avg_loss,
+                        f"{model_name} Validation Accuracy": avg_acc,
                     }
                 )
 
@@ -89,7 +88,7 @@ class Trainer:
                     self.best_acc[model_name] = avg_acc
                     torch.save(model.state_dict(), f"{model_name}_best_model.pth")
                     logging.info(
-                        f"Saved new best model for {model_name} with accuracy: {avg_acc}"
+                        f"Saved new best model for {model_name} with accuracy: {avg_acc:.4f}"
                     )
 
 
