@@ -50,7 +50,8 @@ class Trainer:
                     {
                         f"{model_name} Train Loss": avg_loss,
                         f"{model_name} Train Accuracy": avg_acc,
-                    }
+                    },
+                    step=epoch,
                 )
 
             # Validate the model get loss and accuracy
@@ -80,7 +81,8 @@ class Trainer:
                     {
                         f"{model_name} Validation Loss": avg_loss,
                         f"{model_name} Validation Accuracy": avg_acc,
-                    }
+                    },
+                    step=epoch,
                 )
 
                 # Save the model if it has better accuracy than previously seen
