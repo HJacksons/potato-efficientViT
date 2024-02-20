@@ -49,5 +49,5 @@ AUGMENT = True
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"{time}_Train_Aug_{AUGMENT}_{EPOCHS}epochs_batch_size_{BATCH_SIZE}",
+    name=f"{time}_TrainV_Aug_{AUGMENT}_{EPOCHS}epochs_batch_size_{BATCH_SIZE}",
 )
