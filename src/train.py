@@ -51,7 +51,7 @@ class Trainer:
                         f"{model_name} Train Loss": avg_loss,
                         f"{model_name} Train Accuracy": avg_acc,
                     },
-                    step=epoch,
+                    step=epoch + 1,
                 )
 
             # Validate the model get loss and accuracy
@@ -82,13 +82,15 @@ class Trainer:
                         f"{model_name} Validation Loss": avg_loss,
                         f"{model_name} Validation Accuracy": avg_acc,
                     },
-                    step=epoch,
+                    step=epoch + 1,
                 )
 
                 # Save the model if it has better accuracy than previously seen
                 if avg_acc > self.best_acc[model_name]:
                     self.best_acc[model_name] = avg_acc
-                    torch.save(model.state_dict(), f"{model_name}_best_model.pth")
+                    torch.save(
+                        model.state_dict(), f"{model_name}_best_model_Aug_{AUGMENT}.pth"
+                    )
                     logging.info(
                         f"Saved new best model for {model_name} with accuracy: {avg_acc:.4f}"
                     )
