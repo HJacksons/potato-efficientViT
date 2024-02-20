@@ -37,7 +37,7 @@ CRITERION = nn.CrossEntropyLoss()
 EPOCHS = 50
 
 DATA = "../data/potatodata"
-TEST_SIZE = 0.3
+TEST_SIZE = 0.2
 VALI_SIZE = 0.5
 RANDOM_STATE = 42  # this is used to ensure reproducibility
 BATCH_SIZE = 64
