@@ -42,7 +42,7 @@ VALI_SIZE = 0.5
 RANDOM_STATE = 42  # this is used to ensure reproducibility
 BATCH_SIZE = 64
 CLASSES = os.listdir(DATA)
-AUGMENT = False
+AUGMENT = True
 
 
 # wandb.login(key=os.getenv("WANDB_KEY"))
