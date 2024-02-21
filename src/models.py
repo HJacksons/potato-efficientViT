@@ -71,12 +71,3 @@ class ViT(nn.Module):
             return logits, loss.item()
         else:
             return logits, None
-
-
-from datetime import datetime
-
-now = datetime.now()
-print(now.time())  # Print time without colon and remove the microseconds
-now = datetime.now()
-time = now.strftime("%H:%M:%S")
-print(time)  # Print time with colon and remove the microseconds
