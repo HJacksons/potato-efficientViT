@@ -35,12 +35,21 @@ class Trainer:
                     self.optimizer[model_name].zero_grad()
 
                     outputs = model(images)
-                    loss = self.criterion(outputs, labels)
+                    #Caters for VIT model
+                    if isinstance(outputs, tuple):
+                        logits, loss = outputs
+                        if loss is None:
+                            loss = self.criterion(logits, labels)
+                    else:
+                        logits = outputs
+                        loss = self.criterion(logits, labels)
+                    # End catering for VIT model
+                    #loss = self.criterion(outputs, labels)
                     loss.backward()
                     self.optimizer[model_name].step()
 
                     running_loss += loss.item()
-                    _, predicted = torch.max(outputs, 1)
+                    _, predicted = torch.max(logits, 1)
                     running_acc += (predicted == labels).sum().item()
                     total_samples += labels.size(0)
 
@@ -53,8 +62,7 @@ class Trainer:
                     {
                         f"{model_name} Train Loss": avg_loss,
                         f"{model_name} Train Accuracy": avg_acc,
-                    },
-                    step=epoch + 1,
+                    }
                 )
             # Log the best training accuracy for each model
             for model_name, acc in self.best_acc.items():
@@ -71,10 +79,18 @@ class Trainer:
                         images, labels = images.to(self.device), labels.to(self.device)
 
                         outputs = model(images)
-                        loss = self.criterion(outputs, labels)
-
+                        #Caters for VIT model
+                        if isinstance(outputs, tuple):
+                            logits, loss = outputs
+                            if loss is None:
+                                loss = self.criterion(logits, labels)
+                        else:
+                            logits = outputs
+                            loss = self.criterion(logits, labels)
+                        # End catering for VIT model
+                        #loss = self.criterion(outputs, labels)
                         running_loss += loss.item()
-                        _, predicted = torch.max(outputs, 1)
+                        _, predicted = torch.max(logits, 1)
                         running_acc += (predicted == labels).sum().item()
                         total_samples += labels.size(0)
 
@@ -87,8 +103,7 @@ class Trainer:
                     {
                         f"{model_name} Validation Loss": avg_loss,
                         f"{model_name} Validation Accuracy": avg_acc,
-                    },
-                    step=epoch + 1,
+                    }
                 )
 
                 # Save the model if it has better accuracy than previously seen
