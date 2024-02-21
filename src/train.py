@@ -35,7 +35,7 @@ class Trainer:
                     self.optimizer[model_name].zero_grad()
 
                     outputs = model(images)
-                    #Caters for VIT model
+                    # Caters for VIT model
                     if isinstance(outputs, tuple):
                         logits, loss = outputs
                         if loss is None:
@@ -44,7 +44,7 @@ class Trainer:
                         logits = outputs
                         loss = self.criterion(logits, labels)
                     # End catering for VIT model
-                    #loss = self.criterion(outputs, labels)
+                    # loss = self.criterion(outputs, labels)
                     loss.backward()
                     self.optimizer[model_name].step()
 
@@ -67,7 +67,7 @@ class Trainer:
             # Log the best training accuracy for each model
             for model_name, acc in self.best_acc.items():
                 logging.info(f"{model_name} Best Training Accuracy: {acc:.4f}")
-                wandb.log({f"{model_name} Best Training Accuracy": acc}, step=epoch + 1)
+                wandb.log({f"{model_name} Best Training Accuracy": acc}, step=epoch)
 
             # Validate the model get loss and accuracy
             for model_name, model in self.models.items():
@@ -79,7 +79,7 @@ class Trainer:
                         images, labels = images.to(self.device), labels.to(self.device)
 
                         outputs = model(images)
-                        #Caters for VIT model
+                        # Caters for VIT model
                         if isinstance(outputs, tuple):
                             logits, loss = outputs
                             if loss is None:
@@ -88,7 +88,7 @@ class Trainer:
                             logits = outputs
                             loss = self.criterion(logits, labels)
                         # End catering for VIT model
-                        #loss = self.criterion(outputs, labels)
+                        # loss = self.criterion(outputs, labels)
                         running_loss += loss.item()
                         _, predicted = torch.max(logits, 1)
                         running_acc += (predicted == labels).sum().item()
@@ -120,9 +120,7 @@ class Trainer:
             # Log the best validation accuracy for each model
             for model_name, acc in self.best_acc.items():
                 logging.info(f"{model_name} Best Validation Accuracy: {acc:.4f}")
-                wandb.log(
-                    {f"{model_name} Best Validation Accuracy": acc}, step=epoch + 1
-                )
+                wandb.log({f"{model_name} Best Validation Accuracy": acc}, step=epoch)
 
 
 if __name__ == "__main__":
