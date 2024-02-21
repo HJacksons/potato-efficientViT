@@ -1,7 +1,7 @@
 import torch
 import torch.optim as optim
 import torch.nn as nn
-from models import VGG19, ResNet50, MobileNetV2
+from models import VGG19, ResNet50, MobileNetV2, ViT
 import os
 import wandb
 from time import gmtime, strftime
@@ -23,14 +23,14 @@ MODELS = {
     "VGG19": VGG19().to(DEVICE),
     "ResNet50": ResNet50().to(DEVICE),
     "MobileV2": MobileNetV2().to(DEVICE),
-    # "model4": ModelD().to(DEVICE)
+    "ViT": ViT().to(DEVICE),
 }
 
 OPTIMIZERS = {
     "VGG19": optim.Adam(MODELS["VGG19"].parameters(), lr=0.0001),
     "ResNet50": optim.Adam(MODELS["ResNet50"].parameters(), lr=0.0001),
     "MobileV2": optim.Adam(MODELS["MobileV2"].parameters(), lr=0.0001),
-    # "model4": optim.Adam(MODELS["modelD"].parameters(), lr=0.0001)
+    "ViT": optim.Adam(MODELS["ViT"].parameters(), lr=0.0001),
 }
 
 CRITERION = nn.CrossEntropyLoss()

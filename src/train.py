@@ -3,8 +3,11 @@ import torch
 import logging
 import wandb
 from dataset import Dataset
+from datetime import datetime
 
 # import pdb; pdb.set_trace()
+now = datetime.now()
+time = now.strftime("%H%M%S")
 
 
 class Trainer:
@@ -53,9 +56,12 @@ class Trainer:
                     },
                     step=epoch + 1,
                 )
+            # Log the best training accuracy for each model
+            for model_name, acc in self.best_acc.items():
+                logging.info(f"{model_name} Best Training Accuracy: {acc:.4f}")
+                wandb.log({f"{model_name} Best Training Accuracy": acc}, step=epoch + 1)
 
             # Validate the model get loss and accuracy
-
             for model_name, model in self.models.items():
                 model.eval()
                 running_loss, running_acc = 0.0, 0.0
@@ -89,11 +95,19 @@ class Trainer:
                 if avg_acc > self.best_acc[model_name]:
                     self.best_acc[model_name] = avg_acc
                     torch.save(
-                        model.state_dict(), f"{model_name}_best_model_Aug_{AUGMENT}.pth"
+                        model.state_dict(),
+                        f"{model_name}_best_model_Aug_{AUGMENT}_{time}.pth",
                     )
                     logging.info(
                         f"Saved new best model for {model_name} with accuracy: {avg_acc:.4f}"
                     )
+
+            # Log the best validation accuracy for each model
+            for model_name, acc in self.best_acc.items():
+                logging.info(f"{model_name} Best Validation Accuracy: {acc:.4f}")
+                wandb.log(
+                    {f"{model_name} Best Validation Accuracy": acc}, step=epoch + 1
+                )
 
 
 if __name__ == "__main__":
