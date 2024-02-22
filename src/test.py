@@ -93,10 +93,19 @@ class Tester:
             # Confusion matrix
             cm = confusion_matrix(all_labels, all_predictions)
             plt.figure(figsize=(10, 10))
-            sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+            sns.heatmap(
+                cm,
+                annot=True,
+                fmt="d",
+                cmap="Blues",
+                xticklabels=CLASSES,
+                yticklabels=CLASSES,
+            )
             plt.title(f"{model_name} Confusion Matrix")
             plt.xlabel("Predicted Labels")
             plt.ylabel("True Labels")
+            plt.xticks(rotation=45)
+            plt.yticks(rotation=45)
             buf = io.BytesIO()
             plt.savefig(buf, format="png")
             buf.seek(0)
