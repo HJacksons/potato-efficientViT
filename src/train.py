@@ -111,7 +111,7 @@ class Trainer:
                     self.best_acc[model_name] = avg_acc
                     torch.save(
                         model.state_dict(),
-                        f"{model_name}_best_model_Aug_{AUGMENT}_{time}.pth",
+                        f"{model_name}_best_plantds_Aug_{AUGMENT}_{time}.pth",
                     )
                     logging.info(
                         f"Saved new best model for {model_name} with accuracy: {avg_acc:.4f}"
