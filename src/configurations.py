@@ -53,7 +53,7 @@ CLASSES = sorted(os.listdir(DATA))
 # for i, cls in enumerate(CLASSES):
 #     print(f"{i}: {cls}")
 
-AUGMENT = False
+AUGMENT = True
 
 
 if AUGMENT:
