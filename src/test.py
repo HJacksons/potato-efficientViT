@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from PIL import Image
 import io
 from configurations import *
 from dataset import Dataset
@@ -99,7 +100,8 @@ class Tester:
             buf = io.BytesIO()
             plt.savefig(buf, format="png")
             buf.seek(0)
-            wandb.log({f"{model_name} Confusion Matrix": wandb.Image(buf)})
+            image = Image.open(buf)
+            wandb.log({f"{model_name} Confusion Matrix": wandb.Image(image)})
             plt.close()
 
 
