@@ -19,12 +19,19 @@ logging.basicConfig(
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-MODELS = {
-    "VGG19": VGG19().to(DEVICE),
-    "ResNet50": ResNet50().to(DEVICE),
-    "MobileV2": MobileNetV2().to(DEVICE),
-    "ViT": ViT().to(DEVICE),
+# MODELS = {
+#     "VGG19": VGG19().to(DEVICE),
+#     "ResNet50": ResNet50().to(DEVICE),
+#     "MobileV2": MobileNetV2().to(DEVICE),
+#     "ViT": ViT().to(DEVICE),
+# }
+MODELS = {  # Testing
+    "VGG19": VGG19,
+    "ResNet50": ResNet50,
+    "MobileV2": MobileNetV2,
+    "ViT": ViT,
 }
+
 
 OPTIMIZERS = {
     "VGG19": optim.Adam(MODELS["VGG19"].parameters(), lr=0.0001),
