@@ -4,6 +4,7 @@ from torchvision.models.resnet import ResNet50_Weights
 from torchvision.models.mobilenet import MobileNet_V2_Weights
 from transformers import ViTModel, ViTForImageClassification
 from torchvision import models
+from utils import *
 from torchsummary import summary
 
 
@@ -15,7 +16,7 @@ class VGG19(nn.Module):
         self.model = models.vgg19(weights=VGG19_Weights.DEFAULT)
         for param in self.model.parameters():
             param.requires_grad = True
-        self.model.classifier[6] = nn.Linear(4096, 7)
+        self.model.classifier[6] = nn.Linear(4096, FEATURES)
 
     def forward(self, x):
         return self.model(x)
@@ -29,7 +30,7 @@ class ResNet50(nn.Module):
         self.model = models.resnet50(weights=ResNet50_Weights.DEFAULT)
         for param in self.model.parameters():
             param.requires_grad = True
-        self.model.fc = nn.Linear(2048, 7)
+        self.model.fc = nn.Linear(2048, FEATURES)
 
     def forward(self, x):
         return self.model(x)
@@ -43,7 +44,7 @@ class MobileNetV2(nn.Module):
         self.model = models.mobilenet_v2(weights=MobileNet_V2_Weights.DEFAULT)
         for param in self.model.parameters():
             param.requires_grad = True
-        self.model.classifier[1] = nn.Linear(1280, 7)
+        self.model.classifier[1] = nn.Linear(1280, FEATURES)
 
     def forward(self, x):
         return self.model(x)
@@ -51,7 +52,7 @@ class MobileNetV2(nn.Module):
 
 # ViT model
 class ViT(nn.Module):
-    def __init__(self, num_labels=7):
+    def __init__(self, num_labels=FEATURES):
         super(ViT, self).__init__()
         self.vit = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
         self.dropout = nn.Dropout(0.1)

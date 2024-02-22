@@ -1,4 +1,5 @@
 from torchvision import transforms
+import os
 
 
 @staticmethod
@@ -36,3 +37,6 @@ def get_transforms_for_model(augment):
 
 
 # Augment True, False
+DATA = "../data/plantVillage"
+CLASSES = sorted(os.listdir(DATA))
+FEATURES = len(CLASSES)

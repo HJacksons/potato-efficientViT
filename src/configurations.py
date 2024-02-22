@@ -18,44 +18,43 @@ logging.basicConfig(
 
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-# MODELS = { # training
-#     "VGG19": VGG19().to(DEVICE),
-#     "ResNet50": ResNet50().to(DEVICE),
-#     "MobileV2": MobileNetV2().to(DEVICE),
-#     "ViT": ViT().to(DEVICE),
-# }
-MODELS = {  # Testing
-    "VGG19": VGG19,
-    "ResNet50": ResNet50,
-    "MobileV2": MobileNetV2,
-    "ViT": ViT,
-}
-
-
-# OPTIMIZERS = { # training
-#     "VGG19": optim.Adam(MODELS["VGG19"].parameters(), lr=0.0001),
-#     "ResNet50": optim.Adam(MODELS["ResNet50"].parameters(), lr=0.0001),
-#     "MobileV2": optim.Adam(MODELS["MobileV2"].parameters(), lr=0.0001),
-#     "ViT": optim.Adam(MODELS["ViT"].parameters(), lr=0.0001),
-# }
-
 CRITERION = nn.CrossEntropyLoss()
 EPOCHS = 50
+lr = 0.0001
+TRAINING = True
+if TRAINING:
+    MODELS = {
+        "VGG19": VGG19().to(DEVICE),
+        "ResNet50": ResNet50().to(DEVICE),
+        "MobileV2": MobileNetV2().to(DEVICE),
+        "ViT": ViT().to(DEVICE),
+    }
 
-DATA = "../data/potatodata"
+    OPTIMIZERS = {
+        "VGG19": optim.Adam(MODELS["VGG19"].parameters(), lr),
+        "ResNet50": optim.Adam(MODELS["ResNet50"].parameters(), lr),
+        "MobileV2": optim.Adam(MODELS["MobileV2"].parameters(), lr),
+        "ViT": optim.Adam(MODELS["ViT"].parameters(), lr),
+    }
+else:  # Testing
+    MODELS = {
+        "VGG19": VGG19,
+        "ResNet50": ResNet50,
+        "MobileV2": MobileNetV2,
+        "ViT": ViT,
+    }
+
+DATA = "../data/plantVillage"
 TEST_SIZE = 0.2
 VALI_SIZE = 0.5
-RANDOM_STATE = 42  # this is used to ensure reproducibility
+RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 # print list of classes
 # for i, cls in enumerate(CLASSES):
 #     print(f"{i}: {cls}")
 
-AUGMENT = True
-
-
+AUGMENT = False
 if AUGMENT:
     SAVED_MODELS = {
         "VGG19": "VGG19_best_model_Aug_True_153455.pth",
@@ -76,6 +75,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    # name=f"{time}_TrainV_Aug_{AUGMENT}_{EPOCHS}epochs_batch_size_{BATCH_SIZE}", # Train name
-    name=f"{time}_Test_models_Aug_{AUGMENT}_bsize_{BATCH_SIZE}",  # Test name
+    name=f"{time}_plantD_train_Aug_{AUGMENT}_{EPOCHS}epochs_bsize_{BATCH_SIZE}",  # Train name
+    # name=f"{time}_plantD_test_models_Aug_{AUGMENT}_bsize_{BATCH_SIZE}",  # Test name
 )
