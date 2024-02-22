@@ -54,7 +54,7 @@ class Dataset:
         train_dataset = Subset(dataset, train_indices)
         vali_dataset = Subset(dataset, vali_indices)
         test_dataset = Subset(dataset, test_indices)
-        # print(len(train_dataset), len(vali_dataset), len(test_dataset))
+        # len(test_dataset))
 
         # Create data loaders
         train_dl = DataLoader(

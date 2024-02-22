@@ -91,7 +91,9 @@ class Tester:
                 }
             )
             # Confusion matrix
-            cm = confusion_matrix(all_labels, all_predictions)
+            cm = confusion_matrix(
+                all_labels, all_predictions, labels=range(len(CLASSES))
+            )
             plt.figure(figsize=(10, 10))
             sns.heatmap(
                 cm,

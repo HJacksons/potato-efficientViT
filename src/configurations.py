@@ -48,7 +48,11 @@ TEST_SIZE = 0.2
 VALI_SIZE = 0.5
 RANDOM_STATE = 42  # this is used to ensure reproducibility
 BATCH_SIZE = 64
-CLASSES = os.listdir(DATA)
+CLASSES = sorted(os.listdir(DATA))
+# print list of classes
+# for i, cls in enumerate(CLASSES):
+#     print(f"{i}: {cls}")
+
 AUGMENT = False
 
 
