@@ -54,7 +54,7 @@ CLASSES = sorted(os.listdir(DATA))
 # for i, cls in enumerate(CLASSES):
 #     print(f"{i}: {cls}")
 
-AUGMENT = True
+AUGMENT = False
 if AUGMENT:
     SAVED_MODELS = {
         "VGG19": "VGG19_best_model_Aug_True_153455.pth",
