@@ -17,11 +17,11 @@ import logging
 
 class Tester:
     def __init__(self, models, device, test_loader, criterion):
+        self.device = device
         self.models = {
             model_name: self.load_model(model_class, SAVED_MODELS[model_name])
             for model_name, model_class in models.items()
         }
-        self.device = device
         self.test_loader = test_loader
         self.criterion = criterion
 
