@@ -19,7 +19,7 @@ logging.basicConfig(
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# MODELS = {
+# MODELS = { # training
 #     "VGG19": VGG19().to(DEVICE),
 #     "ResNet50": ResNet50().to(DEVICE),
 #     "MobileV2": MobileNetV2().to(DEVICE),
@@ -33,12 +33,12 @@ MODELS = {  # Testing
 }
 
 
-OPTIMIZERS = {
-    "VGG19": optim.Adam(MODELS["VGG19"].parameters(), lr=0.0001),
-    "ResNet50": optim.Adam(MODELS["ResNet50"].parameters(), lr=0.0001),
-    "MobileV2": optim.Adam(MODELS["MobileV2"].parameters(), lr=0.0001),
-    "ViT": optim.Adam(MODELS["ViT"].parameters(), lr=0.0001),
-}
+# OPTIMIZERS = { # training
+#     "VGG19": optim.Adam(MODELS["VGG19"].parameters(), lr=0.0001),
+#     "ResNet50": optim.Adam(MODELS["ResNet50"].parameters(), lr=0.0001),
+#     "MobileV2": optim.Adam(MODELS["MobileV2"].parameters(), lr=0.0001),
+#     "ViT": optim.Adam(MODELS["ViT"].parameters(), lr=0.0001),
+# }
 
 CRITERION = nn.CrossEntropyLoss()
 EPOCHS = 50
@@ -68,10 +68,10 @@ else:
     }
 
 
-wandb.login(key=os.getenv("WANDB_KEY"))
-wandb.init(
-    project=os.getenv("WANDB_PROJECT"),
-    entity=os.getenv("WANDB_ENTITY"),
-    # name=f"{time}_TrainV_Aug_{AUGMENT}_{EPOCHS}epochs_batch_size_{BATCH_SIZE}", # Train name
-    name=f"{time}_Test_models_Aug_{AUGMENT}_bsize_{BATCH_SIZE}",  # Test name
-)
+# wandb.login(key=os.getenv("WANDB_KEY"))
+# wandb.init(
+#     project=os.getenv("WANDB_PROJECT"),
+#     entity=os.getenv("WANDB_ENTITY"),
+#     # name=f"{time}_TrainV_Aug_{AUGMENT}_{EPOCHS}epochs_batch_size_{BATCH_SIZE}", # Train name
+#     name=f"{time}_Test_models_Aug_{AUGMENT}_bsize_{BATCH_SIZE}",  # Test name
+# )
