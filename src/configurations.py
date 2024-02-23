@@ -32,7 +32,7 @@ CLASSES = sorted(os.listdir(DATA))
 # for i, cls in enumerate(CLASSES):
 #     print(f"{i}: {cls}")
 
-TRAINING = True
+TRAINING = False
 AUGMENT = True
 
 NEW_DATASET = False
