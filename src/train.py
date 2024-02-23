@@ -67,7 +67,7 @@ class Trainer:
             # Log the best training accuracy for each model
             for model_name, acc in self.best_acc.items():
                 logging.info(f"{model_name} Best Training Accuracy: {acc:.4f}")
-                wandb.log({f"{model_name} Best Training Accuracy": acc}, step=epoch)
+                wandb.log({f"{model_name} Best Training Accuracy": acc})
 
             # Validate the model get loss and accuracy
             for model_name, model in self.models.items():
@@ -120,7 +120,7 @@ class Trainer:
             # Log the best validation accuracy for each model
             for model_name, acc in self.best_acc.items():
                 logging.info(f"{model_name} Best Validation Accuracy: {acc:.4f}")
-                wandb.log({f"{model_name} Best Validation Accuracy": acc}, step=epoch)
+                wandb.log({f"{model_name} Best Validation Accuracy": acc})
 
 
 if __name__ == "__main__":
