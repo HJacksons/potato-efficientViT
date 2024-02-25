@@ -24,14 +24,13 @@ class Dataset:
         self.test_size = test_size
         self.vali_size = vali_size
         self.random_state = random_state
-        self.data_transforms = get_transforms_for_model(augment)
+        self.train_transforms = get_transforms_for_model(augment)
+        self.other_transforms = get_transforms_for_model(False)
         print(augment)
 
     def prepare_dataset(self):
         # Load dataset
-        dataset = datasets.ImageFolder(
-            self.dataset_name, transform=self.data_transforms
-        )
+        dataset = datasets.ImageFolder(self.dataset_name)
 
         # Get targets/labels from the dataset
         targets = np.array([s[1] for s in dataset.samples])
@@ -55,6 +54,10 @@ class Dataset:
         vali_dataset = Subset(dataset, vali_indices)
         test_dataset = Subset(dataset, test_indices)
         # len(test_dataset))
+        if self.augment:
+            train_dataset.dataset.transform = self.train_transforms
+        vali_dataset.dataset.transform = self.other_transforms
+        test_dataset.dataset.transform = self.other_transforms
 
         # Create data loaders
         train_dl = DataLoader(

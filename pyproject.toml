@@ -19,6 +19,7 @@ black = "^24.2.0"
 torchstat = "^0.0.7"
 transformers = "^4.37.2"
 seaborn = "^0.13.2"
+timm = "^0.9.16"
 
 
 [build-system]

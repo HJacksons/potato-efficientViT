@@ -101,6 +101,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"{time}_plantD_train_Aug_{AUGMENT}_{EPOCHS}epochs_bsize_{BATCH_SIZE}",  # Train name
-    # name=f"{time}_plantD_test_models_Aug_{AUGMENT}_bsize_{BATCH_SIZE}",  # Test name
+    # name=f"{time}_plantD_train_Aug_{AUGMENT}_{EPOCHS}epochs_bsize_{BATCH_SIZE}",  # Train name
+    name=f"{time}_plantD_test_models_Aug_{AUGMENT}_bsize_{BATCH_SIZE}",  # Test name
 )

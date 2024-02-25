@@ -5,6 +5,7 @@ from torchvision.models.mobilenet import MobileNet_V2_Weights
 from transformers import ViTModel, ViTForImageClassification
 from torchvision import models
 from utils import *
+import timm
 from torchsummary import summary
 
 
@@ -72,3 +73,17 @@ class ViT(nn.Module):
             return logits, loss.item()
         else:
             return logits, None
+
+
+# Xception model
+class Xception:
+    def __init__(self):
+        self.model = timm.create_model("xception", pretrained=True)
+        self.model.fc = nn.Linear(2048, FEATURES)
+
+
+# model = Xception().model
+# print(summary(model, (3, 224, 224)))
+
+# TODO
+# Xception, vgg16, inception
