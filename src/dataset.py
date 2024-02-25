@@ -24,6 +24,7 @@ class Dataset:
         self.test_size = test_size
         self.vali_size = vali_size
         self.random_state = random_state
+        self.augment = augment
         self.train_transforms = get_transforms_for_model(augment)
         self.other_transforms = get_transforms_for_model(False)
         print(augment)
