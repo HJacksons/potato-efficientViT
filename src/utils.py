@@ -5,11 +5,9 @@ import os
 @staticmethod
 def get_transforms_for_model(augment):
     if augment:
-        data_transforms = transforms.Compose( # trying to reproduce the same results
+        data_transforms = transforms.Compose(  # trying to reproduce the same results
             [
-                transforms.Resize(
-                    (224, 224)
-                ),  # Resize images to 224x224
+                transforms.Resize((224, 224)),  # Resize images to 224x224
                 transforms.RandomHorizontalFlip(),  # Horizontal flipping
                 transforms.RandomVerticalFlip(),  # Vertical flipping
                 transforms.RandomRotation(15),  # Rotation
@@ -24,7 +22,7 @@ def get_transforms_for_model(augment):
                 ),  # Normalization
             ]
         )
-        # data_transforms = transforms.Compose(
+        # data_transforms = transforms.Compose( # My original code
         #     [
         #         transforms.Resize(256),  # Resize the shortest side of the image to 256
         #         transforms.RandomResizedCrop(
@@ -65,6 +63,6 @@ def get_transforms_for_model(augment):
 
 
 # Augment True, False
-DATA = "../data/plantVillage"
+DATA = "../data/potatodata"
 CLASSES = sorted(os.listdir(DATA))
 FEATURES = len(CLASSES)
