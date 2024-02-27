@@ -7,7 +7,7 @@ import wandb
 from time import gmtime, strftime
 
 # print time now
-time = strftime("%Y- %H:%M:%S", gmtime())
+time = strftime("%d- %H:%M:%S", gmtime())
 
 # from dataset import Dataset
 import logging
@@ -32,7 +32,7 @@ CLASSES = sorted(os.listdir(DATA))
 #     print(f"{i}: {cls}")
 
 TRAINING = True
-AUGMENT = True
+AUGMENT = False
 DATATYPE = "potatodata"  # plantVillage or potatodata
 
 NEW_DATASET = False  # for the purpose of testing
@@ -79,6 +79,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name
+    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_effnet",  # Train name
     # name=f"{time}_plantD_test_models_Aug_{AUGMENT}_bsize_{BATCH_SIZE}",  # Test name
 )
