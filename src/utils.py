@@ -2,7 +2,6 @@ from torchvision import transforms
 import os
 
 
-@staticmethod
 def get_transforms_for_model(augment):
     if augment:
         data_transforms = transforms.Compose(  # trying to reproduce the same results

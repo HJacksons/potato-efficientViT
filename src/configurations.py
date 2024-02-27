@@ -32,7 +32,7 @@ CLASSES = sorted(os.listdir(DATA))
 #     print(f"{i}: {cls}")
 
 TRAINING = True
-AUGMENT = True
+AUGMENT = False
 DATATYPE = "potatodata"  # plantVillage or potatodata
 
 NEW_DATASET = False  # for the purpose of testing
