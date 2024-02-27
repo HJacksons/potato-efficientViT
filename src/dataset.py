@@ -36,15 +36,15 @@ class Dataset:
         # Get targets/labels from the dataset
         targets = np.array([s[1] for s in dataset.samples])
 
-        # Split the dataset into train, validation, and test sets
-        train_indices, temp_indices = train_test_split(
+        # Split the dataset into train and test sets
+        train_indices, test_indices = train_test_split(
             np.arange(len(targets)),
             test_size=self.test_size,
             random_state=self.random_state,
             # stratify=targets,
         )
-        vali_indices, test_indices = train_test_split(
-            temp_indices,
+        train_indices, vali_indices = train_test_split(
+            train_indices,
             test_size=self.vali_size,
             random_state=self.random_state,
             # stratify=targets[temp_indices],
@@ -54,7 +54,7 @@ class Dataset:
         train_dataset = Subset(dataset, train_indices)
         vali_dataset = Subset(dataset, vali_indices)
         test_dataset = Subset(dataset, test_indices)
-        # len(test_dataset))
+        # print("Train, valid, test", len(train_dataset), len(vali_dataset), len(test_dataset))
         if self.augment:
             train_dataset.dataset.transform = self.train_transforms
         vali_dataset.dataset.transform = self.other_transforms

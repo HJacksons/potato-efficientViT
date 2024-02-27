@@ -22,8 +22,8 @@ EPOCHS = 50
 lr = 0.0001
 
 DATA = "../data/potatodata"
-TEST_SIZE = 0.2
-VALI_SIZE = 0.5
+TEST_SIZE = 0.1
+VALI_SIZE = 0.1
 RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
