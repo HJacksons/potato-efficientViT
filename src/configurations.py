@@ -39,14 +39,14 @@ NEW_DATASET = False  # for the purpose of testing
 if TRAINING:
     MODELS = {
         "EfficientNetV2B3": EfficientNetV2B3().to(DEVICE),
-        # "ViT": ViT().to(DEVICE),
-        # "HybridModel": HybridModel().to(DEVICE),
+        "ViT": ViT().to(DEVICE),
+        "HybridModel": HybridModel().to(DEVICE),
     }
 
     OPTIMIZERS = {
         "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr),
-        # "ViT": optim.Adam(MODELS["ViT"].parameters(), lr),
-        # "HybridModel": optim.Adam(MODELS["HybridModel"].parameters(), lr),
+        "ViT": optim.Adam(MODELS["ViT"].parameters(), lr),
+        "HybridModel": optim.Adam(MODELS["HybridModel"].parameters(), lr),
     }
 else:  # Testing
     MODELS = {
