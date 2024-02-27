@@ -1,58 +1,43 @@
-import torch
+import timm
 import torch.nn as nn
-from torchvision import models
-import torch.optim as optim
+from torchsummary import summary
 
 
-class Trainer:
-    def __init__(self, models, device, train_loader, criterion, optimizers):
-        self.models = models
-        self.device = device
-        self.train_loader = train_loader
-        self.criterion = criterion
-        self.optimizers = optimizers
+# Load the pre-trained model
+efficientnet = timm.create_model("tf_efficientnetv2_b3", pretrained=True)
 
-    def train(self, num_epochs):
-        for epoch in range(num_epochs):
-            for model_name, model in self.models.items():
-                model.train()
-                running_loss = 0.0
-                for inputs, labels in self.train_loader:
-                    inputs, labels = inputs.to(self.device), labels.to(self.device)
+# Freeze all layers
+for param in efficientnet.parameters():
+    param.requires_grad = False
 
-                    self.optimizers[model_name].zero_grad()
+# Unfreeze the Fully Connected Layers (Classifier)
+# Assuming the classifier layer's parameters contain 'classifier' in their names
+for name, param in efficientnet.named_parameters():
+    if "classifier" in name:
+        param.requires_grad = True
 
-                    outputs = model(inputs)
-                    loss = self.criterion(outputs, labels)
-                    loss.backward()
-                    self.optimizers[model_name].step()
+model = efficientnet
+# Replace the classifier layer with a new one
+model.classifier = nn.Linear(1536, 7)
 
-                    running_loss += loss.item()
+# Print the model
+print(summary(model, (3, 224, 224)))
 
-                print(
-                    f"Epoch {epoch + 1}, Model {model_name}, Loss: {running_loss / len(self.train_loader)}"
-                )
+# Load the pre-trained model
+vit = timm.create_model("vit_base_patch16_224", pretrained=True)
 
+# Freeze all layers
+for param in vit.parameters():
+    param.requires_grad = False
 
-# Example usage
-if __name__ == "__main__":
-    DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# Unfreeze the head of the model
+# Assuming the head's parameters contain 'head' in their names
+for name, param in vit.named_parameters():
+    if "head" in name:
+        param.requires_grad = True
 
-    # Define your models, optimizers, and criterion here
-    MODELS = {
-        "VGG19": models.vgg19(pretrained=True).to(DEVICE)
-        # Add other models as needed
-    }
+# Replace the head with a new one
+vit.head = nn.Linear(768, 7)
 
-    OPTIMIZERS = {
-        "VGG19": optim.Adam(MODELS["VGG19"].parameters(), lr=0.001)
-        # Add optimizers for other models as needed
-    }
-
-    CRITERION = nn.CrossEntropyLoss()
-
-    # Assume TRAIN_LOADER is defined elsewhere
-    TRAIN_LOADER = None  # Placeholder for the actual DataLoader
-
-    trainer = Trainer(MODELS, DEVICE, TRAIN_LOADER, CRITERION, OPTIMIZERS)
-    trainer.train(num_epochs=10)
+# Print the model
+# print(summary(vit, (3, 224, 224)))

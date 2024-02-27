@@ -39,6 +39,11 @@ class Tester:
             total_samples = 0
             all_labels = []
             all_predictions = []
+            incorrect_images = []
+            incorrect_labels = []
+            incorrect_predictions = []
+            class_correct = list(0.0 for i in range(len(CLASSES)))
+            class_total = list(0.0 for i in range(len(CLASSES)))
             with torch.no_grad():
                 for images, labels in self.test_loader:
                     images, labels = images.to(self.device), labels.to(self.device)
@@ -58,61 +63,128 @@ class Tester:
                     total_samples += labels.size(0)
                     all_labels.extend(labels.cpu().numpy())
                     all_predictions.extend(predicted.cpu().numpy())
+                    class_correct, class_total = self.calculate_classwise_accuracy(
+                        labels, predicted, class_correct, class_total
+                    )
+                    incorrect_images, incorrect_labels, incorrect_predictions = (
+                        self.error_analysis(
+                            images,
+                            labels,
+                            predicted,
+                            incorrect_images,
+                            incorrect_labels,
+                            incorrect_predictions,
+                        )
+                    )
+
             all_labels = np.array(all_labels)
             all_predictions = np.array(all_predictions)
-
             avg_loss = running_loss / len(self.test_loader)
-            avg_acc = (
-                running_acc / total_samples
-            )  # WIll report accuracy from sklearn instead of this
-            accuracy = accuracy_score(
-                all_labels, all_predictions
-            )  # A = (TP + TN) / (TP + TN + FP + FN)
-            precision = precision_score(
-                all_labels, all_predictions, average="macro"
-            )  # P = TP / (TP + FP)
-            recall = recall_score(
-                all_labels, all_predictions, average="macro"
-            )  # R = TP / (TP + FN)
-            f1 = f1_score(
-                all_labels, all_predictions, average="macro"
-            )  # F1 = 2 * (P * R) / (P + R)
+            avg_acc = running_acc / total_samples
+            self.calculate_and_log_metrics(
+                model_name, all_labels, all_predictions, avg_loss
+            )
+            self.log_confusion_matrix(model_name, all_labels, all_predictions)
+            self.log_classwise_accuracy(model_name, class_correct, class_total)
+            self.log_misclassified_images(
+                model_name, incorrect_images, incorrect_labels, incorrect_predictions
+            )
 
+    @staticmethod
+    def calculate_classwise_accuracy(labels, predicted, class_correct, class_total):
+        for label, prediction in zip(labels, predicted):
+            if label == prediction:
+                class_correct[label] += 1
+            class_total[label] += 1
+        return class_correct, class_total
+
+    @staticmethod
+    def error_analysis(
+        images,
+        labels,
+        predicted,
+        incorrect_images,
+        incorrect_labels,
+        incorrect_predictions,
+    ):
+        incorrect_indices = (predicted != labels).nonzero()
+        incorrect_images.extend(images[incorrect_indices].cpu().numpy())
+        incorrect_labels.extend(labels[incorrect_indices].cpu().numpy())
+        incorrect_predictions.extend(predicted[incorrect_indices].cpu().numpy())
+        mean = np.array([0.485, 0.456, 0.406])
+        std = np.array([0.229, 0.224, 0.225])
+        incorrect_images = np.array(incorrect_images)
+        incorrect_images = (
+            incorrect_images * std[None, :, None, None] + mean[None, :, None, None]
+        )
+        incorrect_images = np.clip(incorrect_images, 0, 1)
+        return incorrect_images, incorrect_labels, incorrect_predictions
+
+    @staticmethod
+    def calculate_and_log_metrics(model_name, all_labels, all_predictions, avg_loss):
+        accuracy = accuracy_score(all_labels, all_predictions)
+        precision = precision_score(all_labels, all_predictions, average="macro")
+        recall = recall_score(all_labels, all_predictions, average="macro")
+        f1 = f1_score(all_labels, all_predictions, average="macro")
+        logging.info(
+            f"Model {model_name}, Test Loss: {avg_loss:.4f}, Test Accuracy: {accuracy:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}, F1: {f1:.4f}"
+        )
+
+    @staticmethod
+    def log_confusion_matrix(model_name, all_labels, all_predictions):
+        cm = confusion_matrix(all_labels, all_predictions, labels=range(len(CLASSES)))
+        plt.figure(figsize=(10, 10))
+        sns.heatmap(
+            cm,
+            annot=True,
+            fmt="d",
+            cmap="Blues",
+            xticklabels=CLASSES,
+            yticklabels=CLASSES,
+        )
+        plt.title(f"{model_name} Confusion Matrix")
+        plt.xlabel("Predicted Labels")
+        plt.ylabel("True Labels")
+        plt.xticks(rotation=45)
+        plt.yticks(rotation=45)
+        buf = io.BytesIO()
+        plt.savefig(buf, format="png")
+        buf.seek(0)
+        image = Image.open(buf)
+        wandb.log({f"{model_name} Confusion Matrix": wandb.Image(image)})
+        plt.close()
+
+    @staticmethod
+    def log_classwise_accuracy(model_name, class_correct, class_total):
+        for i in range(len(CLASSES)):
             logging.info(
-                f"Model {model_name}, Test Loss: {avg_loss:.4f}, Test Accuracy: {accuracy:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}, F1: {f1:.4f}"
+                f"Accuracy of {CLASSES[i]}: {100 * class_correct[i] / class_total[i]}%"
             )
             wandb.log(
                 {
-                    f"{model_name} Test Loss": avg_loss,
-                    f"{model_name} Test Accuracy": accuracy,
-                    f"{model_name} Precision": precision,
-                    f"{model_name} Recall": recall,
-                    f"{model_name} F1": f1,
+                    f"{model_name} Accuracy of {CLASSES[i]}": 100
+                    * class_correct[i]
+                    / class_total[i]
                 }
             )
-            # Confusion matrix
-            cm = confusion_matrix(
-                all_labels, all_predictions, labels=range(len(CLASSES))
+
+    @staticmethod
+    def log_misclassified_images(
+        model_name, incorrect_images, incorrect_labels, incorrect_predictions
+    ):
+        for i in range(min(10, len(incorrect_images))):
+            plt.figure()
+            plt.imshow(
+                np.transpose(incorrect_images[i], (1, 2, 0))
+            )  # assuming the images are in C, H, W format
+            plt.title(
+                f"True label: {CLASSES[incorrect_labels[i]]}, Predicted: {CLASSES[incorrect_predictions[i]]}"
             )
-            plt.figure(figsize=(10, 10))
-            sns.heatmap(
-                cm,
-                annot=True,
-                fmt="d",
-                cmap="Blues",
-                xticklabels=CLASSES,
-                yticklabels=CLASSES,
-            )
-            plt.title(f"{model_name} Confusion Matrix")
-            plt.xlabel("Predicted Labels")
-            plt.ylabel("True Labels")
-            plt.xticks(rotation=45)
-            plt.yticks(rotation=45)
             buf = io.BytesIO()
             plt.savefig(buf, format="png")
             buf.seek(0)
             image = Image.open(buf)
-            wandb.log({f"{model_name} Confusion Matrix": wandb.Image(image)})
+            wandb.log({f"{model_name} Misclassified Images": wandb.Image(image)})
             plt.close()
 
 

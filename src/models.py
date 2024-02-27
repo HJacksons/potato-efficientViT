@@ -1,51 +1,23 @@
 from torch import nn
-from torchvision.models.vgg import VGG19_Weights
 from torchvision.models.resnet import ResNet50_Weights
-from torchvision.models.mobilenet import MobileNet_V2_Weights
 from transformers import ViTModel, ViTForImageClassification
 from torchvision import models
 from utils import *
 import timm
 from torchsummary import summary
+from torchinfo import summary
 
 
-# VGG19 model
-class VGG19(nn.Module):
+# EfficientNetV2B3 model
+class EfficientNetV2B3(nn.Module):
     def __init__(self):
-        super(VGG19, self).__init__()
-
-        self.model = models.vgg19(weights=VGG19_Weights.DEFAULT)
-        for param in self.model.parameters():
-            param.requires_grad = True
-        self.model.classifier[6] = nn.Linear(4096, FEATURES)
-
-    def forward(self, x):
-        return self.model(x)
-
-
-# ResNet model
-class ResNet50(nn.Module):
-    def __init__(self):
-        super(ResNet50, self).__init__()
-
-        self.model = models.resnet50(weights=ResNet50_Weights.DEFAULT)
-        for param in self.model.parameters():
-            param.requires_grad = True
-        self.model.fc = nn.Linear(2048, FEATURES)
-
-    def forward(self, x):
-        return self.model(x)
-
-
-# MobileNetV2 model
-class MobileNetV2(nn.Module):
-    def __init__(self):
-        super(MobileNetV2, self).__init__()
-
-        self.model = models.mobilenet_v2(weights=MobileNet_V2_Weights.DEFAULT)
-        for param in self.model.parameters():
-            param.requires_grad = True
-        self.model.classifier[1] = nn.Linear(1280, FEATURES)
+        super(EfficientNetV2B3, self).__init__()
+        self.model = timm.create_model("tf_efficientnetv2_b3.in21k", pretrained=True)
+        # for param in self.model.parameters():
+        #     param.requires_grad = False
+        # for name, param in self.model.named_parameters():
+        #     if "classifier" in name: param.requires_grad = True
+        self.model.classifier = nn.Linear(1536, FEATURES)
 
     def forward(self, x):
         return self.model(x)
@@ -56,6 +28,11 @@ class ViT(nn.Module):
     def __init__(self, num_labels=FEATURES):
         super(ViT, self).__init__()
         self.vit = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
+        for param in self.vit.parameters():
+            param.requires_grad = False
+        for name, param in self.vit.named_parameters():
+            if "classifier" in name:
+                param.requires_grad = True
         self.dropout = nn.Dropout(0.1)
         self.classifier = nn.Linear(self.vit.config.hidden_size, num_labels)
         self.num_labels = num_labels
@@ -75,15 +52,48 @@ class ViT(nn.Module):
             return logits, None
 
 
-# Xception model
-class Xception:
-    def __init__(self):
-        self.model = timm.create_model("xception", pretrained=True)
-        self.model.fc = nn.Linear(2048, FEATURES)
+# The hybrid model
+class HybridModel(nn.Module):
+    def __init__(self, num_labels=FEATURES):
+        super(HybridModel, self).__init__()
+        self.effnet = timm.create_model("tf_efficientnetv2_b3.in21k", pretrained=True)
+        # Freeze the EfficientNetV2B3 model
+        for param in self.effnet.parameters():
+            param.requires_grad = False
+        # Replace the classifier with a no op (identity) to get the features
+        self.effnet.classifier = nn.Identity()
 
+        # Add a fully-connected layer to transform the output shape
+        self.fc = nn.Linear(
+            1536, 3 * 224 * 224
+        )  # Replace 3 with the number of channels expected by ViT
 
-# model = Xception().model
-# print(summary(model, (3, 224, 224)))
+        self.vit = ViTModel.from_pretrained(
+            "google/vit-base-patch16-224-in21k", num_labels=num_labels
+        )
+        for param in self.vit.parameters():
+            param.requires_grad = False
+        for param in self.vit.encoder.layer[-1].parameters():
+            param.requires_grad = True
+        self.dropout = nn.Dropout(0.1)
+        self.classifier = nn.Linear(self.vit.config.hidden_size, num_labels)
 
-# TODO
-# Xception, vgg16, inception
+    def forward(self, pixel_values, labels=None):
+        # Extract features from EfficientNetV2B3
+        x = self.effnet(pixel_values)
+        # Transform the output shape
+        x = self.fc(x)
+        x = x.view(x.shape[0], 3, 224, 224)  # Reshape to match ViT's input shape
+        # Feed the features into ViT
+        outputs = self.vit(pixel_values=x)
+        output = self.dropout(outputs.last_hidden_state[:, 0])
+        logits = self.classifier(output)
+
+        loss = None
+        if labels is not None:
+            loss_fct = nn.CrossEntropyLoss()
+            loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
+        if loss is not None:
+            return logits, loss.item()
+        else:
+            return logits, None

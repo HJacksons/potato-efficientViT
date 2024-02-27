@@ -20,6 +20,7 @@ torchstat = "^0.0.7"
 transformers = "^4.37.2"
 seaborn = "^0.13.2"
 timm = "^0.9.16"
+torchinfo = "^1.8.0"
 
 
 [build-system]

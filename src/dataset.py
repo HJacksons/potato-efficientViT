@@ -41,13 +41,13 @@ class Dataset:
             np.arange(len(targets)),
             test_size=self.test_size,
             random_state=self.random_state,
-            stratify=targets,
+            # stratify=targets,
         )
         vali_indices, test_indices = train_test_split(
             temp_indices,
             test_size=self.vali_size,
             random_state=self.random_state,
-            stratify=targets[temp_indices],
+            # stratify=targets[temp_indices],
         )
 
         # Create subsets from the indices
