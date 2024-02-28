@@ -64,10 +64,6 @@ class Trainer:
                         f"{model_name} Train Accuracy": avg_acc,
                     }
                 )
-            # Log the best training accuracy for each model
-            for model_name, acc in self.best_acc.items():
-                logging.info(f"{model_name} Best Training Accuracy: {acc:.4f}")
-                wandb.log({f"{model_name} Best Training Accuracy": acc})
 
             # Validate the model get loss and accuracy
             for model_name, model in self.models.items():
