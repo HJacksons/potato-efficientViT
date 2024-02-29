@@ -163,7 +163,7 @@ class Tester:
 
         for i in range(min(10, len(incorrect_images))):
             plt.figure()
-            image = incorrect_images[i]
+            image = incorrect_images[i].squeeze()  # remove all dimensions of size 1
             # Denormalize
             image = image * std + mean
             image = image.clamp(0, 1).cpu().numpy()  # clip values to the valid range for plt.imshow()
@@ -182,6 +182,8 @@ class Tester:
             image = Image.open(buf)
             wandb.log({f"{model_name} Misclassified Images": wandb.Image(image)})
             plt.close()
+
+    ▍
 
 
 if __name__ == "__main__":
