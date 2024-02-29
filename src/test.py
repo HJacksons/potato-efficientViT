@@ -168,10 +168,12 @@ class Tester:
             image = image * std + mean
             image = image.clamp(0, 1).cpu().numpy()  # clip values to the valid range for plt.imshow()
 
-            # Transpose from (C, H, W) to (H, W, C) for visualization
-            image = np.transpose(image, (1, 2, 0))
+            # Transpose from (C, H, W) to (H, W, C) for visualization, only if image has 3 channels
+            if image.shape[0] == 3:
+                image = np.transpose(image, (1, 2, 0))
 
-            plt.imshow(image)
+            plt.imshow(image,
+                       cmap='gray' if image.shape[0] == 1 else None)  # Use grayscale colormap for 1-channel images
             plt.title(
                 f"True label: {CLASSES[incorrect_labels[i].item()]}, Predicted: {CLASSES[incorrect_predictions[i].item()]}"
             )
