@@ -100,3 +100,11 @@ class HybridModel(nn.Module):
             return logits, loss.item()
         else:
             return logits, None
+
+
+class EfficientNetV2B3Test:
+    def __init__(self):
+        self.model = timm.create_model("tf_efficientnetv2_b3.in21k", pretrained=False, num_classes=FEATURES)
+
+    def __call__(self):
+        return self.model
