@@ -21,8 +21,8 @@ logging.basicConfig(
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CRITERION = nn.CrossEntropyLoss()
-EPOCHS = 70 # From 50 to 70 for vit to learn more
-lr = 0.0001
+EPOCHS = 70  # From 50 to 70 for vit to learn more
+lr = 0.0003  # from 0.0001 to 0.0003
 
 DATA = "../data/potatodata"
 TEST_SIZE = 0.1
@@ -46,11 +46,29 @@ if TRAINING:
         "ViT": ViT().to(DEVICE),
         "HybridModel": HybridModel().to(DEVICE),
     }
+    model = MODELS["HybridModel"]  # Your hybrid model instance
 
     OPTIMIZERS = {
         # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr),
-        "ViT": optim.AdamW(MODELS["ViT"].parameters(), lr), #  swtich to AdamW all
-        "HybridModel": optim.AdamW(MODELS["HybridModel"].parameters(), lr, weight_decay=0.02), # Added weight decay/reguralization to stop overfitting
+        "ViT": optim.AdamW(MODELS["ViT"].parameters(), lr),  #  swtich to AdamW all
+        "HybridModel": optim.AdamW(
+            [
+                {
+                    "params": model.fc.parameters(),
+                    "lr": 0.0003,
+                },  # Higher learning rate for the fully connected layer
+                {
+                    "params": model.classifier.parameters(),
+                    "lr": 0.0003,
+                },  # Same higher rate for the classifier layer
+                {
+                    "params": model.vit.encoder.layer[-1].parameters(),
+                    "lr": 0.0003,
+                },  # Assuming this is the part you're actively training
+            ],
+            lr=0.0001,
+            weight_decay=0.02,
+        ),  # Default learning rate for any other parameters if any
     }
 else:  # Testing
     MODELS = {
