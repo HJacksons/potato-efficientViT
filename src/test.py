@@ -155,7 +155,7 @@ class Tester:
 
     @staticmethod
     def log_misclassified_images(
-        model_name, incorrect_images, incorrect_labels, incorrect_predictions
+            model_name, incorrect_images, incorrect_labels, incorrect_predictions
     ):
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1).to(device)
@@ -163,16 +163,13 @@ class Tester:
 
         for i in range(min(10, len(incorrect_images))):
             plt.figure()
-            image = incorrect_images[i].squeeze()  # remove all dimensions of size 1
+            image = incorrect_images[i][0]  # Select the first image from the batch
             # Denormalize
             image = image * std + mean
-            image = (
-                image.clamp(0, 1).cpu().numpy()
-            )  # clip values to the valid range for plt.imshow()
+            image = image.clamp(0, 1).cpu().numpy()  # clip values to the valid range for plt.imshow()
 
-            # Only transpose if image has 3 dimensions (C, H, W)
-            if image.ndim == 3:
-                image = np.transpose(image, (1, 2, 0))  # change (C, H, W) to (H, W, C)
+            # Transpose from (C, H, W) to (H, W, C) for visualization
+            image = np.transpose(image, (1, 2, 0))
 
             plt.imshow(image)
             plt.title(
