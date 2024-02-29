@@ -13,11 +13,11 @@ class EfficientNetV2B3(nn.Module):
     def __init__(self):
         super(EfficientNetV2B3, self).__init__()
         self.model = timm.create_model("tf_efficientnetv2_b3.in21k", pretrained=True)
-        # for param in self.model.parameters():
-        #     param.requires_grad = False
-        # for name, param in self.model.named_parameters():
-        #     if "classifier" in name:
-        #         param.requires_grad = True
+        for param in self.model.parameters():
+            param.requires_grad = False
+        for name, param in self.model.named_parameters():
+            if "classifier" in name:
+                param.requires_grad = True
         self.model.classifier = nn.Linear(1536, FEATURES)
 
     def forward(self, x):
