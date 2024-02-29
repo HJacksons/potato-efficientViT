@@ -99,23 +99,17 @@ class Tester:
 
     @staticmethod
     def error_analysis(
-        images,
-        labels,
-        predicted,
-        incorrect_images,
-        incorrect_labels,
-        incorrect_predictions,
+            images,
+            labels,
+            predicted,
+            incorrect_images,
+            incorrect_labels,
+            incorrect_predictions,
     ):
         incorrect_indices = (predicted != labels).nonzero()
-        incorrect_images += [image.cpu().numpy() for image in images[incorrect_indices]]
+        incorrect_images += [image for image in images[incorrect_indices]]
         incorrect_labels.extend(labels[incorrect_indices].cpu().numpy())
         incorrect_predictions.extend(predicted[incorrect_indices].cpu().numpy())
-        mean = np.array([0.485, 0.456, 0.406])
-        std = np.array([0.229, 0.224, 0.225])
-        incorrect_images = [
-            (image.squeeze() * std[:, None, None] + mean[:, None, None]).clip(0, 1)
-            for image in incorrect_images
-        ]
         return incorrect_images, incorrect_labels, incorrect_predictions
 
     @staticmethod
@@ -163,11 +157,16 @@ class Tester:
     def log_misclassified_images(
             model_name, incorrect_images, incorrect_labels, incorrect_predictions
     ):
+        mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+        std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+
         for i in range(min(10, len(incorrect_images))):
             plt.figure()
             image = incorrect_images[i]
-            if image.shape[0] == 3:  # if image has 3 channels
-                image = np.transpose(image, (1, 2, 0))  # change (C, H, W) to (H, W, C)
+            # Denormalize
+            image = image * std + mean
+            image = image.clamp(0, 1).numpy()  # clip values to the valid range for plt.imshow()
+            image = np.transpose(image, (1, 2, 0))  # change (C, H, W) to (H, W, C)
             plt.imshow(image)
             plt.title(
                 f"True label: {CLASSES[incorrect_labels[i].item()]}, Predicted: {CLASSES[incorrect_predictions[i].item()]}"
