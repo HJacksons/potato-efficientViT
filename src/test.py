@@ -27,7 +27,7 @@ class Tester:
         self.criterion = criterion
 
     def load_model(self, model_class, saved_model_path):
-        print(f"Loading model {model_class} from {saved_model_path}")  # debug print
+        #print(f"Loading model {model_class} from {saved_model_path}")  # debug print
         model = model_class()
         print("Model instantiated successfully")
         print("Loading state dict...")
