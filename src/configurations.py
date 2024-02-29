@@ -50,7 +50,7 @@ if TRAINING:
     OPTIMIZERS = {
         # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr),
         "ViT": optim.Adam(MODELS["ViT"].parameters(), lr),
-        "HybridModel": optim.Adam(MODELS["HybridModel"].parameters(), lr, weight_decay=0.01), # Added weight decay/reguralization to stop overfitting
+        "HybridModel": optim.Adam(MODELS["HybridModel"].parameters(), lr, weight_decay=0.015), # Added weight decay/reguralization to stop overfitting
     }
 else:  # Testing
     MODELS = {
