@@ -19,8 +19,6 @@ import logging
 class Tester:
     def __init__(self, models, device, test_loader, criterion):
         self.device = device
-        # print(f"Models: {models}")  # new debug print
-
         self.models = {
             model_name: self.load_model(model_class, SAVED_MODELS[model_name])
             for model_name, model_class in models.items()
@@ -29,21 +27,8 @@ class Tester:
         self.criterion = criterion
 
     def load_model(self, model_class, saved_model_path):
-        try:
-            model = EfficientNetV2B3()  # instantiate the model directly
-        except TypeError as e:
-            print(f"Caught an error during model instantiation: {str(e)}")
-            return None
-
-        print("Model instantiated successfully")
-        print("Loading state dict...")
-
-        state_dict = torch.load(saved_model_path, map_location=self.device)
-        print(f"State dict keys: {state_dict.keys()}")  # new debug print
-
-        print("State dict loaded successfully")
-        model.load_state_dict(state_dict)
-        model = model.to(self.device)
+        model = model_class().to(self.device)
+        model.load_state_dict(torch.load(saved_model_path, map_location=self.device))
         model.eval()
         return model
 
