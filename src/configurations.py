@@ -22,7 +22,7 @@ logging.basicConfig(
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CRITERION = nn.CrossEntropyLoss()
 EPOCHS = 70  # From 50 to 70 for vit to learn more
-lr = 0.0001
+lr = 0.00005 # from 0.00001 to 0.00005
 
 DATA = "../data/potatodata"
 TEST_SIZE = 0.1

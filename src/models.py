@@ -2,7 +2,7 @@ from torch import nn
 from transformers import ViTModel
 from utils import *
 import timm
-from torchsummary import summary
+# from torchsummary import summary
 from torchinfo import summary
 
 
@@ -61,6 +61,11 @@ class HybridModel(nn.Module):
         # Freeze the EfficientNetV2B3 model
         for param in self.effnet.parameters():
             param.requires_grad = False
+        # unfreeze the last layer few layers of the model, may be 5
+        for i, param in enumerate(self.effnet.parameters()):
+            if i >= len(list(self.effnet.parameters())) - 5:
+                param.requires_grad = True
+
         # Replace the classifier with a no op (identity) to get the features
         self.effnet.classifier = nn.Identity()
 
@@ -79,7 +84,7 @@ class HybridModel(nn.Module):
             param.requires_grad = False
         for param in self.vit.encoder.layer[-1].parameters():
             param.requires_grad = True
-        self.dropout = nn.Dropout(0.3)
+        self.dropout = nn.Dropout(0.1)
         self.classifier = nn.Linear(self.vit.config.hidden_size, num_labels)
 
     def forward(self, pixel_values, labels=None):
@@ -101,3 +106,4 @@ class HybridModel(nn.Module):
             return logits, loss.item()
         else:
             return logits, None
+
