@@ -38,7 +38,7 @@ TRAINING = True
 AUGMENT = False
 DATATYPE = "potatodata"  # plantVillage or potatodata
 
-NEW_DATASET = False  # for the purpose of testing
+NEW_DATASET = True  # for the purpose of testing
 
 if TRAINING:
     MODELS = {
@@ -62,11 +62,11 @@ else:  # Testing
     if NEW_DATASET:
         if AUGMENT:
             SAVED_MODELS = {
-                "ViT": "ViT_best_model_Aug_True_153455.pth",
+                "EfficientNetV2B3":"EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
             }
         else:
             SAVED_MODELS = {
-                "ViT": "ViT_best_model_Aug_False_153348.pth",
+                "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth",
             }
     else:
         if AUGMENT:
@@ -82,6 +82,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_effnet",  # Train name
-    # name=f"{time}_plantD_test_models_Aug_{AUGMENT}_bsize_{BATCH_SIZE}",  # Test name
+    # name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_effnet",  # Train name
+    name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_effnet",  # Test name
 )
