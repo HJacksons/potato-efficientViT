@@ -34,11 +34,11 @@ CLASSES = sorted(os.listdir(DATA))
 # for i, cls in enumerate(CLASSES):
 #     print(f"{i}: {cls}")
 
-TRAINING = False
-AUGMENT = True
-DATATYPE = "potatodata"  # plantVillage or potatodata
+TRAINING = True
+AUGMENT = False
+DATATYPE = "plantVillage"  # plantVillage or potatodata
 
-NEW_DATASET = True  # for the purpose of testing
+NEW_DATASET = False  # for the purpose of testing
 
 if TRAINING:
     MODELS = {
@@ -82,6 +82,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    # name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_effnet",  # Train name
-    name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_effnet",  # Test name
+    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_effnet",  # Train name
+    # name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_effnet",  # Test name
 )
