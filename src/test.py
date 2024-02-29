@@ -168,7 +168,6 @@ class Tester:
             image = incorrect_images[i]
             if image.shape[0] == 3:  # if image has 3 channels
                 image = np.transpose(image, (1, 2, 0))  # change (C, H, W) to (H, W, C)
-            image = image.astype(float)  # ensure the image is float type
             plt.imshow(image)
             plt.title(
                 f"True label: {CLASSES[incorrect_labels[i].item()]}, Predicted: {CLASSES[incorrect_predictions[i].item()]}"
