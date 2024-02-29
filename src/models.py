@@ -68,6 +68,7 @@ class HybridModel(nn.Module):
         self.fc = nn.Linear(
             1536, 3 * 224 * 224
         )  # Replace 3 with the number of channels expected by ViT
+        self.dropout_effnet = nn.Dropout(0.5)
 
         self.vit = ViTModel.from_pretrained(
             "google/vit-base-patch16-224-in21k", num_labels=num_labels

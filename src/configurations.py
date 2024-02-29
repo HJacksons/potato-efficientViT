@@ -50,7 +50,7 @@ if TRAINING:
     OPTIMIZERS = {
         # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr),
         "ViT": optim.Adam(MODELS["ViT"].parameters(), lr),
-        "HybridModel": optim.Adam(MODELS["HybridModel"].parameters(), lr),
+        "HybridModel": optim.Adam(MODELS["HybridModel"].parameters(), lr, weight_decay=0.01),
     }
 else:  # Testing
     MODELS = {
@@ -82,6 +82,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_Vit_Hybrid",  # Train name
+    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_Vit_Hybrid_l2_05",  # Train name
     # name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_Vit_hybrid",  # Test name
 )
