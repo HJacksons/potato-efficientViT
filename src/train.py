@@ -12,7 +12,7 @@ time = now.strftime("%H%M%S")
 
 class Trainer:
     def __init__(
-        self, models, device, train_loader, vali_loader, criterion, optimizers
+        self, models, device, train_loader, vali_loader, criterion, optimizers, schedulers
     ):
         self.models = models
         self.device = device
@@ -20,6 +20,7 @@ class Trainer:
         self.vali_loader = vali_loader
         self.criterion = criterion
         self.optimizer = optimizers
+        self.scheduler = schedulers
         self.best_acc = {model_name: 0.0 for model_name in self.models.keys()}
 
     # Train the model get loss and accuracy
@@ -101,6 +102,9 @@ class Trainer:
                         f"{model_name} Validation Accuracy": avg_acc,
                     }
                 )
+                # Update the learning rate
+                self.scheduler[model_name].step(avg_loss)
+
         for model_name, model in self.models.items():
             torch.save(
                 model.state_dict(),
@@ -128,7 +132,7 @@ class Trainer:
 if __name__ == "__main__":
     dataset = Dataset()
     train_loader, vali_loader, _ = dataset.prepare_dataset()
-    trainer = Trainer(MODELS, DEVICE, train_loader, vali_loader, CRITERION, OPTIMIZERS)
+    trainer = Trainer(MODELS, DEVICE, train_loader, vali_loader, CRITERION, OPTIMIZERS, SCHEDULER)
     trainer.train_and_validate(EPOCHS)
 
     wandb.finish()

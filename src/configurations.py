@@ -22,7 +22,7 @@ logging.basicConfig(
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CRITERION = nn.CrossEntropyLoss()
 EPOCHS = 70  # From 50 to 70 for vit to learn more
-lr = 0.001
+lr = 0.0001
 
 DATA = "../data/potatodata"
 TEST_SIZE = 0.1
@@ -55,21 +55,27 @@ if TRAINING:
             [
                 {
                     "params": model.fc.parameters(),
-                    "lr": 0.002,
+                    "lr": 0.0005,
                 },  # Higher learning rate for the fully connected layer
                 {
                     "params": model.classifier.parameters(),
-                    "lr": 0.002,
+                    "lr": 0.0005,
                 },  # Same higher rate for the classifier layer
                 {
                     "params": model.vit.encoder.layer[-1].parameters(),
-                    "lr": 0.002,
+                    "lr": 0.0005,
                 },  # Assuming this is the part you're actively training
             ],
             lr=lr,
             weight_decay=0.02,
         ),  # Default learning rate for any other parameters if any
     }
+    SCHEDULER = {
+        "ViT": optim.lr_scheduler.ReduceLROnPlateau(OPTIMIZERS["ViT"], patience=5, factor=0.5, verbose=True),
+        "HybridModel": optim.lr_scheduler.ReduceLROnPlateau(OPTIMIZERS["HybridModel"], patience=5, factor=0.5, verbose=True),
+    }
+
+
 else:  # Testing
     MODELS = {
         # "EfficientNetV2B3": EfficientNetV2B3
