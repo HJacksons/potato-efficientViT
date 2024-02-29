@@ -107,12 +107,13 @@ class Tester:
         incorrect_predictions,
     ):
         incorrect_indices = (predicted != labels).nonzero()
-        incorrect_images.extend(images[incorrect_indices].cpu().numpy())
+        incorrect_images = np.concatenate(
+            (incorrect_images, images[incorrect_indices].cpu().numpy())
+        )
         incorrect_labels.extend(labels[incorrect_indices].cpu().numpy())
         incorrect_predictions.extend(predicted[incorrect_indices].cpu().numpy())
         mean = np.array([0.485, 0.456, 0.406])
         std = np.array([0.229, 0.224, 0.225])
-        incorrect_images = np.array(incorrect_images)
         incorrect_images = (
             incorrect_images * std[None, :, None, None] + mean[None, :, None, None]
         )
