@@ -99,12 +99,12 @@ class Tester:
 
     @staticmethod
     def error_analysis(
-            images,
-            labels,
-            predicted,
-            incorrect_images,
-            incorrect_labels,
-            incorrect_predictions,
+        images,
+        labels,
+        predicted,
+        incorrect_images,
+        incorrect_labels,
+        incorrect_predictions,
     ):
         incorrect_indices = (predicted != labels).nonzero()
         incorrect_images += [image.cpu().numpy() for image in images[incorrect_indices]]
@@ -176,7 +176,7 @@ class Tester:
                 np.transpose(incorrect_images[i], (1, 2, 0))
             )  # assuming the images are in C, H, W format
             plt.title(
-                f"True label: {CLASSES[incorrect_labels[i]]}, Predicted: {CLASSES[incorrect_predictions[i]]}"
+                f"True label: {CLASSES[incorrect_labels[i].item()]}, Predicted: {CLASSES[incorrect_predictions[i].item()]}"
             )
             buf = io.BytesIO()
             plt.savefig(buf, format="png")
