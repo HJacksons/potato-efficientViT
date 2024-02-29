@@ -27,10 +27,15 @@ class Tester:
         self.criterion = criterion
 
     def load_model(self, model_class, saved_model_path):
-        # print(f"Loading model {model_class} from {saved_model_path}")
+        print(f"Loading model {model_class} from {saved_model_path}")
         print(f"model_class type: {type(model_class)}")
 
-        model = model_class()
+        try:
+            model = model_class()
+        except TypeError as e:
+            print(f"Caught an error during model instantiation: {str(e)}")
+            return None
+
         print("Model instantiated successfully")
         print("Loading state dict...")
 
