@@ -1,7 +1,5 @@
 from torch import nn
-from torchvision.models.resnet import ResNet50_Weights
-from transformers import ViTModel, ViTForImageClassification
-from torchvision import models
+from transformers import ViTModel
 from utils import *
 import timm
 from torchsummary import summary
@@ -100,10 +98,3 @@ class HybridModel(nn.Module):
             return logits, loss.item()
         else:
             return logits, None
-
-
-class EfficientNetV2B3Test:
-    def __new__(cls):
-        return timm.create_model(
-            "tf_efficientnetv2_b3.in21k", pretrained=False, num_classes=FEATURES
-        )
