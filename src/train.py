@@ -104,6 +104,8 @@ class Trainer:
                 )
                 # Update the learning rate
                 self.scheduler[model_name].step(avg_loss)
+                current_lr = self.optimizer[model_name].param_groups[0]["lr"]
+                logging.info(f"Current learning rate for {model_name}: {current_lr}")
 
         for model_name, model in self.models.items():
             torch.save(
