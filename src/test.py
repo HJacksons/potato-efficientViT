@@ -38,6 +38,8 @@ class Tester:
             total_samples = 0
             all_labels = []
             all_predictions = []
+            class_correct = list(0.0 for i in range(len(CLASSES)))
+            class_total = list(0.0 for i in range(len(CLASSES)))
             with torch.no_grad():
                 for images, labels in self.test_loader:
                     images, labels = images.to(self.device), labels.to(self.device)
@@ -117,7 +119,7 @@ class Tester:
     def log_classwise_accuracy(model_name, class_correct, class_total):
         for i in range(len(CLASSES)):
             logging.info(
-                f"Accuracy of {model_name},  {CLASSES[i]}: {100 * class_correct[i] / class_total[i]}%"
+                f"Accuracy of {CLASSES[i]}: {100 * class_correct[i] / class_total[i]}%"
             )
 
 
