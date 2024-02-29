@@ -19,7 +19,7 @@ import logging
 class Tester:
     def __init__(self, models, device, test_loader, criterion):
         self.device = device
-        print(f"Models: {models}")  # new debug print
+        # print(f"Models: {models}")  # new debug print
 
         self.models = {
             model_name: self.load_model(model_class, SAVED_MODELS[model_name])
@@ -29,11 +29,8 @@ class Tester:
         self.criterion = criterion
 
     def load_model(self, model_class, saved_model_path):
-        #print(f"Loading model {model_class} from {saved_model_path}")
-        print(f"model_class type: {type(model_class)}")
-
         try:
-            model = model_class()
+            model = EfficientNetV2B3()  # instantiate the model directly
         except TypeError as e:
             print(f"Caught an error during model instantiation: {str(e)}")
             return None
