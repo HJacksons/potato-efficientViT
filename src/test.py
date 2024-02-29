@@ -27,9 +27,13 @@ class Tester:
         self.criterion = criterion
 
     def load_model(self, model_class, saved_model_path):
-        print(f"Loading model {model_class} from {saved_model_path}")  # debug print
-
-        model = model_class()
+        # print(f"Loading model {model_class} from {saved_model_path}")  # debug print
+        try:
+            model = model_class()
+        except TypeError as e:
+            print(f"Caught an exception during the instantiation of the model: {e}")
+            print("Continuing with the execution...")
+            return None
         model.load_state_dict(torch.load(saved_model_path, map_location=self.device))
         model = model.to(self.device)
         model.eval()
