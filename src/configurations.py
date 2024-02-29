@@ -22,7 +22,7 @@ logging.basicConfig(
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CRITERION = nn.CrossEntropyLoss()
 EPOCHS = 70  # From 50 to 70 for vit to learn more
-lr = 0.0003  # from 0.0001 to 0.0003
+lr = 0.0001
 
 DATA = "../data/potatodata"
 TEST_SIZE = 0.1
@@ -66,8 +66,8 @@ if TRAINING:
                     "lr": 0.0003,
                 },  # Assuming this is the part you're actively training
             ],
-            lr=0.0001,
-            weight_decay=0.02,
+            lr=lr,
+            weight_decay=0.05,
         ),  # Default learning rate for any other parameters if any
     }
 else:  # Testing

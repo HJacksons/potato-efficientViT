@@ -69,7 +69,7 @@ class HybridModel(nn.Module):
             1536, 3 * 224 * 224
         )  # Replace 3 with the number of channels expected by ViT
         self.dropout_effnet = nn.Dropout(
-            0.3
+            0.5
         )  # added dropout later to avoid overfitting
 
         self.vit = ViTModel.from_pretrained(
