@@ -113,7 +113,7 @@ class Tester:
         mean = np.array([0.485, 0.456, 0.406])
         std = np.array([0.229, 0.224, 0.225])
         incorrect_images = [
-            (image * std[:, None, None] + mean[:, None, None]).clip(0, 1)
+            (image.squeeze() * std[:, None, None] + mean[:, None, None]).clip(0, 1)
             for image in incorrect_images
         ]
         return incorrect_images, incorrect_labels, incorrect_predictions
