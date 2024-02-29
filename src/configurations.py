@@ -55,19 +55,19 @@ if TRAINING:
             [
                 {
                     "params": model.fc.parameters(),
-                    "lr": 0.0003,
+                    "lr": 0.002,
                 },  # Higher learning rate for the fully connected layer
                 {
                     "params": model.classifier.parameters(),
-                    "lr": 0.0003,
+                    "lr": 0.002,
                 },  # Same higher rate for the classifier layer
                 {
                     "params": model.vit.encoder.layer[-1].parameters(),
-                    "lr": 0.0003,
+                    "lr": 0.002,
                 },  # Assuming this is the part you're actively training
             ],
             lr=lr,
-            weight_decay=0.05,
+            weight_decay=0.02,
         ),  # Default learning rate for any other parameters if any
     }
 else:  # Testing
