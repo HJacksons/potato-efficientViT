@@ -34,7 +34,7 @@ CLASSES = sorted(os.listdir(DATA))
 # for i, cls in enumerate(CLASSES):
 #     print(f"{i}: {cls}")
 
-TRAINING = True
+TRAINING = False
 AUGMENT = True
 DATATYPE = "plantVillage"  # plantVillage or potatodata
 
@@ -71,17 +71,17 @@ if NEW_DATASET:
 else:
     if AUGMENT:
         SAVED_MODELS = {
-            "ViT": "ViT_best_plantds_Aug_True_192710.pth",
+            "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_True_142228.pth",
         }
     else:
         SAVED_MODELS = {
-            "ViT": "ViT_best_plantds_Aug_False_185343.pth",
+            "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_False_141359.pth",
         }
 
 wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_effnet",  # Train name
-    # name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_effnet",  # Test name
+    # name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_effnet",  # Train name
+    name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_effnet",  # Test name
 )
