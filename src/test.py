@@ -47,16 +47,12 @@ class Tester:
             with torch.no_grad():
                 for images, labels in self.test_loader:
                     images, labels = images.to(self.device), labels.to(self.device)
-                    outputs = model(images)
-                    # Caters for VIT model
-                    if isinstance(outputs, tuple):
-                        logits, loss = outputs
-                        if loss is None:
-                            loss = self.criterion(logits, labels)
+                    if isinstance(model, (ViT, HybridModel)):
+                        outputs, _ = model(images, None)  # Ignore the returned loss
                     else:
-                        logits = outputs
-                        loss = self.criterion(logits, labels)
-                    # End catering for VIT model
+                        outputs = model(images)
+                    logits = outputs
+                    loss = self.criterion(logits, labels)
                     running_loss += loss.item()
                     _, predicted = torch.max(logits, 1)
                     running_acc += (predicted == labels).sum().item()
