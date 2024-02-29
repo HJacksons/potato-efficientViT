@@ -55,28 +55,28 @@ if TRAINING:
 else:  # Testing
     MODELS = {
         "EfficientNetV2B3": EfficientNetV2B3,
-        "ViT": ViT,
-        "HybridModel": HybridModel,
+        # "ViT": ViT,
+        # "HybridModel": HybridModel,
     }
 
-    if NEW_DATASET:
-        if AUGMENT:
-            SAVED_MODELS = {
-                "EfficientNetV2B3":"EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
-            }
-        else:
-            SAVED_MODELS = {
-                "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth",
-            }
+if NEW_DATASET:
+    if AUGMENT:
+        SAVED_MODELS = {
+            "EfficientNetV2B3":"EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
+        }
     else:
-        if AUGMENT:
-            SAVED_MODELS = {
-                "ViT": "ViT_best_plantds_Aug_True_192710.pth",
-            }
-        else:
-            SAVED_MODELS = {
-                "ViT": "ViT_best_plantds_Aug_False_185343.pth",
-            }
+        SAVED_MODELS = {
+            "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth",
+        }
+else:
+    if AUGMENT:
+        SAVED_MODELS = {
+            "ViT": "ViT_best_plantds_Aug_True_192710.pth",
+        }
+    else:
+        SAVED_MODELS = {
+            "ViT": "ViT_best_plantds_Aug_False_185343.pth",
+        }
 
 wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
