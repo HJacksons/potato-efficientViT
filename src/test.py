@@ -158,13 +158,6 @@ class Tester:
             logging.info(
                 f"Accuracy of {CLASSES[i]}: {100 * class_correct[i] / class_total[i]}%"
             )
-            wandb.log(
-                {
-                    f"{model_name} Accuracy of {CLASSES[i]}": 100
-                    * class_correct[i]
-                    / class_total[i]
-                }
-            )
 
     @staticmethod
     def log_misclassified_images(
@@ -175,7 +168,7 @@ class Tester:
             image = incorrect_images[i]
             if image.shape[0] == 3:  # if image has 3 channels
                 image = np.transpose(image, (1, 2, 0))  # change (C, H, W) to (H, W, C)
-            image = image.astype(np.float)  # ensure the image is float type
+            image = image.astype(float)  # ensure the image is float type
             plt.imshow(image)
             plt.title(
                 f"True label: {CLASSES[incorrect_labels[i].item()]}, Predicted: {CLASSES[incorrect_predictions[i].item()]}"
