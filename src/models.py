@@ -103,8 +103,7 @@ class HybridModel(nn.Module):
 
 
 class EfficientNetV2B3Test:
-    def __init__(self):
-        self.model = timm.create_model("tf_efficientnetv2_b3.in21k", pretrained=False, num_classes=FEATURES)
-
-    def __call__(self):
-        return self.model
+    def __new__(cls):
+        return timm.create_model(
+            "tf_efficientnetv2_b3.in21k", pretrained=False, num_classes=FEATURES
+        )
