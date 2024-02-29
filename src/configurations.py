@@ -1,7 +1,7 @@
 import torch
 import torch.optim as optim
 import torch.nn as nn
-from models import ViT, EfficientNetV2B3, HybridModel, EfficientNetV2B3Test
+from models import ViT, EfficientNetV2B3, HybridModel
 import os
 import wandb
 from time import gmtime, strftime
@@ -54,7 +54,7 @@ if TRAINING:
     }
 else:  # Testing
     MODELS = {
-        "EfficientNetV2B3": EfficientNetV2B3Test
+        "EfficientNetV2B3": EfficientNetV2B3
         # "ViT": ViT,
         # "HybridModel": HybridModel,
     }

@@ -28,6 +28,8 @@ class Tester:
 
     def load_model(self, model_class, saved_model_path):
         # print(f"Loading model {model_class} from {saved_model_path}")  # debug print
+        print(f"model_class type: {type(model_class)}")  # new debug print
+
         model = model_class()
         print("Model instantiated successfully")
         print("Loading state dict...")
