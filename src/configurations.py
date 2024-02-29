@@ -5,6 +5,9 @@ from models import ViT, EfficientNetV2B3, HybridModel
 import os
 import wandb
 from time import gmtime, strftime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # print time now
 time = strftime("%d- %H:%M:%S", gmtime())
@@ -32,7 +35,7 @@ CLASSES = sorted(os.listdir(DATA))
 #     print(f"{i}: {cls}")
 
 TRAINING = True
-AUGMENT = True
+AUGMENT = False
 DATATYPE = "potatodata"  # plantVillage or potatodata
 
 NEW_DATASET = False  # for the purpose of testing
