@@ -98,21 +98,6 @@ class Tester:
         return class_correct, class_total
 
     @staticmethod
-    def error_analysis(
-        images,
-        labels,
-        predicted,
-        incorrect_images,
-        incorrect_labels,
-        incorrect_predictions,
-    ):
-        incorrect_indices = (predicted != labels).nonzero()
-        incorrect_images += [image for image in images[incorrect_indices]]
-        incorrect_labels.extend(labels[incorrect_indices].cpu().numpy())
-        incorrect_predictions.extend(predicted[incorrect_indices].cpu().numpy())
-        return incorrect_images, incorrect_labels, incorrect_predictions
-
-    @staticmethod
     def calculate_and_log_metrics(model_name, all_labels, all_predictions, avg_loss):
         accuracy = accuracy_score(all_labels, all_predictions)
         precision = precision_score(all_labels, all_predictions, average="macro")
@@ -152,36 +137,6 @@ class Tester:
             logging.info(
                 f"Accuracy of {CLASSES[i]}: {100 * class_correct[i] / class_total[i]}%"
             )
-
-    @staticmethod
-    def log_misclassified_images(
-            model_name, incorrect_images, incorrect_labels, incorrect_predictions
-    ):
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1).to(device)
-        std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1).to(device)
-
-        for i in range(min(10, len(incorrect_images))):
-            plt.figure()
-            image = incorrect_images[i].squeeze()  # Remove batch dimension
-            # Denormalize
-            image = image * std + mean
-            image = image.clamp(0, 1).cpu().numpy()  # clip values to the valid range for plt.imshow()
-
-            # Transpose from (C, H, W) to (H, W, C) for visualization, only if image has 3 dimensions
-            if image.ndim == 3:
-                image = np.transpose(image, (1, 2, 0))
-
-            plt.imshow(image, cmap='gray' if image.ndim == 2 else None)  # Use grayscale colormap for 2D images
-            plt.title(
-                f"True label: {CLASSES[incorrect_labels[i].item()]}, Predicted: {CLASSES[incorrect_predictions[i].item()]}"
-            )
-            buf = io.BytesIO()
-            plt.savefig(buf, format="png")
-            buf.seek(0)
-            image = Image.open(buf)
-            wandb.log({f"{model_name} Misclassified Images": wandb.Image(image)})
-            plt.close()
 
 
 if __name__ == "__main__":
