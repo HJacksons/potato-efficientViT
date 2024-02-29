@@ -163,8 +163,8 @@ class Tester:
     def log_misclassified_images(
             model_name, incorrect_images, incorrect_labels, incorrect_predictions
     ):
-        mean = np.array([0.485, 0.456, 0.406])
-        std = np.array([0.229, 0.224, 0.225])
+        mean = np.array([0.485, 0.456, 0.406])[:, np.newaxis, np.newaxis]
+        std = np.array([0.229, 0.224, 0.225])[:, np.newaxis, np.newaxis]
 
         for i in range(min(10, len(incorrect_images))):
             plt.figure()
