@@ -27,13 +27,16 @@ class Tester:
         self.criterion = criterion
 
     def load_model(self, model_class, saved_model_path):
-        # print(f"Loading model {model_class} from {saved_model_path}")  # debug print
-        print(f"model_class type: {type(model_class)}")  # new debug print
+        # print(f"Loading model {model_class} from {saved_model_path}")
+        print(f"model_class type: {type(model_class)}")
 
         model = model_class()
         print("Model instantiated successfully")
         print("Loading state dict...")
+
         state_dict = torch.load(saved_model_path, map_location=self.device)
+        print(f"State dict keys: {state_dict.keys()}")  # new debug print
+
         print("State dict loaded successfully")
         model.load_state_dict(state_dict)
         model = model.to(self.device)
