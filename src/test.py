@@ -27,6 +27,8 @@ class Tester:
         self.criterion = criterion
 
     def load_model(self, model_class, saved_model_path):
+        print(f"Loading model {model_class} from {saved_model_path}")  # debug print
+
         model = model_class()
         model.load_state_dict(torch.load(saved_model_path, map_location=self.device))
         model = model.to(self.device)

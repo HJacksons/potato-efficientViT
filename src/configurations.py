@@ -62,7 +62,7 @@ else:  # Testing
 if NEW_DATASET:
     if AUGMENT:
         SAVED_MODELS = {
-            "EfficientNetV2B3":"EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
+            "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
         }
     else:
         SAVED_MODELS = {

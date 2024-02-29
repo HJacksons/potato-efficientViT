@@ -21,6 +21,8 @@ class EfficientNetV2B3(nn.Module):
         self.model.classifier = nn.Linear(1536, FEATURES)
 
     def forward(self, x):
+        print("In EfficientNetV2B3 forward method")  # debug print
+
         return self.model(x)
 
 
