@@ -38,11 +38,6 @@ class Tester:
             total_samples = 0
             all_labels = []
             all_predictions = []
-            incorrect_images = []
-            incorrect_labels = []
-            incorrect_predictions = []
-            class_correct = list(0.0 for i in range(len(CLASSES)))
-            class_total = list(0.0 for i in range(len(CLASSES)))
             with torch.no_grad():
                 for images, labels in self.test_loader:
                     images, labels = images.to(self.device), labels.to(self.device)
@@ -65,16 +60,6 @@ class Tester:
                     class_correct, class_total = self.calculate_classwise_accuracy(
                         labels, predicted, class_correct, class_total
                     )
-                    incorrect_images, incorrect_labels, incorrect_predictions = (
-                        self.error_analysis(
-                            images,
-                            labels,
-                            predicted,
-                            incorrect_images,
-                            incorrect_labels,
-                            incorrect_predictions,
-                        )
-                    )
 
             all_labels = np.array(all_labels)
             all_predictions = np.array(all_predictions)
@@ -85,9 +70,6 @@ class Tester:
             )
             self.log_confusion_matrix(model_name, all_labels, all_predictions)
             self.log_classwise_accuracy(model_name, class_correct, class_total)
-            self.log_misclassified_images(
-                model_name, incorrect_images, incorrect_labels, incorrect_predictions
-            )
 
     @staticmethod
     def calculate_classwise_accuracy(labels, predicted, class_correct, class_total):
@@ -135,7 +117,7 @@ class Tester:
     def log_classwise_accuracy(model_name, class_correct, class_total):
         for i in range(len(CLASSES)):
             logging.info(
-                f"Accuracy of {CLASSES[i]}: {100 * class_correct[i] / class_total[i]}%"
+                f"Accuracy of {model_name},  {CLASSES[i]}: {100 * class_correct[i] / class_total[i]}%"
             )
 
 
