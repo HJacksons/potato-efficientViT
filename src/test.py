@@ -99,25 +99,23 @@ class Tester:
 
     @staticmethod
     def error_analysis(
-        images,
-        labels,
-        predicted,
-        incorrect_images,
-        incorrect_labels,
-        incorrect_predictions,
+            images,
+            labels,
+            predicted,
+            incorrect_images,
+            incorrect_labels,
+            incorrect_predictions,
     ):
         incorrect_indices = (predicted != labels).nonzero()
-        incorrect_images = np.concatenate(
-            (incorrect_images, images[incorrect_indices].cpu().numpy())
-        )
+        incorrect_images += [image.cpu().numpy() for image in images[incorrect_indices]]
         incorrect_labels.extend(labels[incorrect_indices].cpu().numpy())
         incorrect_predictions.extend(predicted[incorrect_indices].cpu().numpy())
         mean = np.array([0.485, 0.456, 0.406])
         std = np.array([0.229, 0.224, 0.225])
-        incorrect_images = (
-            incorrect_images * std[None, :, None, None] + mean[None, :, None, None]
-        )
-        incorrect_images = np.clip(incorrect_images, 0, 1)
+        incorrect_images = [
+            (image * std[:, None, None] + mean[:, None, None]).clip(0, 1)
+            for image in incorrect_images
+        ]
         return incorrect_images, incorrect_labels, incorrect_predictions
 
     @staticmethod
