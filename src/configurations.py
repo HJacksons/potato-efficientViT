@@ -28,7 +28,7 @@ DATA = "../data/potatodata"
 TEST_SIZE = 0.1
 VALI_SIZE = 0.1
 RANDOM_STATE = 42  # for reproducibility
-BATCH_SIZE = 32 # from 64 to 32
+BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 # print list of classes
 # for i, cls in enumerate(CLASSES):
@@ -50,7 +50,7 @@ if TRAINING:
     OPTIMIZERS = {
         # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr),
         "ViT": optim.AdamW(MODELS["ViT"].parameters(), lr), #  swtich to AdamW all
-        "HybridModel": optim.AdamW(MODELS["HybridModel"].parameters(), lr, weight_decay=0.05), # Added weight decay/reguralization to stop overfitting
+        "HybridModel": optim.AdamW(MODELS["HybridModel"].parameters(), lr, weight_decay=0.02), # Added weight decay/reguralization to stop overfitting
     }
 else:  # Testing
     MODELS = {
