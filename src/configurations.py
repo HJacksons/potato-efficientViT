@@ -71,8 +71,12 @@ if TRAINING:
         ),  # Default learning rate for any other parameters if any
     }
     SCHEDULER = {
-        "ViT": optim.lr_scheduler.ReduceLROnPlateau(OPTIMIZERS["ViT"], patience=5, factor=0.5, verbose=True),
-        "HybridModel": optim.lr_scheduler.ReduceLROnPlateau(OPTIMIZERS["HybridModel"], patience=5, factor=0.5, verbose=True),
+        "ViT": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["ViT"], patience=5, factor=0.5, verbose=True
+        ),
+        "HybridModel": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["HybridModel"], patience=2, factor=0.5, verbose=True
+        ),
     }
 
 

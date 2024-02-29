@@ -12,7 +12,14 @@ time = now.strftime("%H%M%S")
 
 class Trainer:
     def __init__(
-        self, models, device, train_loader, vali_loader, criterion, optimizers, schedulers
+        self,
+        models,
+        device,
+        train_loader,
+        vali_loader,
+        criterion,
+        optimizers,
+        schedulers,
     ):
         self.models = models
         self.device = device
@@ -134,7 +141,9 @@ class Trainer:
 if __name__ == "__main__":
     dataset = Dataset()
     train_loader, vali_loader, _ = dataset.prepare_dataset()
-    trainer = Trainer(MODELS, DEVICE, train_loader, vali_loader, CRITERION, OPTIMIZERS, SCHEDULER)
+    trainer = Trainer(
+        MODELS, DEVICE, train_loader, vali_loader, CRITERION, OPTIMIZERS, SCHEDULER
+    )
     trainer.train_and_validate(EPOCHS)
 
     wandb.finish()
