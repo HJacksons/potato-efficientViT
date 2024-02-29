@@ -26,7 +26,8 @@ class Tester:
         self.test_loader = test_loader
         self.criterion = criterion
 
-    def load_model(self, model, saved_model_path):
+    def load_model(self, model_class, saved_model_path):
+        model = model_class().to(self.device)
         model.load_state_dict(torch.load(saved_model_path, map_location=self.device))
         model.eval()
         return model

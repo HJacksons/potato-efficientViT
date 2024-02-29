@@ -34,8 +34,8 @@ CLASSES = sorted(os.listdir(DATA))
 # for i, cls in enumerate(CLASSES):
 #     print(f"{i}: {cls}")
 
-TRAINING = True
-AUGMENT = True
+TRAINING = False
+AUGMENT = False
 DATATYPE = "potatodata"  # plantVillage or potatodata
 
 NEW_DATASET = True  # for the purpose of testing
