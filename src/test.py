@@ -163,19 +163,11 @@ class Tester:
     def log_misclassified_images(
             model_name, incorrect_images, incorrect_labels, incorrect_predictions
     ):
-        mean = np.array([0.485, 0.456, 0.406])[:, np.newaxis, np.newaxis]
-        std = np.array([0.229, 0.224, 0.225])[:, np.newaxis, np.newaxis]
-
         for i in range(min(10, len(incorrect_images))):
             plt.figure()
             image = incorrect_images[i]
-            # Denormalize
-            image = std * image + mean
-            image = np.clip(image, 0, 1)  # clip values to the valid range for plt.imshow()
-
             if image.shape[0] == 3:  # if image has 3 channels
                 image = np.transpose(image, (1, 2, 0))  # change (C, H, W) to (H, W, C)
-
             plt.imshow(image)
             plt.title(
                 f"True label: {CLASSES[incorrect_labels[i].item()]}, Predicted: {CLASSES[incorrect_predictions[i].item()]}"
