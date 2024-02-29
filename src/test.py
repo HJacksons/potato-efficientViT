@@ -27,8 +27,9 @@ class Tester:
         self.criterion = criterion
 
     def load_model(self, model_class, saved_model_path):
-        model = model_class().to(self.device)
+        model = model_class()
         model.load_state_dict(torch.load(saved_model_path, map_location=self.device))
+        model = model.to(self.device)
         model.eval()
         return model
 
@@ -47,12 +48,16 @@ class Tester:
             with torch.no_grad():
                 for images, labels in self.test_loader:
                     images, labels = images.to(self.device), labels.to(self.device)
-                    if isinstance(model, (ViT, HybridModel)):
-                        outputs, _ = model(images, None)  # Ignore the returned loss
+                    outputs = model(images)
+                    # Caters for VIT model
+                    if isinstance(outputs, tuple):
+                        logits, loss = outputs
+                        if loss is None:
+                            loss = self.criterion(logits, labels)
                     else:
-                        outputs = model(images)
-                    logits = outputs
-                    loss = self.criterion(logits, labels)
+                        logits = outputs
+                        loss = self.criterion(logits, labels)
+                    # End catering for VIT model
                     running_loss += loss.item()
                     _, predicted = torch.max(logits, 1)
                     running_acc += (predicted == labels).sum().item()
