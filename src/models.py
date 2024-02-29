@@ -69,7 +69,7 @@ class HybridModel(nn.Module):
             1536, 3 * 224 * 224
         )  # Replace 3 with the number of channels expected by ViT
         self.dropout_effnet = nn.Dropout(
-            0.5
+            0.1
         )  # added dropout later to avoid overfitting
 
         self.vit = ViTModel.from_pretrained(
@@ -79,7 +79,7 @@ class HybridModel(nn.Module):
             param.requires_grad = False
         for param in self.vit.encoder.layer[-1].parameters():
             param.requires_grad = True
-        self.dropout = nn.Dropout(0.3)
+        self.dropout = nn.Dropout(0.1)
         self.classifier = nn.Linear(self.vit.config.hidden_size, num_labels)
 
     def forward(self, pixel_values, labels=None):
