@@ -21,7 +21,7 @@ logging.basicConfig(
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CRITERION = nn.CrossEntropyLoss()
-EPOCHS = 50
+EPOCHS = 70 # From 50 to 70 for vit to learn more
 lr = 0.0001
 
 DATA = "../data/potatodata"
@@ -50,7 +50,7 @@ if TRAINING:
     OPTIMIZERS = {
         # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr),
         "ViT": optim.Adam(MODELS["ViT"].parameters(), lr),
-        "HybridModel": optim.Adam(MODELS["HybridModel"].parameters(), lr, weight_decay=0.01),
+        "HybridModel": optim.Adam(MODELS["HybridModel"].parameters(), lr, weight_decay=0.01), # Added weight decay/reguralization to stop overfitting
     }
 else:  # Testing
     MODELS = {
@@ -82,6 +82,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_Vit_Hybrid_l2_05",  # Train name
+    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_Vit_Hybrid_l2_05",  # Train name # Added L2 regularization... 0.5
     # name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_Vit_hybrid",  # Test name
 )
