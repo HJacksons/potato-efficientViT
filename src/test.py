@@ -168,13 +168,15 @@ class Tester:
 
     @staticmethod
     def log_misclassified_images(
-        model_name, incorrect_images, incorrect_labels, incorrect_predictions
+            model_name, incorrect_images, incorrect_labels, incorrect_predictions
     ):
         for i in range(min(10, len(incorrect_images))):
             plt.figure()
-            plt.imshow(
-                np.transpose(incorrect_images[i], (1, 2, 0))
-            )  # assuming the images are in C, H, W format
+            image = incorrect_images[i]
+            if image.shape[0] == 3:  # if image has 3 channels
+                image = np.transpose(image, (1, 2, 0))  # change (C, H, W) to (H, W, C)
+            image = image.astype(np.float)  # ensure the image is float type
+            plt.imshow(image)
             plt.title(
                 f"True label: {CLASSES[incorrect_labels[i].item()]}, Predicted: {CLASSES[incorrect_predictions[i].item()]}"
             )
