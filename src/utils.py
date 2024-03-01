@@ -5,16 +5,35 @@ from imgaug import augmenters as iaa
 import numpy as np
 from PIL import Image
 
-# Mosaic and MixUp augmentations using imgaug library
-mosaic_aug = iaa.Mosaic(mode="random", fillval=(0, 255, 0))
-mixup_aug = iaa.MixUp(alpha=(0.6, 0.6))  # alpha is the range for beta distribution to sample from
+class Mosaic(object):
+    def __init__(self, size):
+        self.size = size
 
-# Define the Lambda transforms
-# Convert PIL image to np array -> apply imgaug augmentation -> convert np array back to PIL image
-mosaic_transform = Lambda(lambda img: Image.fromarray(mosaic_aug.augment_image(np.array(img))))
-mixup_transform = Lambda(lambda img: Image.fromarray(mixup_aug.augment_image(np.array(img))))
-mosaic_transform = Lambda(lambda img: mosaic_aug.augment_image(np.array(img)))
-mixup_transform = Lambda(lambda img: mixup_aug.augment_image(np.array(img)))
+    def __call__(self, img):
+        # Convert PIL image to numpy array
+        img = np.array(img)
+
+        # Create an empty array for the output
+        output = np.zeros_like(img)
+
+        # Divide the image into four quarters
+        quarters = [
+            img[:self.size[0]//2, :self.size[1]//2, :],
+            img[:self.size[0]//2, self.size[1]//2:, :],
+            img[self.size[0]//2:, :self.size[1]//2, :],
+            img[self.size[0]//2:, self.size[1]//2:, :]
+        ]
+
+        # Shuffle the quarters
+        np.random.shuffle(quarters)
+
+        # Construct the output image from the shuffled quarters
+        output[:self.size[0]//2, :self.size[1]//2, :] = quarters[0]
+        output[:self.size[0]//2, self.size[1]//2:, :] = quarters[1]
+        output[self.size[0]//2:, :self.size[1]//2, :] = quarters[2]
+        output[self.size[0]//2:, self.size[1]//2:, :] = quarters[3]
+
+        return Image.fromarray(output)
 
 def get_transforms_for_model(augment):
     if augment:
@@ -59,8 +78,7 @@ def get_transforms_for_model(augment):
                         1.2,
                     ),  # Adjust scale values for additional zooming effect
                 ),
-                mosaic_transform,  # Mosaic augmentation
-                mixup_transform,  # MixUp augmentation
+                Mosaic((224, 224)),  # Add mosaic effect
                 transforms.ToTensor(),
                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
             ]
