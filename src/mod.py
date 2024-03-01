@@ -49,6 +49,3 @@ class HybridModel(nn.Module):
             loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
         return (logits, loss) if loss is not None else logits
 
-
-model = HybridModel()
-print(summary(model, input_size=(1, 3, 224, 224)))
