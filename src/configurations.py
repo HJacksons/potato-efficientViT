@@ -75,27 +75,26 @@ else:  # Testing
 if NEW_DATASET:
     if AUGMENT:
         SAVED_MODELS = {
-            #"EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
+            # "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
             "ViT": "ViT_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
             "HybridModel": "HybridModel_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
         }
     else:
         SAVED_MODELS = {
-            #"EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth",
+            # "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth",
             "ViT": "ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
             "HybridModel": "HybridModel_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
-
         }
 else:
     if AUGMENT:
         SAVED_MODELS = {
-            #"EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_True_142228.pth",
+            # "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_True_142228.pth",
             "ViT": "ViT_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
             "HybridModel": "HybridModel_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
         }
     else:
         SAVED_MODELS = {
-            #"EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_False_141359.pth",
+            # "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_False_141359.pth",
             "ViT": "ViT_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
             "HybridModel": "HybridModel_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
         }
