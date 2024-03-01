@@ -34,7 +34,7 @@ CLASSES = sorted(os.listdir(DATA))
 # for i, cls in enumerate(CLASSES):
 #     print(f"{i}: {cls}")
 
-TRAINING = True
+TRAINING = False
 AUGMENT = False
 DATATYPE = "potatodata"  # plantVillage or potatodata
 
@@ -76,10 +76,14 @@ if NEW_DATASET:
     if AUGMENT:
         SAVED_MODELS = {
             "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
+            "ViT": "ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
+            "HybridModel": "HybridModel_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
         }
     else:
         SAVED_MODELS = {
             "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth",
+            "ViT": "ViT_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
+            "HybridModel": "HybridModel_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
         }
 else:
     if AUGMENT:
@@ -95,6 +99,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_Vit_Hybrid_l2_3",  # Train name # Added L2 regularization... 0.5
-    # name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_Vit_hybrid",  # Test name
+    # name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_Vit_Hybrid_l2_3",  # Train name # Added L2 regularization... 0.5
+    name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_Vit_and_hybrid_",  # Test name
 )

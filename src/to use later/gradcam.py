@@ -11,7 +11,8 @@ import matplotlib.pyplot as plt
 import cv2
 from PIL import Image
 
-
+# for vit  https://medium.com/orohealth/explainable-ai-using-vision-transformers-on-skin-disease-images-9148d1583faf
+# https://jacobgil.github.io/pytorch-gradcam-book/introduction.html
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
