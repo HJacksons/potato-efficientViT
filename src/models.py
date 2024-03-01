@@ -2,6 +2,7 @@ from torch import nn
 from transformers import ViTModel
 from utils import *
 import timm
+
 # from torchsummary import summary
 from torchinfo import summary
 
@@ -61,9 +62,9 @@ class HybridModel(nn.Module):
         # Freeze the EfficientNetV2B3 model
         for param in self.effnet.parameters():
             param.requires_grad = False
-        # unfreeze the last layer few layers of the model, may be 5
+        # unfreeze the last layer few layers of the model, may be 3
         for i, param in enumerate(self.effnet.parameters()):
-            if i >= len(list(self.effnet.parameters())) - 2:
+            if i >= len(list(self.effnet.parameters())) - 3:
                 param.requires_grad = True
 
         # Replace the classifier with a no op (identity) to get the features
@@ -106,4 +107,3 @@ class HybridModel(nn.Module):
             return logits, loss.item()
         else:
             return logits, None
-

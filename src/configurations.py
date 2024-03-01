@@ -21,7 +21,7 @@ logging.basicConfig(
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CRITERION = nn.CrossEntropyLoss()
-EPOCHS = 100  # From 50 to 70 for vit to learn more
+EPOCHS = 70  # From 50 to 70 for vit to learn more
 lr = 0.0001
 
 DATA = "../data/potatodata"
@@ -50,8 +50,10 @@ if TRAINING:
 
     OPTIMIZERS = {
         # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr),
-        "ViT": optim.AdamW(MODELS["ViT"].parameters(), lr),  #  swtich to AdamW all
-        "HybridModel": optim.AdamW(MODELS["HybridModel"].parameters(), lr),
+        "ViT": optim.Adam(MODELS["ViT"].parameters(), lr),  #  swtich to AdamW all
+        "HybridModel": optim.Adam(
+            MODELS["HybridModel"].parameters(), lr, weight_decay=0.5
+        ),
     }
     SCHEDULER = {
         "ViT": optim.lr_scheduler.ReduceLROnPlateau(

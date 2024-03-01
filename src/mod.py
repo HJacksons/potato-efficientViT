@@ -8,10 +8,14 @@ from torchinfo import summary
 class HybridModel(nn.Module):
     def __init__(self, num_labels=7):  # Assuming FEATURES is defined as 7
         super(HybridModel, self).__init__()
-        self.effnet = timm.create_model("tf_efficientnetv2_b3", pretrained=True, features_only=True)
+        self.effnet = timm.create_model(
+            "tf_efficientnetv2_b3", pretrained=True, features_only=True
+        )
 
         # Unfreeze the last few layers of EfficientNet
-        for param in list(self.effnet.parameters())[-20:]:  # Unfreezing the last 20 parameters as an example
+        for param in list(self.effnet.parameters())[
+            -20:
+        ]:  # Unfreezing the last 20 parameters as an example
             param.requires_grad = True
 
         # identity layer
@@ -44,7 +48,6 @@ class HybridModel(nn.Module):
             loss_fct = nn.CrossEntropyLoss()
             loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
         return (logits, loss) if loss is not None else logits
-
 
 
 model = HybridModel()
