@@ -1,6 +1,20 @@
 from torchvision import transforms
 import os
+from torchvision.transforms import Lambda
+from imgaug import augmenters as iaa
+import numpy as np
+from PIL import Image
 
+# Mosaic and MixUp augmentations using imgaug library
+mosaic_aug = iaa.Mosaic(mode="random", fillval=(0, 255, 0))
+mixup_aug = iaa.MixUp(alpha=(0.6, 0.6))  # alpha is the range for beta distribution to sample from
+
+# Define the Lambda transforms
+# Convert PIL image to np array -> apply imgaug augmentation -> convert np array back to PIL image
+mosaic_transform = Lambda(lambda img: Image.fromarray(mosaic_aug.augment_image(np.array(img))))
+mixup_transform = Lambda(lambda img: Image.fromarray(mixup_aug.augment_image(np.array(img))))
+mosaic_transform = Lambda(lambda img: mosaic_aug.augment_image(np.array(img)))
+mixup_transform = Lambda(lambda img: mixup_aug.augment_image(np.array(img)))
 
 def get_transforms_for_model(augment):
     if augment:
@@ -26,7 +40,7 @@ def get_transforms_for_model(augment):
                 transforms.Resize(256),  # Resize the shortest side of the image to 256
                 transforms.RandomResizedCrop(
                     224,
-                    scale=(0.5, 1.5),  # Adjust scale for more intense zooming
+                    scale=(0.95, 1.05),  # Adjust scale for more intense zooming
                     ratio=(0.75, 1.33),
                     interpolation=transforms.InterpolationMode.BICUBIC,
                 ),
@@ -34,17 +48,19 @@ def get_transforms_for_model(augment):
                 transforms.RandomVerticalFlip(),
                 transforms.RandomRotation(30),  # Increase rotation range
                 transforms.ColorJitter(
-                    brightness=0.3, contrast=0.2, saturation=0.2, hue=0.02
+                    saturation=0.8, hue=0.021
                 ),
                 # Add contrast and saturation adjustment
                 transforms.RandomAffine(
                     degrees=0,
-                    translate=(0.2, 0.2),  # Increase translate values for more shifting
+                    translate=(0.13, 0.13),  # Increase translate values for more shifting
                     scale=(
                         0.8,
                         1.2,
                     ),  # Adjust scale values for additional zooming effect
                 ),
+                mosaic_transform,  # Mosaic augmentation
+                mixup_transform,  # MixUp augmentation
                 transforms.ToTensor(),
                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
             ]
