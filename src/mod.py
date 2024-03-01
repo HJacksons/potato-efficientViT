@@ -48,4 +48,3 @@ class HybridModel(nn.Module):
             loss_fct = nn.CrossEntropyLoss()
             loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
         return (logits, loss) if loss is not None else logits
-

@@ -5,35 +5,6 @@ from imgaug import augmenters as iaa
 import numpy as np
 from PIL import Image
 
-class Mosaic(object):
-    def __init__(self, size):
-        self.size = size
-
-    def __call__(self, img):
-        # Convert PIL image to numpy array
-        img = np.array(img)
-
-        # Create an empty array for the output
-        output = np.zeros_like(img)
-
-        # Divide the image into four quarters
-        quarters = [
-            img[:self.size[0]//2, :self.size[1]//2, :],
-            img[:self.size[0]//2, self.size[1]//2:, :],
-            img[self.size[0]//2:, :self.size[1]//2, :],
-            img[self.size[0]//2:, self.size[1]//2:, :]
-        ]
-
-        # Shuffle the quarters
-        np.random.shuffle(quarters)
-
-        # Construct the output image from the shuffled quarters
-        output[:self.size[0]//2, :self.size[1]//2, :] = quarters[0]
-        output[:self.size[0]//2, self.size[1]//2:, :] = quarters[1]
-        output[self.size[0]//2:, :self.size[1]//2, :] = quarters[2]
-        output[self.size[0]//2:, self.size[1]//2:, :] = quarters[3]
-
-        return Image.fromarray(output)
 
 def get_transforms_for_model(augment):
     if augment:
@@ -65,20 +36,20 @@ def get_transforms_for_model(augment):
                 ),
                 transforms.RandomHorizontalFlip(),
                 transforms.RandomVerticalFlip(),
-                transforms.RandomRotation(30),  # Increase rotation range
-                transforms.ColorJitter(
-                    saturation=0.8, hue=0.021
-                ),
+                transforms.RandomRotation([-40, 40]),  # Increase rotation range
+                transforms.ColorJitter(saturation=0.8, hue=0.021),
                 # Add contrast and saturation adjustment
                 transforms.RandomAffine(
                     degrees=0,
-                    translate=(0.13, 0.13),  # Increase translate values for more shifting
+                    translate=(
+                        0.13,
+                        0.13,
+                    ),  # Increase translate values for more shifting
                     scale=(
                         0.8,
                         1.2,
                     ),  # Adjust scale values for additional zooming effect
                 ),
-                Mosaic((224, 224)),  # Add mosaic effect
                 transforms.ToTensor(),
                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
             ]
