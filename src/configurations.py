@@ -75,15 +75,16 @@ else:  # Testing
 if NEW_DATASET:
     if AUGMENT:
         SAVED_MODELS = {
-            "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
-            "ViT": "ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
-            "HybridModel": "HybridModel_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
+            #"EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
+            "ViT": "ViT_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
+            "HybridModel": "HybridModel_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
         }
     else:
         SAVED_MODELS = {
-            "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth",
-            "ViT": "ViT_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
-            "HybridModel": "HybridModel_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
+            #"EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth",
+            "ViT": "ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
+            "HybridModel": "HybridModel_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
+
         }
 else:
     if AUGMENT:
