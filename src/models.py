@@ -63,7 +63,7 @@ class HybridModel(nn.Module):
             param.requires_grad = False
         # unfreeze the last layer few layers of the model, may be 5
         for i, param in enumerate(self.effnet.parameters()):
-            if i >= len(list(self.effnet.parameters())) - 5:
+            if i >= len(list(self.effnet.parameters())) - 2:
                 param.requires_grad = True
 
         # Replace the classifier with a no op (identity) to get the features
@@ -74,7 +74,7 @@ class HybridModel(nn.Module):
             1536, 3 * 224 * 224
         )  # Replace 3 with the number of channels expected by ViT
         self.dropout_effnet = nn.Dropout(
-            0.1
+            0.2
         )  # added dropout later to avoid overfitting
 
         self.vit = ViTModel.from_pretrained(

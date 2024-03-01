@@ -21,8 +21,8 @@ logging.basicConfig(
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CRITERION = nn.CrossEntropyLoss()
-EPOCHS = 70  # From 50 to 70 for vit to learn more
-lr = 0.001 # from 0.00001 to 0.00005
+EPOCHS = 100  # From 50 to 70 for vit to learn more
+lr = 0.0001
 
 DATA = "../data/potatodata"
 TEST_SIZE = 0.1
@@ -35,7 +35,7 @@ CLASSES = sorted(os.listdir(DATA))
 #     print(f"{i}: {cls}")
 
 TRAINING = True
-AUGMENT = False
+AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata
 
 NEW_DATASET = True  # for the purpose of testing
@@ -51,24 +51,7 @@ if TRAINING:
     OPTIMIZERS = {
         # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr),
         "ViT": optim.AdamW(MODELS["ViT"].parameters(), lr),  #  swtich to AdamW all
-        "HybridModel": optim.AdamW(
-            [
-                {
-                    "params": model.fc.parameters(),
-                    "lr": 0.0005,
-                },  # Higher learning rate for the fully connected layer
-                {
-                    "params": model.classifier.parameters(),
-                    "lr": 0.0005,
-                },  # Same higher rate for the classifier layer
-                {
-                    "params": model.vit.encoder.layer[-1].parameters(),
-                    "lr": 0.0005,
-                },  # Assuming this is the part you're actively training
-            ],
-            lr=lr,
-            weight_decay=0.02,
-        ),  # Default learning rate for any other parameters if any
+        "HybridModel": optim.AdamW(MODELS["HybridModel"].parameters(), lr),
     }
     SCHEDULER = {
         "ViT": optim.lr_scheduler.ReduceLROnPlateau(
@@ -110,6 +93,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_Vit_Hybrid_l2_05",  # Train name # Added L2 regularization... 0.5
+    name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_Vit_Hybrid_l2_3",  # Train name # Added L2 regularization... 0.5
     # name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_Vit_hybrid",  # Test name
 )
