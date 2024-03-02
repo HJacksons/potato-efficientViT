@@ -24,7 +24,7 @@ CRITERION = nn.CrossEntropyLoss()
 EPOCHS = 70  # From 50 to 70 for vit to learn more
 lr = 0.0001
 
-DATA = "../data/plantVillage"
+DATA = "../data/potatodata"
 TEST_SIZE = 0.1
 VALI_SIZE = 0.1
 RANDOM_STATE = 42  # for reproducibility
@@ -35,10 +35,10 @@ CLASSES = sorted(os.listdir(DATA))
 #     print(f"{i}: {cls}")
 
 TRAINING = False
-AUGMENT = True
-DATATYPE = "plantVillage"  # plantVillage or potatodata
+AUGMENT = False
+DATATYPE = "potatodata"  # plantVillage or potatodata
 
-NEW_DATASET = False  # for the purpose of testing
+NEW_DATASET = True  # for the purpose of testing
 
 if TRAINING:
     MODELS = {
@@ -104,5 +104,5 @@ wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
     # name=f"{time}_{DATATYPE}_train_Aug_{AUGMENT}_Vit_Hybrid_l2_4",  # Train name # Added L2 regularization... 0.5
-    name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_Vit_and_hybrid_",  # Test names
+    name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_Vit_and_hybrid_all_final",  # Test names
 )

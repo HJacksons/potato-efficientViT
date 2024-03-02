@@ -69,10 +69,10 @@ class Tester:
             avg_loss = running_loss / len(self.test_loader)
             avg_acc = running_acc / total_samples
             self.calculate_and_log_metrics(
-                model_name, all_labels, all_predictions, avg_loss
+                model_name, all_labels, all_predictions, avg_loss, class_correct, class_total
             )
             self.log_confusion_matrix(model_name, all_labels, all_predictions)
-            self.log_classwise_accuracy(model_name, class_correct, class_total)
+            #self.log_classwise_accuracy(model_name, class_correct, class_total)
 
     @staticmethod
     def calculate_classwise_accuracy(labels, predicted, class_correct, class_total):
@@ -83,7 +83,7 @@ class Tester:
         return class_correct, class_total
 
     @staticmethod
-    def calculate_and_log_metrics(model_name, all_labels, all_predictions, avg_loss):
+    def calculate_and_log_metrics(model_name, all_labels, all_predictions, avg_loss, class_correct, class_total):
         accuracy = accuracy_score(all_labels, all_predictions)
         precision = precision_score(all_labels, all_predictions, average="macro")
         recall = recall_score(all_labels, all_predictions, average="macro")
@@ -91,6 +91,17 @@ class Tester:
         logging.info(
             f"Model {model_name}, Test Loss: {avg_loss:.4f}, Test Accuracy: {accuracy:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}, F1: {f1:.4f}"
         )
+        # Class-wise metrics
+        precision_classwise = precision_score(all_labels, all_predictions, average=None)
+        recall_classwise = recall_score(all_labels, all_predictions, average=None)
+        f1_classwise = f1_score(all_labels, all_predictions, average=None)
+
+        for i in range(len(CLASSES)):
+            class_accuracy = 100 * class_correct[i] / class_total[i]
+            logging.info(
+                f"Class {CLASSES[i]}, Accuracy: {class_accuracy:.2f}%, Precision: {precision_classwise[i]:.4f}, Recall: {recall_classwise[i]:.4f}, F1: {f1_classwise[i]:.4f}"
+            )
+
 
     @staticmethod
     def log_confusion_matrix(model_name, all_labels, all_predictions):
@@ -116,12 +127,12 @@ class Tester:
         wandb.log({f"{model_name} Confusion Matrix": wandb.Image(image)})
         plt.close()
 
-    @staticmethod
-    def log_classwise_accuracy(model_name, class_correct, class_total):
-        for i in range(len(CLASSES)):
-            logging.info(
-                f"Accuracy of {CLASSES[i]}: {100 * class_correct[i] / class_total[i]}%"
-            )
+    # @staticmethod
+    # def log_classwise_accuracy(model_name, class_correct, class_total):
+    #     for i in range(len(CLASSES)):
+    #         logging.info(
+    #             f"Accuracy of {CLASSES[i]}: {100 * class_correct[i] / class_total[i]}%"
+    #         )
 
 
 if __name__ == "__main__":

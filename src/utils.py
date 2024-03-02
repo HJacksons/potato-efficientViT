@@ -67,6 +67,6 @@ def get_transforms_for_model(augment):
 
 
 # Augment True, False
-DATA = "../data/plantVillage"
+DATA = "../data/potatodata"
 CLASSES = sorted(os.listdir(DATA))
 FEATURES = len(CLASSES)
