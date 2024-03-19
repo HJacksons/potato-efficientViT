@@ -103,6 +103,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"HT{time}_{DATATYPE}_train_Aug_{AUGMENT}_Vit_Hybrid_l2_4",  # Train name # Added L2 regularization... 0.5
+    name=f"HT{time}_{DATATYPE}_train_Aug_{AUGMENT}Hybrid_400k",  # Train name # Added L2 regularization... 0.5
     #name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_Vit_and_hybrid_all_final",  # Test names
 )
