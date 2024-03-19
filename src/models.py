@@ -173,3 +173,6 @@ class HybridModel(nn.Module):
 
         return output
 
+
+# mod = HybridModel()
+# summary(mod, input_size=(1, 3, 224, 224))

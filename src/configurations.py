@@ -43,22 +43,22 @@ NEW_DATASET = False  # for the purpose of testing
 if TRAINING:
     MODELS = {
         # "EfficientNetV2B3": EfficientNetV2B3().to(DEVICE),
-        "ViT": ViT().to(DEVICE),
+        # "ViT": ViT().to(DEVICE),
         "HybridModel": HybridModel().to(DEVICE),
     }
     model = MODELS["HybridModel"]  # Your hybrid model instance
 
     OPTIMIZERS = {
         # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr),
-        "ViT": optim.Adam(MODELS["ViT"].parameters(), lr),  #  swtich to AdamW all
+        # "ViT": optim.Adam(MODELS["ViT"].parameters(), lr),  #  swtich to AdamW all
         "HybridModel": optim.Adam(
             MODELS["HybridModel"].parameters(), lr, weight_decay=0.5
         ),
     }
     SCHEDULER = {
-        "ViT": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["ViT"], patience=5, factor=0.5, verbose=True
-        ),
+        # "ViT": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["ViT"], patience=5, factor=0.5, verbose=True
+        # ),
         "HybridModel": optim.lr_scheduler.ReduceLROnPlateau(
             OPTIMIZERS["HybridModel"], patience=2, factor=0.5, verbose=True
         ),
