@@ -100,8 +100,7 @@ class Tester:
 
         for i in range(len(CLASSES)):
             class_accuracy = 100 * class_correct[i] / class_total[i]
-            mcc_classwise = np.mean([matthews_corrcoef(all_labels == i, all_predictions == i) for i in
-                                     range(len(CLASSES))])  # MCC for each class
+            mcc_classwise = matthews_corrcoef(all_labels == i, all_predictions == i)
             logging.info(
                 f"Class {CLASSES[i]}, Accuracy: {class_accuracy:.2f}%, Precision: {precision_classwise[i]:.4f}, Recall: {recall_classwise[i]:.4f}, F1: {f1_classwise[i]:.4f}, MCC: {mcc_classwise:.4f}"
             )
