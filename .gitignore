@@ -163,4 +163,4 @@ wandb/
 _saved_models/
 backup/
 data/
-
+*.png

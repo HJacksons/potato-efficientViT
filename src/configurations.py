@@ -34,11 +34,11 @@ CLASSES = sorted(os.listdir(DATA))
 # for i, cls in enumerate(CLASSES):
 #     print(f"{i}: {cls}")
 
-TRAINING = True
-AUGMENT = False
+TRAINING = False
+AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata
 
-NEW_DATASET = False  # for the purpose of testing
+NEW_DATASET = True  # for the purpose of testing
 
 if TRAINING:
     MODELS = {
@@ -68,7 +68,7 @@ if TRAINING:
 else:  # Testing
     MODELS = {
         # "EfficientNetV2B3": EfficientNetV2B3
-        "ViT": ViT,
+        #"ViT": ViT,
         "HybridModel": HybridModel,
     }
 
@@ -76,33 +76,35 @@ if NEW_DATASET:
     if AUGMENT:
         SAVED_MODELS = {
             # "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
-            "ViT": "ViT_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
-            "HybridModel": "HybridModel_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
+            #"ViT": "ViT_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
+            #"HybridModel": "HybridModel_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
+            "HybridModel": "HybridModel_last_potatodata_Aug_True_204450_HT400k.pth",
         }
     else:
         SAVED_MODELS = {
             # "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth",
-            "ViT": "ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
-            "HybridModel": "HybridModel_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
+            #"ViT": "ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
+            #"HybridModel": "HybridModel_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
+            "HybridModel": "HybridModel_last_potatodata_Aug_False_205609_HT400k.pth",
         }
 else:
     if AUGMENT:
         SAVED_MODELS = {
             # "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_True_142228.pth",
-            "ViT": "ViT_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
-            "HybridModel": "HybridModel_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
+            #"ViT": "ViT_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
+            #"HybridModel": "HybridModel_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
         }
     else:
         SAVED_MODELS = {
             # "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_False_141359.pth",
-            "ViT": "ViT_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
-            "HybridModel": "HybridModel_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
+            #"ViT": "ViT_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
+            #"HybridModel": "HybridModel_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
         }
 
 wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"HT{time}_{DATATYPE}_train_Aug_{AUGMENT}Hybrid_400k",  # Train name # Added L2 regularization... 0.5
-    #name=f"{time}_{DATATYPE}_test_Aug_{AUGMENT}_Vit_and_hybrid_all_final",  # Test names
+    #name=f"HT{time}_{DATATYPE}_train_Aug_{AUGMENT}Hybrid_400k",  # Train name # Added L2 regularization... 0.5
+    name=f"HT{time}_{DATATYPE}_test_Aug_{AUGMENT}_Hybrid_400k",  # Test names
 )

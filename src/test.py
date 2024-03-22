@@ -9,6 +9,7 @@ from sklearn.metrics import (
     f1_score,
     accuracy_score,
     confusion_matrix,
+    matthews_corrcoef,
 )
 import seaborn as sns
 import torch
@@ -88,8 +89,9 @@ class Tester:
         precision = precision_score(all_labels, all_predictions, average="macro")
         recall = recall_score(all_labels, all_predictions, average="macro")
         f1 = f1_score(all_labels, all_predictions, average="macro")
+        mcc = matthews_corrcoef(all_labels, all_predictions, average=None)
         logging.info(
-            f"Model {model_name}, Test Loss: {avg_loss:.4f}, Test Accuracy: {accuracy:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}, F1: {f1:.4f}"
+            f"Model {model_name}, Test Loss: {avg_loss:.4f}, Test Accuracy: {accuracy:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}, F1: {f1:.4f}, MCC: {mcc:.4f}"
         )
         # Class-wise metrics
         precision_classwise = precision_score(all_labels, all_predictions, average=None)
@@ -98,8 +100,9 @@ class Tester:
 
         for i in range(len(CLASSES)):
             class_accuracy = 100 * class_correct[i] / class_total[i]
+            mcc_classwise = matthews_corrcoef(all_labels == i, all_predictions == i)  # MCC for each class
             logging.info(
-                f"Class {CLASSES[i]}, Accuracy: {class_accuracy:.2f}%, Precision: {precision_classwise[i]:.4f}, Recall: {recall_classwise[i]:.4f}, F1: {f1_classwise[i]:.4f}"
+                f"Class {CLASSES[i]}, Accuracy: {class_accuracy:.2f}%, Precision: {precision_classwise[i]:.4f}, Recall: {recall_classwise[i]:.4f}, F1: {f1_classwise[i]:.4f}, MCC: {mcc_classwise:.4f}"
             )
 
 
