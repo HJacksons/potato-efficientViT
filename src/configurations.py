@@ -93,12 +93,14 @@ else:
             # "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_True_142228.pth",
             #"ViT": "ViT_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
+            "HybridModel": "HybridModel_last_plantVillage_Aug_True_151547_HT400k.pth",
         }
     else:
         SAVED_MODELS = {
             # "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_False_141359.pth",
             #"ViT": "ViT_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
+            "HybridModel": "HybridModel_last_plantVillage_Aug_False_082359_HT400k.pth",
         }
 
 wandb.login(key=os.getenv("WANDB_KEY"))
