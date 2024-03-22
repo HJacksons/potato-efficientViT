@@ -34,7 +34,7 @@ CLASSES = sorted(os.listdir(DATA))
 # for i, cls in enumerate(CLASSES):
 #     print(f"{i}: {cls}")
 
-TRAINING = True
+TRAINING = False
 AUGMENT = True
 DATATYPE = "plantVillage"  # plantVillage or potatodata
 
@@ -107,6 +107,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"HT{time}_{DATATYPE}_train_Aug_{AUGMENT}Hybrid_400k",  # Train name # Added L2 regularization... 0.5
-    #name=f"HT{time}_{DATATYPE}_test_Aug_{AUGMENT}_Hybrid_400k",  # Test names
+    #name=f"HT{time}_{DATATYPE}_train_Aug_{AUGMENT}Hybrid_400k",  # Train name # Added L2 regularization... 0.5
+    name=f"HT{time}_{DATATYPE}_test_Aug_{AUGMENT}_Hybrid_400k",  # Test names
 )
