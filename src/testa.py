@@ -1,23 +1,11 @@
-import torch
-from models import EfficientNetV2B3
+import timm
 
+# Get a list of all models
+all_models = timm.list_models()
 
-def load_model(model_class, saved_model_path):
-    model = model_class()
-    state_dict = torch.load(saved_model_path)
-    model.load_state_dict(state_dict)
-    model.eval()
-    return model
+# Filter for EfficientNet models
+efficientnet_models = [model_name for model_name in all_models if model_name.startswith("tf_efficientnet")]
 
-
-model = load_model(
-    EfficientNetV2B3, "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth"
-)
-
-# Create a random input tensor with the correct size for your model
-input_tensor = torch.randn(1, 3, 224, 224)
-
-# Pass the input tensor through the model
-output = model(input_tensor)
-
-print(output)
+# Print EfficientNet models
+for model_name in efficientnet_models:
+    print(model_name)

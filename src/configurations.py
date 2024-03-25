@@ -1,7 +1,7 @@
 import torch
 import torch.optim as optim
 import torch.nn as nn
-from models import ViT, EfficientNetV2B3, HybridModel
+from models import ViT, EfficientNetV2B3, HybridModel, EfficientNetV2S, EfficientNetV2M
 import os
 import wandb
 from time import gmtime, strftime
@@ -21,39 +21,40 @@ logging.basicConfig(
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CRITERION = nn.CrossEntropyLoss()
-EPOCHS = 70  # From 50 to 70 for vit to learn more
+EPOCHS = 70
 lr = 0.0001
 
-DATA = "../data/plantVillage"  # "../data/potatodata
+DATA = "../data/potatodata"  # "../data/potatodata
 TEST_SIZE = 0.1
 VALI_SIZE = 0.1
 RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
-# print list of classes
-# for i, cls in enumerate(CLASSES):
-#     print(f"{i}: {cls}")
 
-TRAINING = False
-AUGMENT = False
-DATATYPE = "plantVillage"  # plantVillage or potatodata
+TRAINING = True
+AUGMENT = True
+DATATYPE = "potatodata"  # plantVillage or potatodata
 
 NEW_DATASET = False  # for the purpose of testing
 
 if TRAINING:
     MODELS = {
-        # "EfficientNetV2B3": EfficientNetV2B3().to(DEVICE),
+        "EfficientNetV2B3": EfficientNetV2B3().to(DEVICE),
+        "EfficientNetV2S": EfficientNetV2S().to(DEVICE),
+        "EfficientNetV2M": EfficientNetV2M().to(DEVICE),
         # "ViT": ViT().to(DEVICE),
-        "HybridModel": HybridModel().to(DEVICE),
+        # "HybridModel": HybridModel().to(DEVICE),
     }
     model = MODELS["HybridModel"]  # Your hybrid model instance
 
     OPTIMIZERS = {
-        # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr),
-        # "ViT": optim.Adam(MODELS["ViT"].parameters(), lr),  #  swtich to AdamW all
-        "HybridModel": optim.Adam(
-            MODELS["HybridModel"].parameters(), lr, weight_decay=0.5
-        ),
+        "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr, weight_decay=0.0001),
+        "EfficientNetV2S": optim.Adam(MODELS["EfficientNetV2S"].parameters(), lr, weight_decay=0.0001),
+        "EfficientNetV2M": optim.Adam(MODELS["EfficientNetV2M"].parameters(), lr, weight_decay=0.0001),
+        # "ViT": optim.Adam(MODELS["ViT"].parameters(), lr),  #  No weight decay for its stability
+        # "HybridModel": optim.Adam(
+        #     MODELS["HybridModel"].parameters(), lr, weight_decay=0.0001 # was 0.5 before
+        # ),
     }
     SCHEDULER = {
         # "ViT": optim.lr_scheduler.ReduceLROnPlateau(
@@ -107,6 +108,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    #name=f"HT{time}_{DATATYPE}_train_Aug_{AUGMENT}Hybrid_400k",  # Train name # Added L2 regularization... 0.5
-    name=f"HT{time}_{DATATYPE}_test_Aug_{AUGMENT}_Hybrid_400k",  # Test names
+    name=f"EFF{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
+    #name=f"HT{time}_{DATATYPE}_test_Aug_{AUGMENT}_Hybrid_400k",  # Test names
 )

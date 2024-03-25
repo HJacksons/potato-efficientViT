@@ -5,26 +5,76 @@ from timm import create_model
 import torch
 import torch.nn.functional as F
 
-# from torchsummary import summary
-from torchinfo import summary
+from torchsummary import summary
+#from torchinfo import summary
 
 
-# EfficientNetV2B3 model
+# EfficientNetV2B3 model used for reproducing the results
+# class EfficientNetV2B3(nn.Module):
+#     def __init__(self):
+#         super(EfficientNetV2B3, self).__init__()
+#         self.model = create_model("tf_efficientnetv2_b3.in21k", pretrained=True)
+#         for param in self.model.parameters():
+#             param.requires_grad = False
+#         for name, param in self.model.named_parameters():
+#             if "classifier" in name:
+#                 param.requires_grad = True
+#         self.model.classifier = nn.Linear(1536, FEATURES)
+#
+#     def forward(self, x):
+#         # print("In EfficientNetV2B3 forward method")  # debug print
+#
+#         return self.model(x)
+
 class EfficientNetV2B3(nn.Module):
     def __init__(self):
         super(EfficientNetV2B3, self).__init__()
-        self.model = create_model("tf_efficientnetv2_b3.in21k", pretrained=True)
-        for param in self.model.parameters():
+        self.effnet = create_model("tf_efficientnetv2_b3.in21k", pretrained=True)
+
+        for param in self.effnet.parameters():
             param.requires_grad = False
-        for name, param in self.model.named_parameters():
-            if "classifier" in name:
-                param.requires_grad = True
-        self.model.classifier = nn.Linear(1536, FEATURES)
+
+        self.effnet.classifier = nn.Sequential(  # Add a dropout layer before the final classifier layer
+            nn.Dropout(0.5),
+            nn.Linear(1536, FEATURES)
+        )
 
     def forward(self, x):
-        # print("In EfficientNetV2B3 forward method")  # debug print
+        return self.effnet(x)
 
-        return self.model(x)
+
+class EfficientNetV2S(nn.Module):
+    def __init__(self):
+        super(EfficientNetV2S, self).__init__()
+        self.effnets = create_model("tf_efficientnetv2_s", pretrained=True)
+
+        for param in self.effnets.parameters():
+            param.requires_grad = False
+
+        self.effnets.classifier = nn.Sequential(  # Add a dropout layer before the final classifier layer
+            nn.Dropout(0.5),
+            nn.Linear(1280, FEATURES)
+        )
+
+    def forward(self, x):
+        return self.effnets(x)
+
+
+class EfficientNetV2M(nn.Module):
+    def __init__(self):
+        super(EfficientNetV2M, self).__init__()
+        self.effnetm = create_model("tf_efficientnetv2_m", pretrained=True)
+
+        for param in self.effnetm.parameters():
+            param.requires_grad = False
+
+        self.effnetm.classifier = nn.Sequential(  # Add a dropout layer before the final classifier layer
+            nn.Dropout(0.5),
+            nn.Linear(1280, FEATURES)
+        )
+
+    def forward(self, x):
+        return self.effnetm(x)
 
 
 # ViT model
@@ -34,9 +84,6 @@ class ViT(nn.Module):
         self.vit = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
         for param in self.vit.parameters():
             param.requires_grad = False
-        for name, param in self.vit.named_parameters():
-            if "classifier" in name:
-                param.requires_grad = True
         self.dropout = nn.Dropout(0.1)
         self.classifier = nn.Linear(self.vit.config.hidden_size, num_labels)
         self.num_labels = num_labels
@@ -213,5 +260,5 @@ class HybridModel(nn.Module):
 
         return output
 
-# mod = HybridModel()
-# summary(mod, input_size=(1, 3, 224, 224))
+# mod = EfficientNetV2S()
+# summary(mod, input_size=(3, 224, 224))
