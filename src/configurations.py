@@ -35,7 +35,7 @@ TRAINING = True
 AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata
 
-NEW_DATASET = False  # for the purpose of testing
+NEW_DATASET = True  # for the purpose of testing
 
 if TRAINING:
     MODELS = {
@@ -45,7 +45,7 @@ if TRAINING:
         # "ViT": ViT().to(DEVICE),
         # "HybridModel": HybridModel().to(DEVICE),
     }
-    model = MODELS["HybridModel"]  # Your hybrid model instance
+    #model = MODELS["HybridModel"]  # Your hybrid model instance
 
     OPTIMIZERS = {
         "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr, weight_decay=0.0001),
