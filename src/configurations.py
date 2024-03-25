@@ -57,12 +57,21 @@ if TRAINING:
         # ),
     }
     SCHEDULER = {
+        "EfficientNetV2B3": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["EfficientNetV2B3"], patience=5, factor=0.5, verbose=True
+        ),
+        "EfficientNetV2S": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["EfficientNetV2S"], patience=5, factor=0.5, verbose=True
+        ),
+        "EfficientNetV2M": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["EfficientNetV2M"], patience=5, factor=0.5, verbose=True
+        ),
         # "ViT": optim.lr_scheduler.ReduceLROnPlateau(
         #     OPTIMIZERS["ViT"], patience=5, factor=0.5, verbose=True
         # ),
-        "HybridModel": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["HybridModel"], patience=2, factor=0.5, verbose=True
-        ),
+        # "HybridModel": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["HybridModel"], patience=2, factor=0.5, verbose=True
+        # ),
     }
 
 
