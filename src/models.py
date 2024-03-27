@@ -6,7 +6,9 @@ import torch
 import torch.nn.functional as F
 
 from torchsummary import summary
-#from torchinfo import summary
+
+
+from torchinfo import summary
 
 
 # EfficientNetV2B3 model used for reproducing the results
@@ -260,5 +262,88 @@ class HybridModel(nn.Module):
 
         return output
 
-# mod = EfficientNetV2S()
-# summary(mod, input_size=(3, 224, 224))
+
+class HybridModelV2s(nn.Module):
+    def __init__(self, num_labels=FEATURES):
+        super(HybridModelV2s, self).__init__()
+
+        # Part of EfficientNet
+        self.effnet = create_model("tf_efficientnetv2_s", pretrained=True)
+        self.effnet.classifier = nn.Identity()  # Remove the classifier
+        for param in self.effnet.parameters():
+            param.requires_grad = False  # Freeze the EfficientNet parameters
+
+        # Part of ViT
+        self.vit = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
+        self.vit_linear = nn.Linear(self.vit.config.hidden_size, 512)
+        for param in self.vit.parameters():
+            param.requires_grad = False  # Freeze the ViT parameters
+
+        self.dropout = nn.Dropout(0.2)
+        self.classifier = nn.Linear(1280 + 512, num_labels)  # Adjusted to match the output of vit_linear
+
+    def forward(self, x):
+        # Extract features using EfficientNet
+        effnet_output = self.effnet.forward_features(x)
+        effnet_output = torch.flatten(effnet_output, start_dim=2)  # Flatten the output
+        effnet_output = effnet_output.mean(dim=2)  # Global average pooling
+
+        # Feed the input into ViT
+        vit_output = self.vit(pixel_values=x)['last_hidden_state'][:, 0]
+        vit_output = self.vit_linear(vit_output)  # Reduce the dimensionality of the ViT output
+
+        # Combine the outputs
+        combined = torch.cat((effnet_output, vit_output), dim=1)
+
+        # Apply dropout
+        combined = self.dropout(combined)
+
+        output = self.classifier(combined)  # Get the final output
+
+        return output
+
+
+class HybridModelV2m(nn.Module):
+    def __init__(self, num_labels=FEATURES):
+        super(HybridModelV2m, self).__init__()
+
+        # Part of EfficientNet
+        self.effnet = create_model("tf_efficientnetv2_m", pretrained=True)
+        self.effnet.classifier = nn.Identity()  # Remove the classifier
+        for param in self.effnet.parameters():
+            param.requires_grad = False  # Freeze the EfficientNet parameters
+
+        # Part of ViT
+        self.vit = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
+        self.vit_linear = nn.Linear(self.vit.config.hidden_size, 512)
+        for param in self.vit.parameters():
+            param.requires_grad = False  # Freeze the ViT parameters
+
+        self.dropout = nn.Dropout(0.2)
+        self.classifier = nn.Linear(1280 + 512, num_labels)  # Adjusted to match the output of vit_linear
+
+    def forward(self, x):
+        # Extract features using EfficientNet
+        effnet_output = self.effnet.forward_features(x)
+        effnet_output = torch.flatten(effnet_output, start_dim=2)  # Flatten the output
+        effnet_output = effnet_output.mean(dim=2)  # Global average pooling
+
+        # Feed the input into ViT
+        vit_output = self.vit(pixel_values=x)['last_hidden_state'][:, 0]
+        vit_output = self.vit_linear(vit_output)  # Reduce the dimensionality of the ViT output
+
+        # Combine the outputs
+        combined = torch.cat((effnet_output, vit_output), dim=1)
+
+        # Apply dropout
+        combined = self.dropout(combined)
+
+        output = self.classifier(combined)  # Get the final output
+
+        return output
+
+
+
+
+mod = HybridModelV2m()
+summary(mod, input_size=(1, 3, 224, 224))
