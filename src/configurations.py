@@ -91,7 +91,7 @@ else:  # Testing
         "EfficientNetV2S": EfficientNetV2S,
         "EfficientNetV2M": EfficientNetV2M,
         #"ViT": ViT,
-        "HybridModel": HybridModel,
+        #"HybridModel": HybridModel,
     }
 
 if NEW_DATASET:
