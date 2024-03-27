@@ -67,7 +67,6 @@ for i, (input_tensors, labels) in enumerate(test_loader):
     # Generate an attention map for each input tensor
     for j in range(input_tensors.size(0)):  # Iterate over the batch dimension
         input_tensor = input_tensors[j]  # Select one image from the batch
-        input_tensor = input_tensor.clone().detach()
         attention_map = model.get_attention_map(input_tensor.unsqueeze(0))  # Add the batch dimension back
 
         # Now you can do something with the attention map, like saving it to a file
