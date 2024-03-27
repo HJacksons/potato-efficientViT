@@ -64,11 +64,11 @@ num_images = 4
 
 # Iterate over the test data
 for i, (input_tensors, labels) in enumerate(test_loader):
-    print(type(input_tensors), input_tensors.shape)
+    #print(type(input_tensors), input_tensors.shape)
 
     # Generate an attention map for each input tensor
     for j, input_tensor in enumerate(input_tensors):
-        attention_map = model.get_attention_map(input_tensor.unsqueeze(0))
+        attention_map = model.get_attention_map(input_tensor)
 
         # Now you can do something with the attention map, like saving it to a file
         # lets save it to file
