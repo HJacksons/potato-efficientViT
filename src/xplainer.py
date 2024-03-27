@@ -18,7 +18,7 @@ class ViT(nn.Module):
         self.num_labels = num_labels
 
         for layer in self.vit.encoder.layer:
-            layer.attention.output.register_forward_hook(self.get_attention)
+            layer.output.register_forward_hook(self.get_attention)
 
         self.attentions = []
 
