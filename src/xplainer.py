@@ -48,9 +48,7 @@ class ViT(nn.Module):
 
         # Use the VITAttentionRollout class from the previous code
         rollout = VITAttentionRollout(self, discard_ratio=0.9)
-        attention_tensor = torch.stack(self.attentions)
-        print(attention_tensor.shape, type(attention_tensor))  # Add this line
-        attention_map = rollout(attention_tensor)
+        attention_map = rollout(self.attentions)
 
         return attention_map
 
