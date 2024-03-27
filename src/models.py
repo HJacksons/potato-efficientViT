@@ -345,5 +345,5 @@ class HybridModelV2m(nn.Module):
 
 
 
-mod = HybridModelV2m()
-summary(mod, input_size=(1, 3, 224, 224))
+# mod = HybridModelV2m()
+# summary(mod, input_size=(1, 3, 224, 224))

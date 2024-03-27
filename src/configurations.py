@@ -31,8 +31,8 @@ RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = True
-AUGMENT = True
+TRAINING = False
+AUGMENT = False
 DATATYPE = "potatodata"  # plantVillage or potatodata
 
 NEW_DATASET = True  # for the purpose of testing
@@ -87,7 +87,9 @@ if TRAINING:
 
 else:  # Testing
     MODELS = {
-        # "EfficientNetV2B3": EfficientNetV2B3
+        "EfficientNetV2B3": EfficientNetV2B3,
+        "EfficientNetV2S": EfficientNetV2S,
+        "EfficientNetV2M": EfficientNetV2M,
         #"ViT": ViT,
         "HybridModel": HybridModel,
     }
@@ -98,14 +100,19 @@ if NEW_DATASET:
             # "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
             #"ViT": "ViT_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
-            "HybridModel": "HybridModel_last_potatodata_Aug_True_204450_HT400k.pth",
+            #"HybridModel": "HybridModel_last_potatodata_Aug_True_204450_HT400k.pth",
         }
     else:
         SAVED_MODELS = {
             # "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth",
             #"ViT": "ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
-            "HybridModel": "HybridModel_last_potatodata_Aug_False_205609_HT400k.pth",
+            #"HybridModel": "HybridModel_last_potatodata_Aug_False_205609_HT400k.pth",
+
+            "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_False_201907_EFF.pth",
+            "EfficientNetV2S": "EfficientNetV2S_potatodata_Aug_False_215124_EFF.pth",
+            "EfficientNetV2M": "EfficientNetV2M_potatodata_Aug_False_215124_EFF.pth",
+
         }
 else:
     if AUGMENT:
@@ -127,6 +134,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"EFF{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
-    #name=f"HT{time}_{DATATYPE}_test_Aug_{AUGMENT}_Hybrid_400k",  # Test names
+    #name=f"EFF{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
+    name=f"EFFT{time}_{DATATYPE}_test_Aug_{AUGMENT}_EFFindi",  # Test names
 )
