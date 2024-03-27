@@ -17,8 +17,8 @@ class ViT(nn.Module):
         self.classifier = nn.Linear(self.vit.config.hidden_size, num_labels)
         self.num_labels = num_labels
 
-        # Register the attention hook
-        self.vit.blocks.register_forward_hook(self.get_attention)
+        for layer in self.vit.encoder.layer:
+            layer.attention.output.register_forward_hook(self.get_attention)
 
         self.attentions = []
 
