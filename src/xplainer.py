@@ -48,7 +48,7 @@ class ViT(nn.Module):
 
         # Use the VITAttentionRollout class from the previous code
         rollout = VITAttentionRollout(self, discard_ratio=0.9)
-        attention_map = rollout(self.attentions)
+        attention_map = rollout(input_tensor)
 
         return attention_map
 
