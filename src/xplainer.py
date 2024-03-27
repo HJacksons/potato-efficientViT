@@ -26,6 +26,8 @@ class ViT(nn.Module):
         self.attentions.append(output.cpu())
 
     def forward(self, pixel_values, labels=None):
+        print(pixel_values.shape, type(pixel_values))  # Add this line
+
         outputs = self.vit(pixel_values=pixel_values)
         output = self.dropout(outputs.last_hidden_state[:, 0])
         logits = self.classifier(output)
