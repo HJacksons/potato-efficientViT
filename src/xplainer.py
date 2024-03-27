@@ -22,9 +22,6 @@ class ViT(nn.Module):
 
         self.attentions = []
 
-    def get_attention(self, module, input, output):
-        self.attentions.append(output.cpu())
-
     def forward(self, pixel_values, labels=None):
         outputs = self.vit(pixel_values=pixel_values)
         output = self.dropout(outputs.last_hidden_state[:, 0])
@@ -67,7 +64,7 @@ for i, (input_tensors, labels) in enumerate(test_loader):
     # Generate an attention map for each input tensor
     for j in range(input_tensors.size(0)):  # Iterate over the batch dimension
         input_tensor = input_tensors[j]  # Select one image from the batch
-        attention_map = model.get_attention_map(input_tensor)  # Add the batch dimension back
+        attention_map = model.get_attention_map(input_tensor.unsqueeze(0))  # Add the batch dimension back
 
         # Now you can do something with the attention map, like saving it to a file
         attention_map_tensor = torch.from_numpy(attention_map)[None, :, :]
