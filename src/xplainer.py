@@ -52,8 +52,7 @@ class ViT(nn.Module):
 
 
 model = ViT()
-model.load_state_dict(torch.load("ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth"))
-model.eval()
+model.load_state_dict(torch.load("ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth", map_location=torch.device('cpu')))model.eval()
 
 # Load your test data
 data = Dataset()
