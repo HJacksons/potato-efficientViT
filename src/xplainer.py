@@ -64,15 +64,12 @@ num_images = 4
 
 # Iterate over the test data
 for i, (input_tensors, labels) in enumerate(test_loader):
-    #print(type(input_tensors), input_tensors.shape)
-
     # Generate an attention map for each input tensor
-    for j, input_tensor in enumerate(input_tensors):
-        attention_map = model.get_attention_map(input_tensor)
+    for j in range(input_tensors.size(0)):  # Iterate over the batch dimension
+        input_tensor = input_tensors[j]  # Select one image from the batch
+        attention_map = model.get_attention_map(input_tensor.unsqueeze(0))  # Add the batch dimension back
 
         # Now you can do something with the attention map, like saving it to a file
-        # lets save it to file
-
         attention_map_tensor = torch.from_numpy(attention_map)[None, :, :]
         save_image(attention_map_tensor, f"attention_map_{i}_{j}.png")
 
