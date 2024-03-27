@@ -23,7 +23,7 @@ class ViT(nn.Module):
         self.attentions = []
 
     def get_attention(self, module, input, output):
-        self.attentions.append(output.attentions.cpu())
+        self.attentions.append(output.cpu())
 
     def forward(self, pixel_values, labels=None):
         outputs = self.vit(pixel_values=pixel_values)
