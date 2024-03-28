@@ -71,6 +71,9 @@ for i, (input_tensors, labels) in enumerate(test_loader):
         input_tensor = input_tensors[j]  # Select one image from the batch
         attention_map = model.get_attention_map(input_tensor.unsqueeze(0))  # Add the batch dimension back
 
+        if not isinstance(input_tensors, torch.Tensor):
+            input_tensors = torch.tensor(input_tensors)
+
         # Now you can do something with the attention map, like saving it to a file
         attention_map_tensor = torch.from_numpy(attention_map)[None, :, :]
         save_image(attention_map_tensor, f"attention_map_{i}_{j}.png")
