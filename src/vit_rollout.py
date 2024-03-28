@@ -56,11 +56,9 @@ class VITAttentionRollout:
         self.attentions = []
 
     def get_attention(self, module, input, output):
-        print("get_attention_called")
         self.attentions.append(output.cpu())
 
     def __call__(self, input_tensor):
-        print("__call__called")
         self.attentions = []
         with torch.no_grad():
             output = self.model(input_tensor)
