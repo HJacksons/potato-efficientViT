@@ -25,6 +25,9 @@ class ViT(nn.Module):
         self.attentions.append(output.cpu())
 
     def forward(self, pixel_values, labels=None):
+        print("pixel_values type:", type(pixel_values))  # Add this line
+        print("pixel_values shape:", pixel_values.shape)  # Add this line
+
         # Ensure pixel_values is a list of tensors
         if not isinstance(pixel_values, list):
             pixel_values = [pixel_values]
