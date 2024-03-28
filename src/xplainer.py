@@ -25,10 +25,7 @@ class ViT(nn.Module):
         self.attentions.append(output.cpu())
 
     def forward(self, pixel_values, labels=None):
-        # Debugging statement
-        print(pixel_values.shape, type(pixel_values))
-
-        # Ensure pixel_values is converted to a list of tensors
+        # Ensure pixel_values is converted to a list of tensors if it's not already
         if not isinstance(pixel_values, list):
             pixel_values = [pixel_values]
 
@@ -55,6 +52,7 @@ class ViT(nn.Module):
         attention_map = rollout(self.attentions)
 
         return attention_map
+
 
 
 # Load the model
