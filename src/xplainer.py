@@ -6,7 +6,6 @@ from utils import FEATURES
 from dataset import Dataset
 from torchvision.utils import save_image
 
-
 class ViT(nn.Module):
     def __init__(self, num_labels=FEATURES):
         super(ViT, self).__init__()
@@ -26,7 +25,8 @@ class ViT(nn.Module):
         self.attentions.append(output.cpu())
 
     def forward(self, pixel_values, labels=None):
-        print(pixel_values.shape, type(pixel_values))  # Add this line
+        # Debugging statement
+        print(pixel_values.shape, type(pixel_values))
 
         outputs = self.vit(pixel_values=pixel_values)
         output = self.dropout(outputs.last_hidden_state[:, 0])
@@ -52,12 +52,12 @@ class ViT(nn.Module):
 
         return attention_map
 
-
+# Load the model
 model = ViT()
 model.load_state_dict(torch.load("ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth", map_location=torch.device('cpu')))
 model.eval()
 
-# Load your test data
+# Load test data
 data = Dataset()
 _, _, test_loader = data.prepare_dataset()
 
@@ -70,9 +70,6 @@ for i, (input_tensors, labels) in enumerate(test_loader):
     for j in range(input_tensors.size(0)):  # Iterate over the batch dimension
         input_tensor = input_tensors[j]  # Select one image from the batch
         attention_map = model.get_attention_map(input_tensor.unsqueeze(0))  # Add the batch dimension back
-
-        if not isinstance(input_tensors, torch.Tensor):
-            input_tensors = torch.tensor(input_tensors)
 
         # Now you can do something with the attention map, like saving it to a file
         attention_map_tensor = torch.from_numpy(attention_map)[None, :, :]
