@@ -106,7 +106,7 @@ if NEW_DATASET:
             # "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_True_194849_EFF.pth",
             # "EfficientNetV2S": "EfficientNetV2S_potatodata_Aug_True_194849_EFF.pth",
             # "EfficientNetV2M": "EfficientNetV2M_potatodata_Aug_True_194849_EFF.pth",
-            ######"HybridModelV2s": "HybridModelV2s_potatodata_Aug_True_073227_EFF.pth",
+            "HybridModelV2s": "HybridModelV2s_potatodata_Aug_True_073227_EFF.pth",
             "HybridModelV2m": "HybridModelV2m_potatodata_Aug_True_073227_EFF.pth",
         }
     else:
@@ -119,7 +119,7 @@ if NEW_DATASET:
             # "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_False_201907_EFF.pth",
             # "EfficientNetV2S": "EfficientNetV2S_potatodata_Aug_False_215124_EFF.pth",
             # "EfficientNetV2M": "EfficientNetV2M_potatodata_Aug_False_215124_EFF.pth",
-            #####"HybridModelV2s": "HybridModelV2s_potatodata_Aug_False_103120_EFF.pth",
+            "HybridModelV2s": "HybridModelV2s_potatodata_Aug_False_103120_EFF.pth",
             "HybridModelV2m": "HybridModelV2m_potatodata_Aug_False_103120_EFF.pth",
 
         }
@@ -129,14 +129,14 @@ else:
             # "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_True_142228.pth",
             #"ViT": "ViT_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
-            "HybridModel": "HybridModel_last_plantVillage_Aug_True_151547_HT400k.pth",
+            #"HybridModel": "HybridModel_last_plantVillage_Aug_True_151547_HT400k.pth",
         }
     else:
         SAVED_MODELS = {
             # "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_False_141359.pth",
             #"ViT": "ViT_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
-            "HybridModel": "HybridModel_last_plantVillage_Aug_False_082359_HT400k.pth",
+            #"HybridModel": "HybridModel_last_plantVillage_Aug_False_082359_HT400k.pth",
         }
 
 wandb.login(key=os.getenv("WANDB_KEY"))
