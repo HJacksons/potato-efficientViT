@@ -93,7 +93,7 @@ for i, (input_tensors, labels) in enumerate(test_loader):
         print("Input tensor type:", type(input_tensor))
 
         # Generate attention map
-        attention_map = model.get_attention_map(input_tensor.unsqueeze(0))  # Add the batch dimension back
+        attention_map = model.get_attention_map(input_tensor)  # Add the batch dimension back
 
         # Now you can do something with the attention map, like saving it to a file
         attention_map_tensor = torch.from_numpy(attention_map)[None, :, :]
