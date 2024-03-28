@@ -18,7 +18,7 @@ def rollout(attentions, discard_ratio, head_fusion):
             elif head_fusion == "min":
                 attention_heads_fused = attention.min(axis=1)[0]
             else:
-                raise "Attention head fusion type Not supported"
+                raise ValueError("Attention head fusion type not supported")
 
             # Drop the lowest attentions, but
             # don't drop the class token
