@@ -25,7 +25,7 @@ class ViT(nn.Module):
         self.attentions.append(output.cpu())
 
     def forward(self, pixel_values, labels=None):
-        # Ensure pixel_values is converted to a list of tensors if it's not already
+        # Ensure pixel_values is a list of tensors
         if not isinstance(pixel_values, list):
             pixel_values = [pixel_values]
 
@@ -52,6 +52,7 @@ class ViT(nn.Module):
         attention_map = rollout(self.attentions)
 
         return attention_map
+
 
 
 
