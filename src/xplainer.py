@@ -28,6 +28,10 @@ class ViT(nn.Module):
         # Debugging statement
         print(pixel_values.shape, type(pixel_values))
 
+        # Ensure pixel_values is converted to a list of tensors
+        if not isinstance(pixel_values, list):
+            pixel_values = [pixel_values]
+
         outputs = self.vit(pixel_values=pixel_values)
         output = self.dropout(outputs.last_hidden_state[:, 0])
         logits = self.classifier(output)
@@ -51,6 +55,7 @@ class ViT(nn.Module):
         attention_map = rollout(self.attentions)
 
         return attention_map
+
 
 # Load the model
 model = ViT()
