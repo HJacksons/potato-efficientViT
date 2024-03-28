@@ -19,6 +19,7 @@ class ViT(nn.Module):
 
         for layer in self.vit.encoder.layer:
             layer.attention.output.register_forward_hook(self.get_attention)
+            print("Hook registered on ", layer)
 
         self.attentions = []
 
@@ -48,10 +49,8 @@ class ViT(nn.Module):
 
         # Use the VITAttentionRollout class from the previous code
         rollout = VITAttentionRollout(self, discard_ratio=0.9)
-        self.train()
+        print("Model training mode:", self.training)  # Add this line
         attention_map = rollout(input_tensor)
-        self.eval()
-
         return attention_map
 
 
