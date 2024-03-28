@@ -24,18 +24,18 @@ CRITERION = nn.CrossEntropyLoss()
 EPOCHS = 70
 lr = 0.0001
 
-DATA = "../data/plantVillage"  # "../data/potatodata
+DATA = "../data/potatodata"  # "../data/potatodata
 TEST_SIZE = 0.1
 VALI_SIZE = 0.1
 RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = True
+TRAINING = False
 AUGMENT = True
-DATATYPE = "plantVillage"  # plantVillage or potatodata
+DATATYPE = "potatodata"  # plantVillage or potatodata
 
-NEW_DATASET = False  # for the purpose of testing
+NEW_DATASET = True  # for the purpose of testing
 
 if TRAINING:
     MODELS = {
@@ -87,11 +87,13 @@ if TRAINING:
 
 else:  # Testing
     MODELS = {
-        "EfficientNetV2B3": EfficientNetV2B3,
-        "EfficientNetV2S": EfficientNetV2S,
-        "EfficientNetV2M": EfficientNetV2M,
+        # "EfficientNetV2B3": EfficientNetV2B3,
+        # "EfficientNetV2S": EfficientNetV2S,
+        # "EfficientNetV2M": EfficientNetV2M,
         #"ViT": ViT,
         #"HybridModel": HybridModel,
+        "HybridModelV2s": HybridModelV2s,
+        "HybridModelV2m": HybridModelV2m,
     }
 
 if NEW_DATASET:
@@ -101,9 +103,11 @@ if NEW_DATASET:
             #"ViT": "ViT_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_potatodata_Aug_True_204450_HT400k.pth",
-            "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_True_194849_EFF.pth",
-            "EfficientNetV2S": "EfficientNetV2S_potatodata_Aug_True_194849_EFF.pth",
-            "EfficientNetV2M": "EfficientNetV2M_potatodata_Aug_True_194849_EFF.pth",
+            # "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_True_194849_EFF.pth",
+            # "EfficientNetV2S": "EfficientNetV2S_potatodata_Aug_True_194849_EFF.pth",
+            # "EfficientNetV2M": "EfficientNetV2M_potatodata_Aug_True_194849_EFF.pth",
+            "HybridModelV2s": "HybridModelV2s_potatodata_Aug_True_073227_EFF.pth",
+            "HybridModelV2m": "HybridModelV2m_potatodata_Aug_True_073227_EFF.pth",
         }
     else:
         SAVED_MODELS = {
@@ -112,9 +116,9 @@ if NEW_DATASET:
             #"HybridModel": "HybridModel_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_potatodata_Aug_False_205609_HT400k.pth",
 
-            "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_False_201907_EFF.pth",
-            "EfficientNetV2S": "EfficientNetV2S_potatodata_Aug_False_215124_EFF.pth",
-            "EfficientNetV2M": "EfficientNetV2M_potatodata_Aug_False_215124_EFF.pth",
+            # "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_False_201907_EFF.pth",
+            # "EfficientNetV2S": "EfficientNetV2S_potatodata_Aug_False_215124_EFF.pth",
+            # "EfficientNetV2M": "EfficientNetV2M_potatodata_Aug_False_215124_EFF.pth",
 
         }
 else:
@@ -137,6 +141,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"All{time}_{DATATYPE}_train_Aug_{AUGMENT}_",  # Train name # Added L2 regularization... 0.5
-    #name=f"EFFT{time}_{DATATYPE}_test_Aug_{AUGMENT}_EFFindi",  # Test names
+    #name=f"All{time}_{DATATYPE}_train_Aug_{AUGMENT}_",  # Train name # Added L2 regularization... 0.5
+    name=f"EFFT{time}_{DATATYPE}_test_Aug_{AUGMENT}_EFFhyb",  # Test names
 )
