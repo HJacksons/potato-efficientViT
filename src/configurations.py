@@ -39,9 +39,9 @@ NEW_DATASET = False  # for the purpose of testing
 
 if TRAINING:
     MODELS = {
-        "EfficientNetV2B3": EfficientNetV2B3().to(DEVICE),
-        "EfficientNetV2S": EfficientNetV2S().to(DEVICE),
-        "EfficientNetV2M": EfficientNetV2M().to(DEVICE),
+        # "EfficientNetV2B3": EfficientNetV2B3().to(DEVICE),
+        # "EfficientNetV2S": EfficientNetV2S().to(DEVICE),
+        # "EfficientNetV2M": EfficientNetV2M().to(DEVICE),
         "ViT": ViT().to(DEVICE),
         # "HybridModel": HybridModel().to(DEVICE),
         "HybridModelV2s": HybridModelV2s().to(DEVICE),
@@ -50,9 +50,9 @@ if TRAINING:
     #model = MODELS["HybridModel"]  # Your hybrid model instance
 
     OPTIMIZERS = {
-        "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr, weight_decay=0.0001),
-        "EfficientNetV2S": optim.Adam(MODELS["EfficientNetV2S"].parameters(), lr, weight_decay=0.0001),
-        "EfficientNetV2M": optim.Adam(MODELS["EfficientNetV2M"].parameters(), lr, weight_decay=0.0001),
+        # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr, weight_decay=0.0001),
+        # "EfficientNetV2S": optim.Adam(MODELS["EfficientNetV2S"].parameters(), lr, weight_decay=0.0001),
+        # "EfficientNetV2M": optim.Adam(MODELS["EfficientNetV2M"].parameters(), lr, weight_decay=0.0001),
         "ViT": optim.Adam(MODELS["ViT"].parameters(), lr, weight_decay=0.0001),  #  No weight decay for its stability
         # "HybridModel": optim.Adam(
         #     MODELS["HybridModel"].parameters(), lr, weight_decay=0.0001 # was 0.5 before
@@ -61,15 +61,15 @@ if TRAINING:
         "HybridModelV2m": optim.Adam(MODELS["HybridModelV2m"].parameters(), lr, weight_decay=0.0001),
     }
     SCHEDULER = {
-        "EfficientNetV2B3": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["EfficientNetV2B3"], patience=5, factor=0.5, verbose=True
-        ),
-        "EfficientNetV2S": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["EfficientNetV2S"], patience=5, factor=0.5, verbose=True
-        ),
-        "EfficientNetV2M": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["EfficientNetV2M"], patience=5, factor=0.5, verbose=True
-        ),
+        # "EfficientNetV2B3": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["EfficientNetV2B3"], patience=5, factor=0.5, verbose=True
+        # ),
+        # "EfficientNetV2S": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["EfficientNetV2S"], patience=5, factor=0.5, verbose=True
+        # ),
+        # "EfficientNetV2M": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["EfficientNetV2M"], patience=5, factor=0.5, verbose=True
+        # ),
         "ViT": optim.lr_scheduler.ReduceLROnPlateau(
             OPTIMIZERS["ViT"], patience=5, factor=0.5, verbose=True
         ),
