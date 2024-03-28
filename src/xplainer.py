@@ -64,11 +64,21 @@ _, _, test_loader = data.prepare_dataset()
 # Set the number of images to explain
 num_images = 4
 
-# Iterate over the test data
+# Inside the loop where you iterate over the test data
 for i, (input_tensors, labels) in enumerate(test_loader):
     # Generate an attention map for each input tensor
     for j in range(input_tensors.size(0)):  # Iterate over the batch dimension
         input_tensor = input_tensors[j]  # Select one image from the batch
+
+        # Convert input_tensor to torch tensor if it's not already
+        if not isinstance(input_tensor, torch.Tensor):
+            input_tensor = torch.tensor(input_tensor)  # Convert to torch tensor if input_tensor is not already
+
+        # Add debugging statements
+        print("Input tensor shape:", input_tensor.shape)
+        print("Input tensor type:", type(input_tensor))
+
+        # Generate attention map
         attention_map = model.get_attention_map(input_tensor.unsqueeze(0))  # Add the batch dimension back
 
         # Now you can do something with the attention map, like saving it to a file
@@ -80,3 +90,4 @@ for i, (input_tensors, labels) in enumerate(test_loader):
             break
     if (i * len(input_tensors) + j + 1) >= num_images:
         break
+
