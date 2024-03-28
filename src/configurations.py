@@ -106,7 +106,7 @@ if NEW_DATASET:
             # "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_True_194849_EFF.pth",
             # "EfficientNetV2S": "EfficientNetV2S_potatodata_Aug_True_194849_EFF.pth",
             # "EfficientNetV2M": "EfficientNetV2M_potatodata_Aug_True_194849_EFF.pth",
-            "HybridModelV2s": "HybridModelV2s_potatodata_Aug_True_073227_EFF.pth",
+            ######"HybridModelV2s": "HybridModelV2s_potatodata_Aug_True_073227_EFF.pth",
             "HybridModelV2m": "HybridModelV2m_potatodata_Aug_True_073227_EFF.pth",
         }
     else:
@@ -119,7 +119,7 @@ if NEW_DATASET:
             # "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_False_201907_EFF.pth",
             # "EfficientNetV2S": "EfficientNetV2S_potatodata_Aug_False_215124_EFF.pth",
             # "EfficientNetV2M": "EfficientNetV2M_potatodata_Aug_False_215124_EFF.pth",
-            "HybridModelV2s": "HybridModelV2s_potatodata_Aug_False_103120_EFF.pth",
+            #####"HybridModelV2s": "HybridModelV2s_potatodata_Aug_False_103120_EFF.pth",
             "HybridModelV2m": "HybridModelV2m_potatodata_Aug_False_103120_EFF.pth",
 
         }
