@@ -43,6 +43,13 @@ class ViT(nn.Module):
             return logits, None
 
     def get_attention_map(self, input_tensor):
+        print("Input tensor type:", type(input_tensor))  # Add this line
+        print("Input tensor shape:", input_tensor.shape)  # Add this line
+
+        input_tensor = input_tensor.unsqueeze(0)
+        print("Input tensor type after unsqueeze:", type(input_tensor))  # Add this line
+        print("Input tensor shape after unsqueeze:", input_tensor.shape)  # Add this line
+
         self.attentions = []
         with torch.no_grad():
             _ = self(input_tensor)
