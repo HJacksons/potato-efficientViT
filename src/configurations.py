@@ -31,8 +31,8 @@ RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = False
-AUGMENT = True
+TRAINING = True
+AUGMENT = False
 DATATYPE = "plantVillage"  # plantVillage or potatodata .
 
 NEW_DATASET = False  # for the purpose of testing
@@ -42,7 +42,7 @@ if TRAINING:
         # "EfficientNetV2B3": EfficientNetV2B3().to(DEVICE),
         # "EfficientNetV2S": EfficientNetV2S().to(DEVICE),
         # "EfficientNetV2M": EfficientNetV2M().to(DEVICE),
-        # "ViT": ViT().to(DEVICE),
+        "ViT": ViT().to(DEVICE),
         # "HybridModel": HybridModel().to(DEVICE),
         "HybridModelV2s": HybridModelV2s().to(DEVICE),
         "HybridModelV2m": HybridModelV2m().to(DEVICE),
@@ -53,7 +53,7 @@ if TRAINING:
         # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr, weight_decay=0.0001),
         # "EfficientNetV2S": optim.Adam(MODELS["EfficientNetV2S"].parameters(), lr, weight_decay=0.0001),
         # "EfficientNetV2M": optim.Adam(MODELS["EfficientNetV2M"].parameters(), lr, weight_decay=0.0001),
-        #"ViT": optim.Adam(MODELS["ViT"].parameters(), lr, weight_decay=0.0001),  #  No weight decay for its stability
+        "ViT": optim.Adam(MODELS["ViT"].parameters(), lr, weight_decay=0.0001),  #  No weight decay for its stability
         # "HybridModel": optim.Adam(
         #     MODELS["HybridModel"].parameters(), lr, weight_decay=0.0001 # was 0.5 before
         # ),
@@ -70,9 +70,9 @@ if TRAINING:
         # "EfficientNetV2M": optim.lr_scheduler.ReduceLROnPlateau(
         #     OPTIMIZERS["EfficientNetV2M"], patience=5, factor=0.5, verbose=True
         # ),
-        # "ViT": optim.lr_scheduler.ReduceLROnPlateau(
-        #     OPTIMIZERS["ViT"], patience=5, factor=0.5, verbose=True
-        # ),
+        "ViT": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["ViT"], patience=5, factor=0.5, verbose=True
+        ),
         # "HybridModel": optim.lr_scheduler.ReduceLROnPlateau(
         #     OPTIMIZERS["HybridModel"], patience=2, factor=0.5, verbose=True
         # ),
@@ -151,6 +151,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    #name=f"All{time}_{DATATYPE}_train_Aug_{AUGMENT}_",  # Train name # Added L2 regularization... 0.5
-    name=f"EFF{time}_{DATATYPE}_test_Aug_{AUGMENT}_EFFind",  # Test names
+    name=f"All{time}_{DATATYPE}_train_Aug_{AUGMENT}_",  # Train name # Added L2 regularization... 0.5
+    #name=f"EFF{time}_{DATATYPE}_test_Aug_{AUGMENT}_EFFind",  # Test names
 )
