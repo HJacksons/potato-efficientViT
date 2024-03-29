@@ -32,7 +32,7 @@ BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
 TRAINING = False
-AUGMENT = False
+AUGMENT = True
 DATATYPE = "plantVillage"  # plantVillage or potatodata .
 
 NEW_DATASET = False  # for the purpose of testing
@@ -130,6 +130,10 @@ else:
             #"ViT": "ViT_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_plantVillage_Aug_True_151547_HT400k.pth",
+
+            "EfficientNetV2B3": "EfficientNetV2B3_plantVillage_Aug_True_134512_EFF.pth",
+            "EfficientNetV2S": "EfficientNetV2S_plantVillage_Aug_True_134512_EFF.pth",
+            "EfficientNetV2M": "EfficientNetV2M_plantVillage_Aug_True_134512_EFF.pth",
         }
     else:
         SAVED_MODELS = {
