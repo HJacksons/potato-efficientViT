@@ -24,7 +24,7 @@ CRITERION = nn.CrossEntropyLoss()
 EPOCHS = 70
 lr = 0.0001
 
-DATA = "../data/potatodata"  # "../data/potatodata
+DATA = "../data/plantVillage"  # "../data/potatodata
 TEST_SIZE = 0.1
 VALI_SIZE = 0.1
 RANDOM_STATE = 42  # for reproducibility
@@ -33,7 +33,7 @@ CLASSES = sorted(os.listdir(DATA))
 
 TRAINING = False
 AUGMENT = False
-DATATYPE = "potatodata"  # plantVillage or potatodata
+DATATYPE = "plantVillage"  # plantVillage or potatodata
 
 NEW_DATASET = False  # for the purpose of testing
 
