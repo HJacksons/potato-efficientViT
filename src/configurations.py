@@ -33,7 +33,7 @@ CLASSES = sorted(os.listdir(DATA))
 
 TRAINING = False
 AUGMENT = False
-DATATYPE = "plantVillage"  # plantVillage or potatodata
+DATATYPE = "plantVillage"  # plantVillage or potatodata .
 
 NEW_DATASET = False  # for the purpose of testing
 
