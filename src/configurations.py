@@ -35,7 +35,7 @@ TRAINING = False
 AUGMENT = False
 DATATYPE = "potatodata"  # plantVillage or potatodata
 
-NEW_DATASET = True  # for the purpose of testing
+NEW_DATASET = False  # for the purpose of testing
 
 if TRAINING:
     MODELS = {
@@ -137,6 +137,10 @@ else:
             #"ViT": "ViT_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
             #"HybridModel": "HybridModel_last_plantVillage_Aug_False_082359_HT400k.pth",
+
+            "EfficientNetV2B3": "EfficientNetV2B3_plantVillage_Aug_False_125405_EFF.pth",
+            "EfficientNetV2S": "EfficientNetV2S_plantVillage_Aug_False_125405_EFF.pth",
+            "EfficientNetV2M": "EfficientNetV2M_plantVillage_Aug_False_125405_EFF.pth",
         }
 
 wandb.login(key=os.getenv("WANDB_KEY"))
@@ -144,5 +148,5 @@ wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
     #name=f"All{time}_{DATATYPE}_train_Aug_{AUGMENT}_",  # Train name # Added L2 regularization... 0.5
-    name=f"EFFT{time}_{DATATYPE}_test_Aug_{AUGMENT}_EFFhyb",  # Test names
+    name=f"EFF{time}_{DATATYPE}_test_Aug_{AUGMENT}_EFFind",  # Test names
 )
