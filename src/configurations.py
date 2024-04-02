@@ -31,7 +31,7 @@ RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = True
+TRAINING = False
 AUGMENT = False
 DATATYPE = "plantVillage"  # plantVillage or potatodata .
 
@@ -47,13 +47,13 @@ if TRAINING:
         "HybridModelV2s": HybridModelV2s().to(DEVICE),
         "HybridModelV2m": HybridModelV2m().to(DEVICE),
     }
-    #model = MODELS["HybridModel"]  # Your hybrid model instance
+    # model = MODELS["HybridModel"]  # Your hybrid model instance
 
     OPTIMIZERS = {
         # "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr, weight_decay=0.0001),
         # "EfficientNetV2S": optim.Adam(MODELS["EfficientNetV2S"].parameters(), lr, weight_decay=0.0001),
         # "EfficientNetV2M": optim.Adam(MODELS["EfficientNetV2M"].parameters(), lr, weight_decay=0.0001),
-        "ViT": optim.Adam(MODELS["ViT"].parameters(), lr, weight_decay=0.0001),  #  No weight decay for its stability
+        "ViT": optim.Adam(MODELS["ViT"].parameters(), lr, weight_decay=0.0001),  # No weight decay for its stability
         # "HybridModel": optim.Adam(
         #     MODELS["HybridModel"].parameters(), lr, weight_decay=0.0001 # was 0.5 before
         # ),
@@ -90,8 +90,8 @@ else:  # Testing
         "EfficientNetV2B3": EfficientNetV2B3,
         "EfficientNetV2S": EfficientNetV2S,
         "EfficientNetV2M": EfficientNetV2M,
-        #"ViT": ViT,
-        #"HybridModel": HybridModel,
+        # "ViT": ViT,
+        # "HybridModel": HybridModel,
         # "HybridModelV2s": HybridModelV2s,
         # "HybridModelV2m": HybridModelV2m,
     }
@@ -100,57 +100,60 @@ if NEW_DATASET:
     if AUGMENT:
         SAVED_MODELS = {
             # "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_True_015623.pth",
-            #"ViT": "ViT_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
-            #"HybridModel": "HybridModel_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
-            #"HybridModel": "HybridModel_last_potatodata_Aug_True_204450_HT400k.pth",
+            # "ViT": "ViT_last_potatodata_Aug_True_134241_L2_dropout_hybrid.pth",
+            # "HybridModel": "HybridModel_last_potatodata_Aug_True_204450_HT400k.pth",
             # "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_True_194849_EFF.pth",
             # "EfficientNetV2S": "EfficientNetV2S_potatodata_Aug_True_194849_EFF.pth",
             # "EfficientNetV2M": "EfficientNetV2M_potatodata_Aug_True_194849_EFF.pth",
             "HybridModelV2s": "HybridModelV2s_potatodata_Aug_True_073227_EFF.pth",
             "HybridModelV2m": "HybridModelV2m_potatodata_Aug_True_073227_EFF.pth",
+
         }
     else:
         SAVED_MODELS = {
             # "EfficientNetV2B3": "EfficientNetV2B3_last_potatodata_Aug_False_082520.pth",
-            #"ViT": "ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
-            #"HybridModel": "HybridModel_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
-            #"HybridModel": "HybridModel_last_potatodata_Aug_False_205609_HT400k.pth",
-
+            # "ViT": "ViT_last_potatodata_Aug_False_134753_L2_dropout_hybrid.pth",
+            # "HybridModel": "HybridModel_last_potatodata_Aug_False_205609_HT400k.pth",
             # "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_False_201907_EFF.pth",
             # "EfficientNetV2S": "EfficientNetV2S_potatodata_Aug_False_215124_EFF.pth",
             # "EfficientNetV2M": "EfficientNetV2M_potatodata_Aug_False_215124_EFF.pth",
             "HybridModelV2s": "HybridModelV2s_potatodata_Aug_False_193355_EFF.pth",
             "HybridModelV2m": "HybridModelV2m_potatodata_Aug_False_193355_EFF.pth",
 
+
         }
 else:
     if AUGMENT:
         SAVED_MODELS = {
             # "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_True_142228.pth",
-            #"ViT": "ViT_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
-            #"HybridModel": "HybridModel_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
-            #"HybridModel": "HybridModel_last_plantVillage_Aug_True_151547_HT400k.pth",
+            # "ViT": "ViT_last_plantVillage_Aug_True_223713_L2_dropout_hybrid.pth",
+            # "HybridModel": "HybridModel_last_plantVillage_Aug_True_151547_HT400k.pth",
 
-            "EfficientNetV2B3": "EfficientNetV2B3_plantVillage_Aug_True_134512_EFF.pth",
-            "EfficientNetV2S": "EfficientNetV2S_plantVillage_Aug_True_134512_EFF.pth",
-            "EfficientNetV2M": "EfficientNetV2M_plantVillage_Aug_True_134512_EFF.pth",
+            # "EfficientNetV2B3": "EfficientNetV2B3_plantVillage_Aug_True_134512_EFF.pth",
+            # "EfficientNetV2S": "EfficientNetV2S_plantVillage_Aug_True_134512_EFF.pth",
+            # "EfficientNetV2M": "EfficientNetV2M_plantVillage_Aug_True_134512_EFF.pth",
+            "ViT": "ViT_plantVillage_Aug_True_033949_EFF.pth",
+            "HybridModelV2s": "HybridModelV2s_plantVillage_Aug_True_033949_EFF.pth",
+            "HybridModelV2m": "HybridModelV2m_plantVillage_Aug_True_033949_EFF..pth",
         }
     else:
         SAVED_MODELS = {
             # "EfficientNetV2B3": "EfficientNetV2B3_last_plantVillage_Aug_False_141359.pth",
-            #"ViT": "ViT_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
-            #"HybridModel": "HybridModel_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
-            #"HybridModel": "HybridModel_last_plantVillage_Aug_False_082359_HT400k.pth",
+            # "ViT": "ViT_last_plantVillage_Aug_False_214638_L2_dropout_hybrid.pth",
+            # "HybridModel": "HybridModel_last_plantVillage_Aug_False_082359_HT400k.pth",
 
-            "EfficientNetV2B3": "EfficientNetV2B3_plantVillage_Aug_False_125405_EFF.pth",
-            "EfficientNetV2S": "EfficientNetV2S_plantVillage_Aug_False_125405_EFF.pth",
-            "EfficientNetV2M": "EfficientNetV2M_plantVillage_Aug_False_125405_EFF.pth",
+            # "EfficientNetV2B3": "EfficientNetV2B3_plantVillage_Aug_False_125405_EFF.pth",
+            # "EfficientNetV2S": "EfficientNetV2S_plantVillage_Aug_False_125405_EFF.pth",
+            # "EfficientNetV2M": "EfficientNetV2M_plantVillage_Aug_False_125405_EFF.pth",
+            "ViT": "ViT_plantVillage_Aug_False_175130_EFF.pth",
+            "HybridModelV2s": "HybridModelV2s_plantVillage_Aug_False_175130_EFF.pth",
+            "HybridModelV2m": "HybridModelV2m_plantVillage_Aug_False_175130_EFF.pth",
         }
 
 wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"All{time}_{DATATYPE}_train_Aug_{AUGMENT}_",  # Train name # Added L2 regularization... 0.5
-    #name=f"EFF{time}_{DATATYPE}_test_Aug_{AUGMENT}_EFFind",  # Test names
+    # name=f"All{time}_{DATATYPE}_train_Aug_{AUGMENT}_",  # Train name # Added L2 regularization... 0.5
+    name=f"EFFh{time}_{DATATYPE}_test_Aug_{AUGMENT}_EFFhyb",  # Test names
 )
