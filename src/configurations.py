@@ -134,7 +134,7 @@ else:
             # "EfficientNetV2M": "EfficientNetV2M_plantVillage_Aug_True_134512_EFF.pth",
             "ViT": "ViT_plantVillage_Aug_True_033949_EFF.pth",
             "HybridModelV2s": "HybridModelV2s_plantVillage_Aug_True_033949_EFF.pth",
-            "HybridModelV2m": "HybridModelV2m_plantVillage_Aug_True_033949_EFF..pth",
+            "HybridModelV2m": "HybridModelV2m_plantVillage_Aug_True_033949_EFF.pth",
         }
     else:
         SAVED_MODELS = {
