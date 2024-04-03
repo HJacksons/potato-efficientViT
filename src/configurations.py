@@ -87,13 +87,13 @@ if TRAINING:
 
 else:  # Testing
     MODELS = {
-        "EfficientNetV2B3": EfficientNetV2B3,
-        "EfficientNetV2S": EfficientNetV2S,
-        "EfficientNetV2M": EfficientNetV2M,
-        # "ViT": ViT,
+        # "EfficientNetV2B3": EfficientNetV2B3,
+        # "EfficientNetV2S": EfficientNetV2S,
+        # "EfficientNetV2M": EfficientNetV2M,
+        "ViT": ViT,
         # "HybridModel": HybridModel,
-        # "HybridModelV2s": HybridModelV2s,
-        # "HybridModelV2m": HybridModelV2m,
+        "HybridModelV2s": HybridModelV2s,
+        "HybridModelV2m": HybridModelV2m,
     }
 
 if NEW_DATASET:
