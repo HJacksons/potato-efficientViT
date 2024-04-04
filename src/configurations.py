@@ -48,8 +48,8 @@ if TRAINING:
         # "HybridModelV2m": HybridModelV2m().to(DEVICE),
 
         "Xception": Xception().to(DEVICE),
-        "Inceptionv3": Inceptionv3().to(DEVICE),
-        "DenseNet121": DenseNet121().to(DEVICE),
+        # "Inceptionv3": Inceptionv3().to(DEVICE),
+        # "DenseNet121": DenseNet121().to(DEVICE),
     }
     # model = MODELS["HybridModel"]  # Your hybrid model instance
 
@@ -65,8 +65,8 @@ if TRAINING:
         # "HybridModelV2m": optim.Adam(MODELS["HybridModelV2m"].parameters(), lr, weight_decay=0.0001),
 
         "Xception": optim.Adam(MODELS["Xception"].parameters(), lr, weight_decay=0.0001),
-        "Inceptionv3": optim.Adam(MODELS["Inceptionv3"].parameters(), lr, weight_decay=0.0001),
-        "DenseNet121": optim.Adam(MODELS["DenseNet121"].parameters(), lr, weight_decay=0.0001),
+        # "Inceptionv3": optim.Adam(MODELS["Inceptionv3"].parameters(), lr, weight_decay=0.0001),
+        # "DenseNet121": optim.Adam(MODELS["DenseNet121"].parameters(), lr, weight_decay=0.0001),
     }
     SCHEDULER = {
         # "EfficientNetV2B3": optim.lr_scheduler.ReduceLROnPlateau(
@@ -93,12 +93,12 @@ if TRAINING:
         "Xception": optim.lr_scheduler.ReduceLROnPlateau(
             OPTIMIZERS["Xception"], patience=5, factor=0.5, verbose=True
         ),
-        "Inceptionv3": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["Inceptionv3"], patience=5, factor=0.5, verbose=True
-        ),
-        "DenseNet121": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["DenseNet121"], patience=5, factor=0.5, verbose=True
-        ),
+        # "Inceptionv3": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["Inceptionv3"], patience=5, factor=0.5, verbose=True
+        # ),
+        # "DenseNet121": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["DenseNet121"], patience=5, factor=0.5, verbose=True
+        # ),
     }
 
 
