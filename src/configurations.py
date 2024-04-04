@@ -32,7 +32,7 @@ BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
 TRAINING = True
-AUGMENT = False
+AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata .
 
 NEW_DATASET = True  # for the purpose of testing
