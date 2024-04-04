@@ -4,10 +4,7 @@ from utils import *
 from timm import create_model
 import torch
 import torch.nn.functional as F
-
 from torchsummary import summary
-
-
 from torchinfo import summary
 
 
@@ -103,61 +100,6 @@ class ViT(nn.Module):
             return logits, loss.item()
         else:
             return logits, None
-
-
-# # The hybrid model
-# class HybridModel(nn.Module):
-#     def __init__(self, num_labels=FEATURES):
-#         super(HybridModel, self).__init__()
-#         self.effnet = timm.create_model("tf_efficientnetv2_b3.in21k", pretrained=True)
-#         # Freeze the EfficientNetV2B3 model
-#         for param in self.effnet.parameters():
-#             param.requires_grad = False
-#         # unfreeze the last layer few layers of the model, may be 3
-#         for i, param in enumerate(self.effnet.parameters()):
-#             if i >= len(list(self.effnet.parameters())) - 3:
-#                 param.requires_grad = True
-#
-#         # Replace the classifier with a no op (identity) to get the features
-#         self.effnet.classifier = nn.Identity()
-#
-#         # Add a fully-connected layer to transform the output shape
-#         self.fc = nn.Linear(
-#             1536, 3 * 224 * 224
-#         )  # Replace 3 with the number of channels expected by ViT
-#         self.dropout_effnet = nn.Dropout(
-#             0.2
-#         )  # added dropout later to avoid overfitting
-#
-#         self.vit = ViTModel.from_pretrained(
-#             "google/vit-base-patch16-224-in21k", num_labels=num_labels
-#         )
-#         for param in self.vit.parameters():
-#             param.requires_grad = False
-#         for param in self.vit.encoder.layer[-1].parameters():
-#             param.requires_grad = True
-#         self.dropout = nn.Dropout(0.1)
-#         self.classifier = nn.Linear(self.vit.config.hidden_size, num_labels)
-#
-#     def forward(self, pixel_values, labels=None):
-#         # Extract features from EfficientNetV2B3
-#         x = self.effnet(pixel_values)
-#         # Transform the output shape
-#         x = self.fc(x)
-#         x = x.view(x.shape[0], 3, 224, 224)  # Reshape to match ViT's input shape
-#         # Feed the features into ViT
-#         outputs = self.vit(pixel_values=x)
-#         output = self.dropout(outputs.last_hidden_state[:, 0])
-#         logits = self.classifier(output)
-#
-#         loss = None
-#         if labels is not None:
-#             loss_fct = nn.CrossEntropyLoss()
-#             loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
-#         if loss is not None:
-#             return logits, loss.item()
-#         else:
-#             return logits, None
 
 
 # class HybridModel(nn.Module): # currently training
@@ -343,7 +285,54 @@ class HybridModelV2m(nn.Module):
         return output
 
 
+# https://arxiv.org/abs/1610.02357
+class Xception(nn.Module):
+    def __init__(self):
+        super(Xception, self).__init__()
+        self.model = create_model("xception", pretrained=True)
+        for param in self.model.parameters():
+            param.requires_grad = False
+        self.model.fc = nn.Sequential(
+            nn.Dropout(0.5),
+            nn.Linear(2048, FEATURES)
+        )
+
+    def forward(self, x):
+        return self.model(x)
 
 
-# mod = HybridModelV2m()
+# https://arxiv.org/abs/1512.00567
+class Inceptionv3(nn.Module):
+    def __init__(self):
+        super(Inceptionv3, self).__init__()
+        self.model = create_model("inception_v3", pretrained=True)
+        for param in self.model.parameters():
+            param.requires_grad = False
+        self.model.fc = nn.Sequential(
+            nn.Dropout(0.5),
+            nn.Linear(2048, FEATURES)
+        )
+
+    def forward(self, x):
+        return self.model(x)
+
+
+# https://arxiv.org/abs/1608.06993
+class DenseNet121(nn.Module):
+    def __init__(self):
+        super(DenseNet121, self).__init__()
+        self.model = create_model("densenet121", pretrained=True)
+        for param in self.model.parameters():
+            param.requires_grad = False
+        self.model.classifier = nn.Sequential(
+            nn.Dropout(0.5),
+            nn.Linear(1024, FEATURES)
+        )
+
+    def forward(self, x):
+        return self.model(x)
+
+# mod = DenseNet121()
+# # trainable_params = sum(p.numel() for p in mod.parameters() if p.requires_grad)
+# # print(f"Trainable parameters: {trainable_params}")
 # summary(mod, input_size=(1, 3, 224, 224))

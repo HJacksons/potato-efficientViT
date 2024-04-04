@@ -117,7 +117,7 @@ class Trainer:
         for model_name, model in self.models.items():
             torch.save(
                 model.state_dict(),
-                f"{model_name}_{DATATYPE}_Aug_{AUGMENT}_{time}_EFF.pth",
+                f"{model_name}_{DATATYPE}_Aug_{AUGMENT}_{time}_CNNs.pth",
             )
             logging.info(f"Saved last model for {model_name}")
 
