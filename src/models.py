@@ -368,5 +368,40 @@ class HybridInceptionV3(nn.Module):
 
         return output
 
-# mod = HybridInceptionV3()
+
+class HybridXception(nn.Module):
+    def __init__(self):
+        super(HybridXception, self).__init__()
+        self.xception = create_model("xception", pretrained=True)
+        self.xception.fc = nn.Identity()
+        for param in self.xception.parameters():
+            param.requires_grad = False
+        self.vit = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
+        self.vit_linear = nn.Linear(self.vit.config.hidden_size, 512)
+        for param in self.vit.parameters():
+            param.requires_grad = False
+        self.dropout = nn.Dropout(0.2)
+        self.classifier = nn.Linear(2048 + 512, FEATURES)
+
+    def forward(self, x):
+        # Extract features using Xception
+        xception_output = self.xception.forward_features(x)
+        xception_output = torch.flatten(xception_output, start_dim=2)
+        xception_output = xception_output.mean(dim=2)
+
+        # Feed the input into ViT
+        vit_output = self.vit(pixel_values=x)['last_hidden_state'][:, 0]
+        vit_output = self.vit_linear(vit_output)
+
+        # Combine the outputs
+        combined = torch.cat((xception_output, vit_output), dim=1)
+
+        # Apply dropout
+        combined = self.dropout(combined)
+
+        output = self.classifier(combined)
+
+        return output
+
+# mod = HybridXception()
 # summary(mod, input_size=(1, 3, 224, 224))
