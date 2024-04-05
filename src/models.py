@@ -332,7 +332,41 @@ class DenseNet121(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-# mod = DenseNet121()
-# # trainable_params = sum(p.numel() for p in mod.parameters() if p.requires_grad)
-# # print(f"Trainable parameters: {trainable_params}")
+
+
+class HybridInceptionV3(nn.Module):
+    def __init__(self):
+        super(HybridInceptionV3, self).__init__()
+        self.inception = create_model("inception_v3", pretrained=True)
+        self.inception.fc = nn.Identity()
+        for param in self.inception.parameters():
+            param.requires_grad = False
+        self.vit = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
+        self.vit_linear = nn.Linear(self.vit.config.hidden_size, 512)
+        for param in self.vit.parameters():
+            param.requires_grad = False
+        self.dropout = nn.Dropout(0.2)
+        self.classifier = nn.Linear(2048 + 512, FEATURES)
+
+    def forward(self, x):
+        # Extract features using InceptionV3
+        inception_output = self.inception.forward_features(x)
+        inception_output = torch.flatten(inception_output, start_dim=2)
+        inception_output = inception_output.mean(dim=2)
+
+        # Feed the input into ViT
+        vit_output = self.vit(pixel_values=x)['last_hidden_state'][:, 0]
+        vit_output = self.vit_linear(vit_output)
+
+        # Combine the outputs
+        combined = torch.cat((inception_output, vit_output), dim=1)
+
+        # Apply dropout
+        combined = self.dropout(combined)
+
+        output = self.classifier(combined)
+
+        return output
+
+# mod = HybridInceptionV3()
 # summary(mod, input_size=(1, 3, 224, 224))

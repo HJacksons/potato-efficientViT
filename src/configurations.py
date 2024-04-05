@@ -1,7 +1,7 @@
 import torch
 import torch.optim as optim
 import torch.nn as nn
-from models import ViT, EfficientNetV2B3, HybridModel, EfficientNetV2S, EfficientNetV2M, HybridModelV2s, HybridModelV2m, Xception, Inceptionv3, DenseNet121
+from models import ViT, EfficientNetV2B3, HybridModel, EfficientNetV2S, EfficientNetV2M, HybridModelV2s, HybridModelV2m, Xception, Inceptionv3, DenseNet121, HybridModelV2s, HybridInceptionV3
 import os
 import wandb
 from time import gmtime, strftime
@@ -47,9 +47,10 @@ if TRAINING:
         # "HybridModelV2s": HybridModelV2s().to(DEVICE),
         # "HybridModelV2m": HybridModelV2m().to(DEVICE),
 
-        "Xception": Xception().to(DEVICE),
+        # "Xception": Xception().to(DEVICE),
         # "Inceptionv3": Inceptionv3().to(DEVICE),
         # "DenseNet121": DenseNet121().to(DEVICE),
+        "HybridInceptionV3": HybridInceptionV3().to(DEVICE),
     }
     # model = MODELS["HybridModel"]  # Your hybrid model instance
 
@@ -64,9 +65,10 @@ if TRAINING:
         # "HybridModelV2s": optim.Adam(MODELS["HybridModelV2s"].parameters(), lr, weight_decay=0.0001),
         # "HybridModelV2m": optim.Adam(MODELS["HybridModelV2m"].parameters(), lr, weight_decay=0.0001),
 
-        "Xception": optim.Adam(MODELS["Xception"].parameters(), lr, weight_decay=0.0001),
+        # "Xception": optim.Adam(MODELS["Xception"].parameters(), lr, weight_decay=0.0001),
         # "Inceptionv3": optim.Adam(MODELS["Inceptionv3"].parameters(), lr, weight_decay=0.0001),
         # "DenseNet121": optim.Adam(MODELS["DenseNet121"].parameters(), lr, weight_decay=0.0001),
+        "HybridInceptionV3": optim.Adam(MODELS["HybridInceptionV3"].parameters(), lr, weight_decay=0.0001),
     }
     SCHEDULER = {
         # "EfficientNetV2B3": optim.lr_scheduler.ReduceLROnPlateau(
@@ -90,15 +92,18 @@ if TRAINING:
         # "HybridModelV2m": optim.lr_scheduler.ReduceLROnPlateau(
         #     OPTIMIZERS["HybridModelV2m"], patience=5, factor=0.5, verbose=True
         # ),
-        "Xception": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["Xception"], patience=5, factor=0.5, verbose=True
-        ),
-        # "Inceptionv3": optim.lr_scheduler.ReduceLROnPlateau(
+        # "Xception": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["Xception"], patience=5, factor=0.5, verbose=True
+        # ),
+        # # "Inceptionv3": optim.lr_scheduler.ReduceLROnPlateau(
         #     OPTIMIZERS["Inceptionv3"], patience=5, factor=0.5, verbose=True
         # ),
         # "DenseNet121": optim.lr_scheduler.ReduceLROnPlateau(
         #     OPTIMIZERS["DenseNet121"], patience=5, factor=0.5, verbose=True
         # ),
+        "HybridInceptionV3": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["HybridInceptionV3"], patience=5, factor=0.5, verbose=True
+        ),
     }
 
 
@@ -180,6 +185,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"CNNs{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
+    name=f"CNNsv3{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
     #name=f"ViTHy{time}_{DATATYPE}_test_Aug_{AUGMENT}_ViTHy",  # Test names
 )
