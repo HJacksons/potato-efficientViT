@@ -50,8 +50,8 @@ if TRAINING:
         # "Xception": Xception().to(DEVICE),
         # "Inceptionv3": Inceptionv3().to(DEVICE),
         # "DenseNet121": DenseNet121().to(DEVICE),
-        #"HybridInceptionV3": HybridInceptionV3().to(DEVICE),
-        "HybridXception": HybridXception().to(DEVICE),
+        "HybridInceptionV3": HybridInceptionV3().to(DEVICE),
+        #"HybridXception": HybridXception().to(DEVICE),
     }
     # model = MODELS["HybridModel"]  # Your hybrid model instance
 
@@ -69,8 +69,8 @@ if TRAINING:
         # "Xception": optim.Adam(MODELS["Xception"].parameters(), lr, weight_decay=0.0001),
         # "Inceptionv3": optim.Adam(MODELS["Inceptionv3"].parameters(), lr, weight_decay=0.0001),
         # "DenseNet121": optim.Adam(MODELS["DenseNet121"].parameters(), lr, weight_decay=0.0001),
-        #"HybridInceptionV3": optim.Adam(MODELS["HybridInceptionV3"].parameters(), lr, weight_decay=0.0001),
-        "HybridXception": optim.Adam(MODELS["HybridXception"].parameters(), lr, weight_decay=0.0001),
+        "HybridInceptionV3": optim.Adam(MODELS["HybridInceptionV3"].parameters(), lr, weight_decay=0.0001),
+        #"HybridXception": optim.Adam(MODELS["HybridXception"].parameters(), lr, weight_decay=0.0001),
     }
     SCHEDULER = {
         # "EfficientNetV2B3": optim.lr_scheduler.ReduceLROnPlateau(
@@ -103,12 +103,12 @@ if TRAINING:
         # "DenseNet121": optim.lr_scheduler.ReduceLROnPlateau(
         #     OPTIMIZERS["DenseNet121"], patience=5, factor=0.5, verbose=True
         # ),
-        # "HybridInceptionV3": optim.lr_scheduler.ReduceLROnPlateau(
-        #     OPTIMIZERS["HybridInceptionV3"], patience=5, factor=0.5, verbose=True
-        # ),
-        "HybridXception": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["HybridXception"], patience=5, factor=0.5, verbose=True
+        "HybridInceptionV3": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["HybridInceptionV3"], patience=5, factor=0.5, verbose=True
         ),
+        # "HybridXception": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["HybridXception"], patience=5, factor=0.5, verbose=True
+        # ),
     }
 
 
