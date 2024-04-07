@@ -31,8 +31,8 @@ RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = True
-AUGMENT = False
+TRAINING = False
+AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata .
 
 NEW_DATASET = True  # for the purpose of testing
@@ -124,6 +124,11 @@ else:  # Testing
 
         # "ViT": ViT,
         # "HybridModel": HybridModel,
+        "Xception": Xception,
+        "Inceptionv3": Inceptionv3,
+        "HybridXception": HybridXception,
+        "HybridInceptionv3": HybridInceptionV3,
+
     }
 
 if NEW_DATASET:
@@ -140,6 +145,11 @@ if NEW_DATASET:
 
             # "ViT": "ViT_potatodata_Aug_True_182227_ViT.pth",
             # "HybridModel": "HybridModel_potatodata_Aug_True_220918_ViT.pth",
+
+            "Xception": "Xception_potatodata_Aug_True_181149_CNNs.pth",
+            "Inceptionv3": "Inceptionv3_potatodata_Aug_True_162810_CNNs.pth",
+            "HybridXception": "HybridXception_potatodata_Aug_True_144722_CNNs.pth",
+            "HybridInceptionv3": "HybridInceptionV3_potatodata_Aug_True_185317_CNNs.pth",
 
         }
     else:
@@ -190,6 +200,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"CNNsv3{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
-    #name=f"ViTHy{time}_{DATATYPE}_test_Aug_{AUGMENT}_ViTHy",  # Test names
+    #name=f"CNNsv3{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
+    name=f"TestCNN{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
 )
