@@ -32,7 +32,7 @@ BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
 TRAINING = False
-AUGMENT = True
+AUGMENT = False
 DATATYPE = "potatodata"  # plantVillage or potatodata .
 
 NEW_DATASET = True  # for the purpose of testing
@@ -165,6 +165,11 @@ if NEW_DATASET:
 
             # "ViT": "ViT_potatodata_Aug_False_201457_ViT.pth",
             # "HybridModel": "HybridModel_potatodata_Aug_False_234841_ViT.pth",
+
+            "Xception": "Xception_potatodata_Aug_False_180720_CNNs.pth",
+            "Inceptionv3": "Inceptionv3_potatodata_Aug_False_225104_CNNs.pth",
+            "HybridXception": "HybridXception_potatodata_Aug_False_154325_CNNs.pth",
+            "HybridInceptionv3": "HybridInceptionV3_potatodata_Aug_False_122219_CNNs.pth",
 
 
         }
