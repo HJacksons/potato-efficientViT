@@ -1,7 +1,7 @@
 import torch
 import torch.optim as optim
 import torch.nn as nn
-from models import ViT, EfficientNetV2B3, HybridModel, EfficientNetV2S, EfficientNetV2M, HybridModelV2s, HybridModelV2m, Xception, Inceptionv3, DenseNet121, HybridModelV2s, HybridInceptionV3, HybridXception
+from models import ViT, EfficientNetV2B3, HybridModel, EfficientNetV2S, EfficientNetV2M, HybridModelV2s, HybridModelV2m, Xception, Inceptionv3, DenseNet121, HybridModelV2s, HybridInceptionV3, HybridXception, HybridModelv2b3
 import os
 import wandb
 from time import gmtime, strftime
@@ -31,8 +31,8 @@ RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = False
-AUGMENT = False
+TRAINING = True
+AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata .
 
 NEW_DATASET = True  # for the purpose of testing
@@ -51,7 +51,9 @@ if TRAINING:
         # "Inceptionv3": Inceptionv3().to(DEVICE),
         # "DenseNet121": DenseNet121().to(DEVICE),
         #"HybridInceptionV3": HybridInceptionV3().to(DEVICE),
-        "HybridXception": HybridXception().to(DEVICE),
+        # "HybridXception": HybridXception().to(DEVICE),
+
+        "HybridModelv2b3": HybridModelv2b3().to(DEVICE),
     }
     # model = MODELS["HybridModel"]  # Your hybrid model instance
 
@@ -70,7 +72,9 @@ if TRAINING:
         # "Inceptionv3": optim.Adam(MODELS["Inceptionv3"].parameters(), lr, weight_decay=0.0001),
         # "DenseNet121": optim.Adam(MODELS["DenseNet121"].parameters(), lr, weight_decay=0.0001),
         #"HybridInceptionV3": optim.Adam(MODELS["HybridInceptionV3"].parameters(), lr, weight_decay=0.0001),
-        "HybridXception": optim.Adam(MODELS["HybridXception"].parameters(), lr, weight_decay=0.0001),
+        # "HybridXception": optim.Adam(MODELS["HybridXception"].parameters(), lr, weight_decay=0.0001),
+
+        "HybridModelv2b3": optim.Adam(MODELS["HybridModelv2b3"].parameters(), lr, weight_decay=0.0001),
     }
     SCHEDULER = {
         # "EfficientNetV2B3": optim.lr_scheduler.ReduceLROnPlateau(
@@ -106,8 +110,12 @@ if TRAINING:
         # "HybridInceptionV3": optim.lr_scheduler.ReduceLROnPlateau(
         #     OPTIMIZERS["HybridInceptionV3"], patience=5, factor=0.5, verbose=True
         # ),
-        "HybridXception": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["HybridXception"], patience=5, factor=0.5, verbose=True
+        # "HybridXception": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["HybridXception"], patience=5, factor=0.5, verbose=True
+        # ),
+
+        "HybridModelv2b3": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["HybridModelv2b3"], patience=5, factor=0.5, verbose=True
         ),
     }
 

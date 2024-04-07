@@ -205,6 +205,51 @@ class HybridModel(nn.Module):
         return output
 
 
+class HybridModelv2b3(nn.Module):  # add more layers after combining the features
+    def __init__(self, num_labels=FEATURES):
+        super(HybridModelv2b3, self).__init__()
+
+        # Part of EfficientNet
+        self.effnet = create_model("tf_efficientnetv2_b3.in21k", pretrained=True)
+        self.effnet.classifier = nn.Identity()  # Remove the classifier
+        for param in self.effnet.parameters():
+            param.requires_grad = False  # Freeze the EfficientNet parameters
+
+        # Part of ViT
+        self.vit = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
+        self.vit_linear = nn.Linear(self.vit.config.hidden_size, 512)
+        for param in self.vit.parameters():
+            param.requires_grad = False  # Freeze the ViT parameters
+
+        self.dropout = nn.Dropout(0.2)
+        self.fc1 = nn.Linear(1536 + 512, 1024)  # New FCL1
+        self.fc2 = nn.Linear(1024, 512)  # New FCL2
+        self.classifier = nn.Linear(512, num_labels)  # Adjusted to match the output of vit_linear
+
+    def forward(self, x):
+        # Extract features using EfficientNet
+        effnet_output = self.effnet.forward_features(x)
+        effnet_output = torch.flatten(effnet_output, start_dim=2)  # Flatten the output
+        effnet_output = effnet_output.mean(dim=2)  # Global average pooling
+
+        # Feed the input into ViT
+        vit_output = self.vit(pixel_values=x)['last_hidden_state'][:, 0]
+        vit_output = self.vit_linear(vit_output)  # Reduce the dimensionality of the ViT output
+
+        # Combine the outputs
+        combined = torch.cat((effnet_output, vit_output), dim=1)
+
+        # Apply dropout
+        combined = self.dropout(combined)
+        # pass through new FCL1 and FCL2
+        combined = F.relu(self.fc1(combined))
+        combined = F.relu(self.fc2(combined))
+
+        output = self.classifier(combined)  # Get the final output
+
+        return output
+
+
 class HybridModelV2s(nn.Module):
     def __init__(self, num_labels=FEATURES):
         super(HybridModelV2s, self).__init__()
@@ -333,7 +378,6 @@ class DenseNet121(nn.Module):
         return self.model(x)
 
 
-
 class HybridInceptionV3(nn.Module):
     def __init__(self):
         super(HybridInceptionV3, self).__init__()
@@ -403,5 +447,6 @@ class HybridXception(nn.Module):
 
         return output
 
-# mod = HybridXception()
+
+# mod = HybridModelv2b3()
 # summary(mod, input_size=(1, 3, 224, 224))
