@@ -31,8 +31,8 @@ RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = True
-AUGMENT = False
+TRAINING = False
+AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata .
 
 NEW_DATASET = True  # for the purpose of testing
@@ -132,10 +132,11 @@ else:  # Testing
 
         # "ViT": ViT,
         # "HybridModel": HybridModel,
-        "Xception": Xception,
-        "Inceptionv3": Inceptionv3,
-        "HybridXception": HybridXception,
-        "HybridInceptionv3": HybridInceptionV3,
+        # "Xception": Xception,
+        # "Inceptionv3": Inceptionv3,
+        # "HybridXception": HybridXception,
+        # "HybridInceptionv3": HybridInceptionV3,
+        "HybridModelv2b3": HybridModelv2b3,
 
     }
 
@@ -154,10 +155,11 @@ if NEW_DATASET:
             # "ViT": "ViT_potatodata_Aug_True_182227_ViT.pth",
             # "HybridModel": "HybridModel_potatodata_Aug_True_220918_ViT.pth",
 
-            "Xception": "Xception_potatodata_Aug_True_181149_CNNs.pth",
-            "Inceptionv3": "Inceptionv3_potatodata_Aug_True_162810_CNNs.pth",
-            "HybridXception": "HybridXception_potatodata_Aug_True_144722_CNNs.pth",
-            "HybridInceptionv3": "HybridInceptionV3_potatodata_Aug_True_185317_CNNs.pth",
+            # "Xception": "Xception_potatodata_Aug_True_181149_CNNs.pth",
+            # "Inceptionv3": "Inceptionv3_potatodata_Aug_True_162810_CNNs.pth",
+            # "HybridXception": "HybridXception_potatodata_Aug_True_144722_CNNs.pth",
+            # "HybridInceptionv3": "HybridInceptionV3_potatodata_Aug_True_185317_CNNs.pth",
+            "HybridModelv2b3": "HybridModelv2b3_potatodata_Aug_True_125450_CNNs.pth",
 
         }
     else:
