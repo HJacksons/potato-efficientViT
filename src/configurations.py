@@ -1,7 +1,9 @@
 import torch
 import torch.optim as optim
 import torch.nn as nn
-from models import ViT, EfficientNetV2B3, HybridModel, EfficientNetV2S, EfficientNetV2M, HybridModelV2s, HybridModelV2m, Xception, Inceptionv3, DenseNet121, HybridModelV2s, HybridInceptionV3, HybridXception, HybridModelv2b3
+from models import (ViT, EfficientNetV2B3, HybridModel, EfficientNetV2S, EfficientNetV2M,
+                    HybridModelV2s, HybridModelV2m, Xception, Inceptionv3, HybridModelV2s,
+                    HybridInceptionV3, HybridXception, HybridModelv2b3, MobileNetV3_large, VGG16, ResNet50, DenseNet121)
 import os
 import wandb
 from time import gmtime, strftime
@@ -31,7 +33,7 @@ RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = False
+TRAINING = True
 AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata .
 
@@ -53,7 +55,12 @@ if TRAINING:
         #"HybridInceptionV3": HybridInceptionV3().to(DEVICE),
         # "HybridXception": HybridXception().to(DEVICE),
 
-        "HybridModelv2b3": HybridModelv2b3().to(DEVICE),
+        # "HybridModelv2b3": HybridModelv2b3().to(DEVICE),
+
+        "MobileNetV3_large": MobileNetV3_large().to(DEVICE),
+        "VGG16": VGG16().to(DEVICE),
+        "ResNet50": ResNet50().to(DEVICE),
+        "DenseNet121": DenseNet121().to(DEVICE),
     }
     # model = MODELS["HybridModel"]  # Your hybrid model instance
 
@@ -74,7 +81,12 @@ if TRAINING:
         #"HybridInceptionV3": optim.Adam(MODELS["HybridInceptionV3"].parameters(), lr, weight_decay=0.0001),
         # "HybridXception": optim.Adam(MODELS["HybridXception"].parameters(), lr, weight_decay=0.0001),
 
-        "HybridModelv2b3": optim.Adam(MODELS["HybridModelv2b3"].parameters(), lr, weight_decay=0.0001),
+        # "HybridModelv2b3": optim.Adam(MODELS["HybridModelv2b3"].parameters(), lr, weight_decay=0.0001),
+
+        "MobileNetV3_large": optim.Adam(MODELS["MobileNetV3_large"].parameters(), lr, weight_decay=0.0001),
+        "VGG16": optim.Adam(MODELS["VGG16"].parameters(), lr, weight_decay=0.0001),
+        "ResNet50": optim.Adam(MODELS["ResNet50"].parameters(), lr, weight_decay=0.0001),
+        "DenseNet121": optim.Adam(MODELS["DenseNet121"].parameters(), lr, weight_decay=0.0001),
     }
     SCHEDULER = {
         # "EfficientNetV2B3": optim.lr_scheduler.ReduceLROnPlateau(
@@ -114,9 +126,23 @@ if TRAINING:
         #     OPTIMIZERS["HybridXception"], patience=5, factor=0.5, verbose=True
         # ),
 
-        "HybridModelv2b3": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["HybridModelv2b3"], patience=5, factor=0.5, verbose=True
+        # "HybridModelv2b3": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["HybridModelv2b3"], patience=5, factor=0.5, verbose=True
+        # ),
+
+        "MobileNetV3_large": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["MobileNetV3_large"], patience=5, factor=0.5, verbose=True
         ),
+        "VGG16": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["VGG16"], patience=5, factor=0.5, verbose=True
+        ),
+        "ResNet50": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["ResNet50"], patience=5, factor=0.5, verbose=True
+        ),
+        "DenseNet121": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["DenseNet121"], patience=5, factor=0.5, verbose=True
+        ),
+
     }
 
 
@@ -215,6 +241,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"Hv2b3{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
+    name=f"paper{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
     #name=f"TestCNN{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
 )
