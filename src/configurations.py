@@ -58,7 +58,7 @@ if TRAINING:
         # "HybridModelv2b3": HybridModelv2b3().to(DEVICE),
 
         "MobileNetV3_large": MobileNetV3_large().to(DEVICE),
-        "VGG16": VGG16().to(DEVICE),
+        #"VGG16": VGG16().to(DEVICE),
         "ResNet50": ResNet50().to(DEVICE),
         "DenseNet121": DenseNet121().to(DEVICE),
     }
@@ -84,7 +84,7 @@ if TRAINING:
         # "HybridModelv2b3": optim.Adam(MODELS["HybridModelv2b3"].parameters(), lr, weight_decay=0.0001),
 
         "MobileNetV3_large": optim.Adam(MODELS["MobileNetV3_large"].parameters(), lr, weight_decay=0.0001),
-        "VGG16": optim.Adam(MODELS["VGG16"].parameters(), lr, weight_decay=0.0001),
+        #"VGG16": optim.Adam(MODELS["VGG16"].parameters(), lr, weight_decay=0.0001),
         "ResNet50": optim.Adam(MODELS["ResNet50"].parameters(), lr, weight_decay=0.0001),
         "DenseNet121": optim.Adam(MODELS["DenseNet121"].parameters(), lr, weight_decay=0.0001),
     }
@@ -133,9 +133,9 @@ if TRAINING:
         "MobileNetV3_large": optim.lr_scheduler.ReduceLROnPlateau(
             OPTIMIZERS["MobileNetV3_large"], patience=5, factor=0.5, verbose=True
         ),
-        "VGG16": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["VGG16"], patience=5, factor=0.5, verbose=True
-        ),
+        # "VGG16": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["VGG16"], patience=5, factor=0.5, verbose=True
+        # ),
         "ResNet50": optim.lr_scheduler.ReduceLROnPlateau(
             OPTIMIZERS["ResNet50"], patience=5, factor=0.5, verbose=True
         ),
