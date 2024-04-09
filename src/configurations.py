@@ -3,7 +3,9 @@ import torch.optim as optim
 import torch.nn as nn
 from models import (ViT, EfficientNetV2B3, HybridModel, EfficientNetV2S, EfficientNetV2M,
                     HybridModelV2s, HybridModelV2m, Xception, Inceptionv3, HybridModelV2s,
-                    HybridInceptionV3, HybridXception, HybridModelv2b3, MobileNetV3_large, VGG16, ResNet50, DenseNet121)
+                    HybridInceptionV3, HybridXception, HybridModelv2b3, MobileNetV3_large, VGG16, ResNet50, DenseNet121,
+                    MobileNetV3ViT, VGG16ViT, ResNet50ViT, DenseNet121ViT
+                    )
 import os
 import wandb
 from time import gmtime, strftime
@@ -34,7 +36,7 @@ BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
 TRAINING = True
-AUGMENT = False
+AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata .
 
 NEW_DATASET = True  # for the purpose of testing
@@ -57,10 +59,15 @@ if TRAINING:
 
         # "HybridModelv2b3": HybridModelv2b3().to(DEVICE),
 
-        "MobileNetV3_large": MobileNetV3_large().to(DEVICE),
-        "VGG16": VGG16().to(DEVICE),
-        "ResNet50": ResNet50().to(DEVICE),
-        "DenseNet121": DenseNet121().to(DEVICE),
+        # "MobileNetV3_large": MobileNetV3_large().to(DEVICE),
+        # "VGG16": VGG16().to(DEVICE),
+        # "ResNet50": ResNet50().to(DEVICE),
+        # "DenseNet121": DenseNet121().to(DEVICE),
+
+        "MobileNetV3ViT": MobileNetV3ViT().to(DEVICE),
+        "VGG16ViT": VGG16ViT().to(DEVICE),
+        "ResNet50ViT": ResNet50ViT().to(DEVICE),
+        "DenseNet121ViT": DenseNet121ViT().to(DEVICE),
     }
     # model = MODELS["HybridModel"]  # Your hybrid model instance
 
@@ -83,10 +90,15 @@ if TRAINING:
 
         #"HybridModelv2b3": optim.Adam(MODELS["HybridModelv2b3"].parameters(), lr, weight_decay=0.0001),
 
-        "MobileNetV3_large": optim.Adam(MODELS["MobileNetV3_large"].parameters(), lr, weight_decay=0.0001),
-        "VGG16": optim.Adam(MODELS["VGG16"].parameters(), lr, weight_decay=0.0001),
-        "ResNet50": optim.Adam(MODELS["ResNet50"].parameters(), lr, weight_decay=0.0001),
-        "DenseNet121": optim.Adam(MODELS["DenseNet121"].parameters(), lr, weight_decay=0.0001),
+        # "MobileNetV3_large": optim.Adam(MODELS["MobileNetV3_large"].parameters(), lr, weight_decay=0.0001),
+        # "VGG16": optim.Adam(MODELS["VGG16"].parameters(), lr, weight_decay=0.0001),
+        # "ResNet50": optim.Adam(MODELS["ResNet50"].parameters(), lr, weight_decay=0.0001),
+        # "DenseNet121": optim.Adam(MODELS["DenseNet121"].parameters(), lr, weight_decay=0.0001),
+
+        "MobileNetV3ViT": optim.Adam(MODELS["MobileNetV3ViT"].parameters(), lr, weight_decay=0.0001),
+        "VGG16ViT": optim.Adam(MODELS["VGG16ViT"].parameters(), lr, weight_decay=0.0001),
+        "ResNet50ViT": optim.Adam(MODELS["ResNet50ViT"].parameters(), lr, weight_decay=0.0001),
+        "DenseNet121ViT": optim.Adam(MODELS["DenseNet121ViT"].parameters(), lr, weight_decay=0.0001),
     }
     SCHEDULER = {
         # "EfficientNetV2B3": optim.lr_scheduler.ReduceLROnPlateau(
@@ -130,18 +142,32 @@ if TRAINING:
         #     OPTIMIZERS["HybridModelv2b3"], patience=5, factor=0.5, verbose=True
         # ),
 
-        "MobileNetV3_large": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["MobileNetV3_large"], patience=5, factor=0.5, verbose=True
+        # "MobileNetV3_large": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["MobileNetV3_large"], patience=5, factor=0.5, verbose=True
+        # ),
+        # "VGG16": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["VGG16"], patience=5, factor=0.5, verbose=True
+        # ),
+        # "ResNet50": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["ResNet50"], patience=5, factor=0.5, verbose=True
+        # ),
+        # "DenseNet121": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["DenseNet121"], patience=5, factor=0.5, verbose=True
+        # ),
+
+        "MobileNetV3ViT": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["MobileNetV3ViT"], patience=5, factor=0.5, verbose=True
         ),
-        "VGG16": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["VGG16"], patience=5, factor=0.5, verbose=True
+        "VGG16ViT": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["VGG16ViT"], patience=5, factor=0.5, verbose=True
         ),
-        "ResNet50": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["ResNet50"], patience=5, factor=0.5, verbose=True
+        "ResNet50ViT": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["ResNet50ViT"], patience=5, factor=0.5, verbose=True
         ),
-        "DenseNet121": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["DenseNet121"], patience=5, factor=0.5, verbose=True
+        "DenseNet121ViT": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["DenseNet121ViT"], patience=5, factor=0.5, verbose=True
         ),
+
 
     }
 
@@ -241,6 +267,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"paper{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
+    name=f"paperhy{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
     #name=f"TestCNN{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
 )
