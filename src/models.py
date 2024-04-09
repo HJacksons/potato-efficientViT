@@ -461,15 +461,23 @@ class MobileNetV3ViT(nn.Module):
         return output
 
 class VGG16(nn.Module):
-    def __init__(self):
+    def __init__(self, num_classes=FEATURES):
         super(VGG16, self).__init__()
+        # Load the pretrained model from timm
         self.model = create_model("vgg16", pretrained=True)
+
+        # Freeze training for all "features" layers
         for param in self.model.parameters():
             param.requires_grad = False
-        self.model.classifier = nn.Sequential(
+
+        # Replace the last linear layer in the "head" section
+        num_features = self.model.head.fc.in_features
+        self.model.head.fc = nn.Sequential(
             nn.Dropout(0.5),
-            nn.Linear(4096, FEATURES)
+            nn.Linear(num_features, num_classes)
         )
+        for param in self.model.head.fc.parameters():
+            param.requires_grad = True
 
     def forward(self, x):
         return self.model(x)
@@ -488,6 +496,7 @@ class VGG16ViT(nn.Module):
         self.dropout = nn.Dropout(0.2)
         self.classifier = nn.Linear(512 + 512, FEATURES)
 
+
     def forward(self, x):
         # Extract features using VGG16
         vgg16_output = self.vgg16.forward_features(x)
@@ -497,8 +506,6 @@ class VGG16ViT(nn.Module):
         # Feed the input into ViT
         vit_output = self.vit(pixel_values=x)['last_hidden_state'][:, 0]
         vit_output = self.vit_linear(vit_output)
-        print("mobilenetv3_output shape:", vgg16_output.shape)
-        print("vit_output shape:", vit_output.shape)
 
         # Combine the outputs
         combined = torch.cat((vgg16_output, vit_output), dim=1)
@@ -629,5 +636,5 @@ class HybridXception(nn.Module):
 
 
 #
-# mod = ResNet50ViT()
+# mod = VGG16()
 # summary(mod, input_size=(1, 3, 224, 224))
