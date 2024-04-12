@@ -28,16 +28,16 @@ CRITERION = nn.CrossEntropyLoss()
 EPOCHS = 70
 lr = 0.0001
 
-DATA = "../data/plantVillage"  # "../data/potatodata
+DATA = "../data/potatodata"  # "../data/potatodata
 TEST_SIZE = 0.1
 VALI_SIZE = 0.1
 RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = True
+TRAINING = False
 AUGMENT = False
-DATATYPE = "plantVillage"  # plantVillage or potatodata .
+DATATYPE = "potatodata"  # plantVillage or potatodata .
 
 NEW_DATASET = True  # for the purpose of testing
 
@@ -188,7 +188,16 @@ else:  # Testing
         # "Inceptionv3": Inceptionv3,
         # "HybridXception": HybridXception,
         # "HybridInceptionv3": HybridInceptionV3,
-        "HybridModelv2b3": HybridModelv2b3,
+        #"HybridModelv2b3": HybridModelv2b3,
+
+        MobileNetV3_large: MobileNetV3_large,
+        VGG16: VGG16,
+        ResNet50: ResNet50,
+        DenseNet121: DenseNet121,
+        MobileNetV3ViT: MobileNetV3ViT,
+        VGG16ViT: VGG16ViT,
+        ResNet50ViT: ResNet50ViT,
+        DenseNet121ViT: DenseNet121ViT,
 
     }
 
@@ -211,7 +220,16 @@ if NEW_DATASET:
             # "Inceptionv3": "Inceptionv3_potatodata_Aug_True_162810_CNNs.pth",
             # "HybridXception": "HybridXception_potatodata_Aug_True_144722_CNNs.pth",
             # "HybridInceptionv3": "HybridInceptionV3_potatodata_Aug_True_185317_CNNs.pth",
-            "HybridModelv2b3": "HybridModelv2b3_potatodata_Aug_True_125450_CNNs.pth",
+            #"HybridModelv2b3": "HybridModelv2b3_potatodata_Aug_True_125450_CNNs.pth",
+
+            "MobileNetV3_large": "MobileNetV3_large_potatodata_Aug_True_013313_CNNs.pth",
+            "VGG16": "VGG16_potatodata_Aug_True_013313_CNNs.pth",
+            "ResNet50": "ResNet50_potatodata_Aug_True_013313_CNNs.pth",
+            "DenseNet121": "DensityNet121_potatodata_Aug_True_013313_CNNs.pth",
+            "MobileNetV3ViT": "MobileNetV3ViT_potatodata_Aug_True_014437_CNNs.pth",
+            "VGG16ViT": "VGG16ViT_potatodata_Aug_True_014437_CNNs.pth",
+            "ResNet50ViT": "ResNet50ViT_potatodata_Aug_True_014437_CNNs.pth",
+            "DenseNet121ViT": "DenseNet121ViT_potatodata_Aug_True_014437_CNNs.pth",
 
         }
     else:
@@ -228,10 +246,19 @@ if NEW_DATASET:
             # "ViT": "ViT_potatodata_Aug_False_201457_ViT.pth",
             # "HybridModel": "HybridModel_potatodata_Aug_False_234841_ViT.pth",
 
-            "Xception": "Xception_potatodata_Aug_False_180720_CNNs.pth",
-            "Inceptionv3": "Inceptionv3_potatodata_Aug_False_225104_CNNs.pth",
-            "HybridXception": "HybridXception_potatodata_Aug_False_154325_CNNs.pth",
-            "HybridInceptionv3": "HybridInceptionV3_potatodata_Aug_False_122219_CNNs.pth",
+            # "Xception": "Xception_potatodata_Aug_False_180720_CNNs.pth",
+            # "Inceptionv3": "Inceptionv3_potatodata_Aug_False_225104_CNNs.pth",
+            # "HybridXception": "HybridXception_potatodata_Aug_False_154325_CNNs.pth",
+            # "HybridInceptionv3": "HybridInceptionV3_potatodata_Aug_False_122219_CNNs.pth",
+
+            "MobileNetV3_large": "MobileNetV3_large_potatodata_Aug_False_013728_CNNs.pth",
+            "VGG16": "VGG16_potatodata_Aug_False_013728_CNNs.pth",
+            "ResNet50": "ResNet50_potatodata_Aug_False_013728_CNNs.pth",
+            "DenseNet121": "DenseNet121_potatodata_Aug_False_013728_CNNs.pth",
+            "MobileNetV3ViT": "MobileNetV3ViT_potatodata_Aug_False_015237_CNNs.pth",
+            "VGG16ViT": "VGG16ViT_potatodata_Aug_False_015237_CNNs.pth",
+            "ResNet50ViT": "ResNet50ViT_potatodata_Aug_False_015237_CNNs.pth",
+            "DenseNet121ViT": "DenseNet121ViT_potatodata_Aug_False_015237_CNNs.pth",
 
 
         }
@@ -248,6 +275,15 @@ else:
             # "ViT": "ViT_plantVillage_Aug_True_033949_EFF.pth",
             # "HybridModelV2s": "HybridModelV2s_plantVillage_Aug_True_033949_EFF.pth",
             # "HybridModelV2m": "HybridModelV2m_plantVillage_Aug_True_033949_EFF.pth",
+
+            "MobileNetV3_large": "MobileNetV3_large_plantVillage_Aug_True_103206_CNNs.pth",
+            "VGG16": "VGG16_plantVillage_Aug_True_103206_CNNs.pth",
+            "ResNet50": "ResNet50_plantVillage_Aug_True_103206_CNNs.pth",
+            "DenseNet121": "DenseNet121ViT_plantVillage_Aug_True_103206_CNNs.pth",
+            "MobileNetV3ViT": "MobileNetV3ViT_plantVillage_Aug_True_103206_CNNs.pth",
+            "VGG16ViT": "VGG16ViT_plantVillage_Aug_True_103206_CNNs.pth",
+            "ResNet50ViT": "ResNet50ViT_plantVillage_Aug_True_103206_CNNs.pth",
+            "DenseNet121ViT": "DenseNet121ViT_plantVillage_Aug_True_103206_CNNs.pth",
         }
     else:
         SAVED_MODELS = {
@@ -261,12 +297,21 @@ else:
             # "ViT": "ViT_plantVillage_Aug_False_175130_EFF.pth",
             # "HybridModelV2s": "HybridModelV2s_plantVillage_Aug_False_175130_EFF.pth",
             # "HybridModelV2m": "HybridModelV2m_plantVillage_Aug_False_175130_EFF.pth",
+
+            "MobileNetV3_large": "MobileNetV3_large_plantVillage_Aug_False_103421_CNNs.pth",
+            "VGG16": "VGG16_plantVillage_Aug_False_103421_CNNs.pth",
+            "ResNet50": "ResNet50_plantVillage_Aug_False_103421_CNNs.pth",
+            "DenseNet121": "DenseNet121_plantVillage_Aug_False_103421_CNNs.pth",
+            "MobileNetV3ViT": "MobileNetV3ViT_plantVillage_Aug_False_103421_CNNs.pth",
+            "VGG16ViT": "VGG16ViT_plantVillage_Aug_False_103421_CNNs.pth",
+            "ResNet50ViT": "ResNet50ViT_plantVillage_Aug_False_103421_CNNs.pth",
+            "DenseNet121ViT": "DenseNet121ViT_plantVillage_Aug_False_103421_CNNs.pth",
         }
 
 wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"plantv{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
-    #name=f"TestCNN{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
+    #name=f"plantv{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
+    name=f"Testpaper{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
 )

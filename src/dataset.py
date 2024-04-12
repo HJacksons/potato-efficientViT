@@ -65,21 +65,21 @@ class Dataset:
             train_dataset,
             batch_size=BATCH_SIZE,
             shuffle=True,
-            num_workers=2,
+            num_workers=4,
             pin_memory=True,
         )
         vali_dl = DataLoader(
             vali_dataset,
             batch_size=BATCH_SIZE,
             shuffle=False,
-            num_workers=2,
+            num_workers=4,
             pin_memory=True,
         )
         test_dl = DataLoader(
             test_dataset,
             batch_size=BATCH_SIZE,
             shuffle=False,
-            num_workers=2,
+            num_workers=4,
             pin_memory=True,
         )
 
