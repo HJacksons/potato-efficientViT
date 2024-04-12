@@ -39,7 +39,7 @@ TRAINING = False
 AUGMENT = False
 DATATYPE = "plantVillage"  # plantVillage or potatodata .
 
-NEW_DATASET = True  # for the purpose of testing
+NEW_DATASET = False  # for the purpose of testing
 
 if TRAINING:
     MODELS = {
