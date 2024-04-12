@@ -279,7 +279,7 @@ else:
             "MobileNetV3_large": "MobileNetV3_large_plantVillage_Aug_True_103206_CNNs.pth",
             "VGG16": "VGG16_plantVillage_Aug_True_103206_CNNs.pth",
             "ResNet50": "ResNet50_plantVillage_Aug_True_103206_CNNs.pth",
-            "DenseNet121": "DenseNet121_plantVillage_Aug_False_103421_CNNs.pth",
+            "DenseNet121": "DenseNet121_plantVillage_Aug_True_103206_CNNs.pth",
             "MobileNetV3ViT": "MobileNetV3ViT_plantVillage_Aug_True_103206_CNNs.pth",
             "VGG16ViT": "VGG16ViT_plantVillage_Aug_True_103206_CNNs.pth",
             "ResNet50ViT": "ResNet50ViT_plantVillage_Aug_True_103206_CNNs.pth",
