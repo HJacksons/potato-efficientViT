@@ -283,7 +283,7 @@ else:
             "MobileNetV3ViT": "MobileNetV3ViT_plantVillage_Aug_True_103206_CNNs.pth",
             "VGG16ViT": "VGG16ViT_plantVillage_Aug_True_103206_CNNs.pth",
             "ResNet50ViT": "ResNet50ViT_plantVillage_Aug_True_103206_CNNs.pth",
-            "DenseNet121ViT": "DenseNet121ViT_plantVillage_Aug_False_103421_CNNs.pth",
+            "DenseNet121ViT": "DenseNet121ViT_plantVillage_Aug_True_103206_CNNs.pth",
         }
     else:
         SAVED_MODELS = {
