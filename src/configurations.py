@@ -225,7 +225,7 @@ if NEW_DATASET:
             "MobileNetV3_large": "MobileNetV3_large_potatodata_Aug_True_013313_CNNs.pth",
             "VGG16": "VGG16_potatodata_Aug_True_013313_CNNs.pth",
             "ResNet50": "ResNet50_potatodata_Aug_True_013313_CNNs.pth",
-            "DenseNet121": "DensityNet121_potatodata_Aug_True_013313_CNNs.pth",
+            "DenseNet121": "DenseNet121_potatodata_Aug_True_013313_CNNs.pth",
             "MobileNetV3ViT": "MobileNetV3ViT_potatodata_Aug_True_014437_CNNs.pth",
             "VGG16ViT": "VGG16ViT_potatodata_Aug_True_014437_CNNs.pth",
             "ResNet50ViT": "ResNet50ViT_potatodata_Aug_True_014437_CNNs.pth",
