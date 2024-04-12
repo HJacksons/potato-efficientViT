@@ -190,14 +190,14 @@ else:  # Testing
         # "HybridInceptionv3": HybridInceptionV3,
         #"HybridModelv2b3": HybridModelv2b3,
 
-        MobileNetV3_large: MobileNetV3_large,
-        VGG16: VGG16,
-        ResNet50: ResNet50,
-        DenseNet121: DenseNet121,
-        MobileNetV3ViT: MobileNetV3ViT,
-        VGG16ViT: VGG16ViT,
-        ResNet50ViT: ResNet50ViT,
-        DenseNet121ViT: DenseNet121ViT,
+        "MobileNetV3_large": MobileNetV3_large,
+        "VGG16": VGG16,
+        "ResNet50": ResNet50,
+        "DenseNet121": DenseNet121,
+        "MobileNetV3ViT": MobileNetV3ViT,
+        "VGG16ViT": VGG16ViT,
+        "ResNet50ViT": ResNet50ViT,
+        "DenseNet121ViT": DenseNet121ViT,
 
     }
 
