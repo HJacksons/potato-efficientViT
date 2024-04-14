@@ -35,8 +35,8 @@ RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = True
-AUGMENT = False
+TRAINING = False
+AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata .
 
 NEW_DATASET = True # for the purpose of testing
@@ -174,7 +174,7 @@ if TRAINING:
 
 else:  # Testing
     MODELS = {
-        # "EfficientNetV2B3": EfficientNetV2B3,
+        "EfficientNetV2B3": EfficientNetV2B3,
         # "EfficientNetV2S": EfficientNetV2S,
         # "EfficientNetV2M": EfficientNetV2M,
         #"ViT": ViT,
@@ -182,7 +182,7 @@ else:  # Testing
         # "HybridModelV2s": HybridModelV2s,
         # "HybridModelV2m": HybridModelV2m,
 
-        # "ViT": ViT,
+        "ViT": ViT,
         # "HybridModel": HybridModel,
         # "Xception": Xception,
         # "Inceptionv3": Inceptionv3,
@@ -190,14 +190,14 @@ else:  # Testing
         # "HybridInceptionv3": HybridInceptionV3,
         #"HybridModelv2b3": HybridModelv2b3,
 
-        "MobileNetV3_large": MobileNetV3_large,
-        "VGG16": VGG16,
-        "ResNet50": ResNet50,
-        "DenseNet121": DenseNet121,
-        "MobileNetV3ViT": MobileNetV3ViT,
-        "VGG16ViT": VGG16ViT,
-        "ResNet50ViT": ResNet50ViT,
-        "DenseNet121ViT": DenseNet121ViT,
+        # "MobileNetV3_large": MobileNetV3_large,
+        # "VGG16": VGG16,
+        # "ResNet50": ResNet50,
+        # "DenseNet121": DenseNet121,
+        # "MobileNetV3ViT": MobileNetV3ViT,
+        # "VGG16ViT": VGG16ViT,
+        # "ResNet50ViT": ResNet50ViT,
+        # "DenseNet121ViT": DenseNet121ViT,
 
     }
 
@@ -222,14 +222,17 @@ if NEW_DATASET:
             # "HybridInceptionv3": "HybridInceptionV3_potatodata_Aug_True_185317_CNNs.pth",
             #"HybridModelv2b3": "HybridModelv2b3_potatodata_Aug_True_125450_CNNs.pth",
 
-            "MobileNetV3_large": "MobileNetV3_large_potatodata_Aug_True_013313_CNNs.pth",
-            "VGG16": "VGG16_potatodata_Aug_True_013313_CNNs.pth",
-            "ResNet50": "ResNet50_potatodata_Aug_True_013313_CNNs.pth",
-            "DenseNet121": "DenseNet121_potatodata_Aug_True_013313_CNNs.pth",
-            "MobileNetV3ViT": "MobileNetV3ViT_potatodata_Aug_True_014437_CNNs.pth",
-            "VGG16ViT": "VGG16ViT_potatodata_AMobileug_True_014437_CNNs.pth",
-            "ResNet50ViT": "ResNet50ViT_potatodata_Aug_True_014437_CNNs.pth",
-            "DenseNet121ViT": "DenseNet121ViT_potatodata_Aug_True_014437_CNNs.pth",
+            # "MobileNetV3_large": "MobileNetV3_large_potatodata_Aug_True_013313_CNNs.pth",
+            # "VGG16": "VGG16_potatodata_Aug_True_013313_CNNs.pth",
+            # "ResNet50": "ResNet50_potatodata_Aug_True_013313_CNNs.pth",
+            # "DenseNet121": "DenseNet121_potatodata_Aug_True_013313_CNNs.pth",
+            # "MobileNetV3ViT": "MobileNetV3ViT_potatodata_Aug_True_014437_CNNs.pth",
+            # "VGG16ViT": "VGG16ViT_potatodata_AMobileug_True_014437_CNNs.pth",
+            # "ResNet50ViT": "ResNet50ViT_potatodata_Aug_True_014437_CNNs.pth",
+            # "DenseNet121ViT": "DenseNet121ViT_potatodata_Aug_True_014437_CNNs.pth",
+
+            "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_True_231842_CNNs.pth",
+            "ViT": "ViT_potatodata_Aug_True_231842_CNNs.pth",
 
         }
     else:
@@ -251,14 +254,17 @@ if NEW_DATASET:
             # "HybridXception": "HybridXception_potatodata_Aug_False_154325_CNNs.pth",
             # "HybridInceptionv3": "HybridInceptionV3_potatodata_Aug_False_122219_CNNs.pth",
 
-            "MobileNetV3_large": "MobileNetV3_large_potatodata_Aug_False_013728_CNNs.pth",
-            "VGG16": "VGG16_potatodata_Aug_False_013728_CNNs.pth",
-            "ResNet50": "ResNet50_potatodata_Aug_False_013728_CNNs.pth",
-            "DenseNet121": "DenseNet121_potatodata_Aug_False_013728_CNNs.pth",
-            "MobileNetV3ViT": "MobileNetV3ViT_potatodata_Aug_False_015237_CNNs.pth",
-            "VGG16ViT": "VGG16ViT_potatodata_Aug_False_015237_CNNs.pth",
-            "ResNet50ViT": "ResNet50ViT_potatodata_Aug_False_015237_CNNs.pth",
-            "DenseNet121ViT": "DenseNet121ViT_potatodata_Aug_False_015237_CNNs.pth",
+            # "MobileNetV3_large": "MobileNetV3_large_potatodata_Aug_False_013728_CNNs.pth",
+            # "VGG16": "VGG16_potatodata_Aug_False_013728_CNNs.pth",
+            # "ResNet50": "ResNet50_potatodata_Aug_False_013728_CNNs.pth",
+            # "DenseNet121": "DenseNet121_potatodata_Aug_False_013728_CNNs.pth",
+            # "MobileNetV3ViT": "MobileNetV3ViT_potatodata_Aug_False_015237_CNNs.pth",
+            # "VGG16ViT": "VGG16ViT_potatodata_Aug_False_015237_CNNs.pth",
+            # "ResNet50ViT": "ResNet50ViT_potatodata_Aug_False_015237_CNNs.pth",
+            # "DenseNet121ViT": "DenseNet121ViT_potatodata_Aug_False_015237_CNNs.pth",
+
+            "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_False_232110_CNNs.pth",
+            "ViT": "ViT_potatodata_Aug_False_232110_CNNs.pth",
 
 
         }
@@ -312,6 +318,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"EV{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
-    #name=f"Testpaper{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
+    #name=f"EV{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
+    name=f"TEV{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
 )
