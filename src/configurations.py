@@ -28,7 +28,7 @@ CRITERION = nn.CrossEntropyLoss()
 EPOCHS = 70
 lr = 0.0001
 
-DATA = "../data/plantVillage"  # "../data/potatodata
+DATA = "../data/potatodata"  # "../data/potatodata
 TEST_SIZE = 0.1
 VALI_SIZE = 0.1
 RANDOM_STATE = 42  # for reproducibility
