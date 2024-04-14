@@ -35,8 +35,8 @@ RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = True
-AUGMENT = False
+TRAINING = False
+AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata .
 
 NEW_DATASET = True # for the purpose of testing
@@ -175,7 +175,7 @@ if TRAINING:
 
 else:  # Testing
     MODELS = {
-        "EfficientNetV2B3": EfficientNetV2B3,
+        #"EfficientNetV2B3": EfficientNetV2B3,
         # "EfficientNetV2S": EfficientNetV2S,
         # "EfficientNetV2M": EfficientNetV2M,
         #"ViT": ViT,
@@ -183,13 +183,14 @@ else:  # Testing
         # "HybridModelV2s": HybridModelV2s,
         # "HybridModelV2m": HybridModelV2m,
 
-        "ViT": ViT,
+        #"ViT": ViT,
         # "HybridModel": HybridModel,
         # "Xception": Xception,
         # "Inceptionv3": Inceptionv3,
         # "HybridXception": HybridXception,
         # "HybridInceptionv3": HybridInceptionV3,
         #"HybridModelv2b3": HybridModelv2b3,
+
 
         # "MobileNetV3_large": MobileNetV3_large,
         # "VGG16": VGG16,
@@ -199,6 +200,8 @@ else:  # Testing
         # "VGG16ViT": VGG16ViT,
         # "ResNet50ViT": ResNet50ViT,
         # "DenseNet121ViT": DenseNet121ViT,
+
+        "EffNetV2B3ViT": HybridModel,
 
     }
 
@@ -232,8 +235,9 @@ if NEW_DATASET:
             # "ResNet50ViT": "ResNet50ViT_potatodata_Aug_True_014437_CNNs.pth",
             # "DenseNet121ViT": "DenseNet121ViT_potatodata_Aug_True_014437_CNNs.pth",
 
-            "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_True_231842_CNNs.pth",
-            "ViT": "ViT_potatodata_Aug_True_231842_CNNs.pth",
+            # "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_True_231842_CNNs.pth",
+            # "ViT": "ViT_potatodata_Aug_True_231842_CNNs.pth",
+            "EffNetV2B3ViT": "EffNetViT_potatodata_Aug_True_011023_CNNs.pth",
 
         }
     else:
@@ -264,8 +268,9 @@ if NEW_DATASET:
             # "ResNet50ViT": "ResNet50ViT_potatodata_Aug_False_015237_CNNs.pth",
             # "DenseNet121ViT": "DenseNet121ViT_potatodata_Aug_False_015237_CNNs.pth",
 
-            "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_False_232110_CNNs.pth",
-            "ViT": "ViT_potatodata_Aug_False_232110_CNNs.pth",
+            # "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_False_232110_CNNs.pth",
+            # "ViT": "ViT_potatodata_Aug_False_232110_CNNs.pth",
+            "EffNetV2B3ViT": "EffNetViT_potatodata_Aug_False_011252_CNNs.pth",
 
 
         }
@@ -319,6 +324,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"HM{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
-    #name=f"TEV{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
+    #name=f"HM{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
+    name=f"TEVit{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
 )
