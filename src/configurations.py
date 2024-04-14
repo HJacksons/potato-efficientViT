@@ -35,19 +35,20 @@ RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = False
-AUGMENT = False
+TRAINING = True
+AUGMENT = True
 DATATYPE = "potatodata"  # plantVillage or potatodata .
 
 NEW_DATASET = True # for the purpose of testing
 
 if TRAINING:
     MODELS = {
-        "EfficientNetV2B3": EfficientNetV2B3().to(DEVICE),
+        #"EfficientNetV2B3": EfficientNetV2B3().to(DEVICE),
         # "EfficientNetV2S": EfficientNetV2S().to(DEVICE),
         # "EfficientNetV2M": EfficientNetV2M().to(DEVICE),
-        "ViT": ViT().to(DEVICE),
+        #"ViT": ViT().to(DEVICE),
         #"HybridModel": HybridModel().to(DEVICE),
+        "EffNetViT": HybridModel().to(DEVICE),
         # "HybridModelV2s": HybridModelV2s().to(DEVICE),
         # "HybridModelV2m": HybridModelV2m().to(DEVICE),
 
@@ -72,13 +73,13 @@ if TRAINING:
     # model = MODELS["HybridModel"]  # Your hybrid model instance
 
     OPTIMIZERS = {
-        "EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr, weight_decay=0.0001),
+        #"EfficientNetV2B3": optim.Adam(MODELS["EfficientNetV2B3"].parameters(), lr, weight_decay=0.0001),
         # "EfficientNetV2S": optim.Adam(MODELS["EfficientNetV2S"].parameters(), lr, weight_decay=0.0001),
         # "EfficientNetV2M": optim.Adam(MODELS["EfficientNetV2M"].parameters(), lr, weight_decay=0.0001),
-        "ViT": optim.Adam(MODELS["ViT"].parameters(), lr, weight_decay=0.0001),  # No weight decay for its stability
-        # "HybridModel": optim.Adam(
-        #     MODELS["HybridModel"].parameters(), lr, weight_decay=0.0001 # was 0.5 before
-        # ),
+        #"ViT": optim.Adam(MODELS["ViT"].parameters(), lr, weight_decay=0.0001),  # No weight decay for its stability
+        "EffNetViT": optim.Adam(
+            MODELS["EffNetViT"].parameters(), lr, weight_decay=0.0001 # was 0.5 before
+        ),
         # "HybridModelV2s": optim.Adam(MODELS["HybridModelV2s"].parameters(), lr, weight_decay=0.0001),
         # "HybridModelV2m": optim.Adam(MODELS["HybridModelV2m"].parameters(), lr, weight_decay=0.0001),
 
@@ -101,21 +102,21 @@ if TRAINING:
         # "DenseNet121ViT": optim.Adam(MODELS["DenseNet121ViT"].parameters(), lr, weight_decay=0.0001),
     }
     SCHEDULER = {
-        "EfficientNetV2B3": optim.lr_scheduler.ReduceLROnPlateau(
-             OPTIMIZERS["EfficientNetV2B3"], patience=5, factor=0.5, verbose=True
-         ),
+        # "EfficientNetV2B3": optim.lr_scheduler.ReduceLROnPlateau(
+        #      OPTIMIZERS["EfficientNetV2B3"], patience=5, factor=0.5, verbose=True
+        #  ),
         # "EfficientNetV2S": optim.lr_scheduler.ReduceLROnPlateau(
         #     OPTIMIZERS["EfficientNetV2S"], patience=5, factor=0.5, verbose=True
         # ),
         # "EfficientNetV2M": optim.lr_scheduler.ReduceLROnPlateau(
         #     OPTIMIZERS["EfficientNetV2M"], patience=5, factor=0.5, verbose=True
-        # # ),
-        "ViT": optim.lr_scheduler.ReduceLROnPlateau(
-            OPTIMIZERS["ViT"], patience=5, factor=0.5, verbose=True
+        # # # ),
+        # "ViT": optim.lr_scheduler.ReduceLROnPlateau(
+        #     OPTIMIZERS["ViT"], patience=5, factor=0.5, verbose=True
+        # ),
+        "EffNetViT": optim.lr_scheduler.ReduceLROnPlateau(
+            OPTIMIZERS["EffNetViT"], patience=5, factor=0.5, verbose=True
         ),
-        # # "HybridModel": optim.lr_scheduler.ReduceLROnPlateau(
-        # #     OPTIMIZERS["HybridModel"], patience=2, factor=0.5, verbose=True
-        # # ),
         # "HybridModelV2s": optim.lr_scheduler.ReduceLROnPlateau(
         #     OPTIMIZERS["HybridModelV2s"], patience=5, factor=0.5, verbose=True
         # ),
@@ -318,6 +319,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    #name=f"EV{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
-    name=f"TEV{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
+    name=f"HM{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
+    #name=f"TEV{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
 )
