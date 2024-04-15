@@ -35,7 +35,7 @@ RANDOM_STATE = 42  # for reproducibility
 BATCH_SIZE = 64
 CLASSES = sorted(os.listdir(DATA))
 
-TRAINING = True
+TRAINING = False
 AUGMENT = False
 DATATYPE = "potatodata"  # plantVillage or potatodata .
 
@@ -324,6 +324,6 @@ wandb.login(key=os.getenv("WANDB_KEY"))
 wandb.init(
     project=os.getenv("WANDB_PROJECT"),
     entity=os.getenv("WANDB_ENTITY"),
-    name=f"HM{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
-    #name=f"TEVit{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
+    #name=f"HM{time}_{DATATYPE}_train_Aug_{AUGMENT}",  # Train name # Added L2 regularization... 0.5
+    name=f"TEVit{time}_{DATATYPE}_test_Aug_{AUGMENT}",  # Test names
 )
