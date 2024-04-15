@@ -270,7 +270,7 @@ if NEW_DATASET:
 
             # "EfficientNetV2B3": "EfficientNetV2B3_potatodata_Aug_False_232110_CNNs.pth",
             # "ViT": "ViT_potatodata_Aug_False_232110_CNNs.pth",
-            "EffNetV2B3ViT": "EffNetViT_potatodata_Aug_False_011252_CNNs.pth",
+            "EffNetV2B3ViT": "EffNetViT_potatodata_Aug_False_015254_CNNs.pth",
 
 
         }
