@@ -8,7 +8,7 @@ from PIL import Image
 
 def get_transforms_for_model(augment):
     if augment:
-        # data_transforms = transforms.Compose(  # trying to reproduce the same results
+        # data_transforms = transforms.Compose(  # trying to reproduce the same results in the paper
         #     [
         #         transforms.Resize((224, 224)),  # Resize images to 224x224
         #         transforms.RandomHorizontalFlip(),  # Horizontal flipping
@@ -66,7 +66,7 @@ def get_transforms_for_model(augment):
     return data_transforms
 
 
-# Augment True, False
+# Get the number of classes to feed in the model architecture as FEATURES
 DATA = "../data/potatodata"
 CLASSES = sorted(os.listdir(DATA))
 FEATURES = len(CLASSES)

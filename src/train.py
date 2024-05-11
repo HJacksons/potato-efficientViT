@@ -12,14 +12,14 @@ time = now.strftime("%H%M%S")
 
 class Trainer:
     def __init__(
-        self,
-        models,
-        device,
-        train_loader,
-        vali_loader,
-        criterion,
-        optimizers,
-        schedulers,
+            self,
+            models,
+            device,
+            train_loader,
+            vali_loader,
+            criterion,
+            optimizers,
+            schedulers,
     ):
         self.models = models
         self.device = device
@@ -30,7 +30,7 @@ class Trainer:
         self.scheduler = schedulers
         self.best_acc = {model_name: 0.0 for model_name in self.models.keys()}
 
-    # Train the model get loss and accuracy
+    # Train and validate models
     def train_and_validate(self, num_epochs):
         for epoch in range(num_epochs):
             for model_name, model in self.models.items():
@@ -120,22 +120,6 @@ class Trainer:
                 f"{model_name}_{DATATYPE}_Aug_{AUGMENT}_{time}_CNNs.pth",
             )
             logging.info(f"Saved last model for {model_name}")
-
-            # # Save the model if it has better accuracy than previously seen
-            # if avg_acc > self.best_acc[model_name]:
-            #     self.best_acc[model_name] = avg_acc
-            #     torch.save(
-            #         model.state_dict(),
-            #         f"{model_name}_best_{DATATYPE}_Aug_{AUGMENT}_{time}.pth",
-            #     )
-            #     logging.info(
-            #         f"Saved new best model for {model_name} with accuracy: {avg_acc:.4f}"
-            #     )
-
-            # # Log the best validation accuracy for each model
-            # for model_name, acc in self.best_acc.items():
-            #     logging.info(f"{model_name} Best Validation Accuracy: {acc:.4f}")
-            #     wandb.log({f"{model_name} Best Validation Accuracy": acc})
 
 
 if __name__ == "__main__":

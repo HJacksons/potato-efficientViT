@@ -165,3 +165,4 @@ backup/
 data/
 *.png
 *.pth
+visualisations.ipynb
