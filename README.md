@@ -1,6 +1,6 @@
-# Deep Learning for Plant Disease Classification
+# Deep Learning for Potato Plant Disease Detection and Identification
 
-This project implements and evaluates deep learning models for classifying plant diseases using image datasets. It provides a framework for training and testing various Convolutional Neural Network (CNN) and Vision Transformer (ViT) based architectures, including hybrid models.
+This project implements and evaluates deep learning models for potato plant disease detection and identification using image datasets. It provides a framework for training and testing various Convolutional Neural Network (CNN) and Vision Transformer (ViT) based architectures, including hybrid models.
 
 ## Table of Contents
 
@@ -17,7 +17,7 @@ This project implements and evaluates deep learning models for classifying plant
 
 ## Project Overview
 
-This project focuses on the development and evaluation of a novel hybrid deep learning architecture, **EfficientNetV2B3ViT**, for advanced plant disease classification from images. The work presented here forms the basis of a research paper, showcasing the model's superior performance and capabilities. While the primary focus is on `EfficientNetV2B3ViT`, the framework also supports experimentation with other Convolutional Neural Network (CNN) and Vision Transformer (ViT) based architectures.
+This project focuses on the development and evaluation of a novel hybrid deep learning architecture, **EfficientNetV2B3ViT**, for advanced potato plant disease detection and identification from images. The work presented here forms the basis of a research paper, showcasing the model's superior performance and capabilities. While the primary focus is on `EfficientNetV2B3ViT`, the framework also supports experimentation with other Convolutional Neural Network (CNN) and Vision Transformer (ViT) based architectures.
 
 ### Publication Details
 
@@ -128,7 +128,7 @@ To test a trained model:
 
 ## Models
 
-The foundation of this project is the **`EfficientNetV2B3ViT`** hybrid model which combines the strengths of EfficientNetV2B3 and a Vision Transformer. This model, defined in `src/models.py` (and typically referenced as `EffNetViT` in `src/configurations.py`), is the primary subject of the research publication due to its promising results in plant disease classification.
+The foundation of this project is the **`EfficientNetV2B3ViT`** hybrid model which combines the strengths of EfficientNetV2B3 and a Vision Transformer. This model, defined in `src/models.py` (and typically referenced as `EffNetViT` in `src/configurations.py`), is the primary subject of the research publication due to its promising results in potato plant disease detection and identification.
 
 While `EfficientNetV2B3ViT` is the main focus, the framework also includes implementations of other models for comparative analysis, such as:
 - Standard Vision Transformer (`ViT`)
