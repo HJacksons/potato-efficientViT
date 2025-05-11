@@ -67,11 +67,14 @@ This research has been published in:
 
 ## Dataset
 
-The project is configured to work with datasets located in the `data/` directory. Currently, it supports:
--   `potatodata`
--   `plantVillage`
+The project is configured to work with datasets placed in the `data/` directory. The actual data files for `potatodata` and `plantVillage` are not version-controlled with Git (as indicated by the project's `.gitignore` file) and need to be obtained separately.
 
-The specific dataset to be used is set in `src/configurations.py` via the `DATA` variable. Ensure your datasets are structured with subdirectories for each class.
+**Setup:**
+1.  Create the directories `data/potatodata` and `data/plantVillage` if they don't exist.
+2.  Populate these directories with your respective image datasets.
+3.  Ensure each dataset is structured with subdirectories for each class.
+
+The specific dataset to be used during runtime is set in `src/configurations.py` via the `DATA` variable (e.g., `DATA = "../data/potatodata"`).
 
 ## Configuration
 
