@@ -295,6 +295,4 @@ class ResNet50ViT(nn.Module):
 
         return output
 
-#
-# model = VGG16()
-# summary(model, input_size=(1, 3, 224, 224))
+
