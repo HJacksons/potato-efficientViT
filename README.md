@@ -17,7 +17,7 @@ This project implements and evaluates deep learning models for potato plant dise
 
 ## Project Overview
 
-This project focuses on the development and evaluation of a novel hybrid deep learning architecture, **EfficientNetV2B3ViT**, for advanced potato plant disease detection and identification from images. The work presented here forms the basis of a research paper, showcasing the model's superior performance and capabilities. While the primary focus is on `EfficientNetV2B3ViT`, the framework also supports experimentation with other Convolutional Neural Network (CNN) and Vision Transformer (ViT) based architectures.
+Addressing the significant challenge of accurately detecting diseases in staple crops like potatoes, this project introduces and evaluates **`EfficientNetV2B3+ViT`**, a novel hybrid deep learning model. This model, combining a Convolutional Neural Network (EfficientNetV2B3) with a Vision Transformer (ViT), demonstrates superior performance for potato plant disease detection and identification, forming the core of the research paper detailed below. While this hybrid model is the central focus, the framework also supports experimentation with other CNN and ViT-based architectures.
 
 ### Publication Details
 
